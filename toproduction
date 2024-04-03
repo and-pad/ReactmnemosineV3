@@ -1,0 +1,11 @@
+#! /bin/bash
+
+
+# Definir las carpetas de origen y destino
+carpeta_origen="/home/andres/React_projects/MuseumCms/mnemosine_v3/build"
+carpeta_destino="/var/www/html/MnemosineReact"
+
+# Copiar los archivos de la carpeta de origen a la carpeta de destino
+cp -r "$carpeta_origen"/* "$carpeta_destino"
+
+echo "Te mamaste ya se copiaron chavo, de $carpeta_origen a $carpeta_destino"
