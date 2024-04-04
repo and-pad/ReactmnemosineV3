@@ -50,7 +50,7 @@ export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
     //actualizado y protegido el sistema siempre con un nuevo token, y un sistema de 
     //doble tokenizado.
     try {//intentamos hacer una llamada API al servidor para checar el token actual
-        console.log('acces que llega a handle', accessToken);
+        // console.log('acces que llega a handle', accessToken);
         //Si funciona este nos responde un json de nombre {'time_left':200.185} en segundos y fracciones,
         //la cantidad restante de tiempo de vida del token.
         var response = await fetch('http://127.0.0.1:8000/auth/check/', {
@@ -68,7 +68,7 @@ export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
         if (response.ok) {//si la respuesta del servidor es en rango de 200 al 299 es considerado ok
             const data = await response.json();//esperamos la respuesta del fetch
             if ('time_left' in data) {//revisamos si viene time_left quiere decir que el token aun tiene vida!!!!
-                console.log(data['time_left']);
+                //    console.log(data['time_left']);
                 //y regresamos como respuesta el data que en este caso solo contiene el time_left
                 //el cual se filtra con el mismo nombre de la etiqueta al recibirse
                 return data;
@@ -96,12 +96,12 @@ export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
                         body: JSON.stringify({ 'refresh': refreshToken }),//ponemos el RefreshToken en el body para que intente hacer la renovacion                        
                     });
 
-                    console.log({ refresh: refreshToken });
+                    //console.log({ refresh: refreshToken });
                     if (response.ok) {
                         //Esperamos a que nos de respuesta y lo convertimos en un objeto json.
                         //viene un json con un elemento llamado "access" que es el nuevo accessToken con tiempo renovado
                         const data = await response.json();
-                        console.log('rastreo access data', data);
+                        //console.log('rastreo access data', data);
                         return data;
                     } else {
                         Cookies.remove('refreshToken');
