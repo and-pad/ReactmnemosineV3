@@ -21,29 +21,14 @@ export var handleLogin = async ({ email, password }) => {
             return 'not authenticated';
         }
     } catch (error) {
-        return 'no network'
+        console.log('elerror', error);
+        return 'not network';
         // Manejar errores de red
     }
 
 };
 
-/*
-{
-    "time_left": 155.14625597000122
-}
 
-{
-    "detail": "Given token not valid for any token type",
-    "code": "token_not_valid",
-    "messages": [
-        {
-            "token_class": "AccessToken",
-            "token_type": "access",
-            "message": "Token is invalid or expired"
-        }
-    ]
-}
-*/
 
 export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
     //Esta función maneja el accessToken y el refreshToken en funcion de mantener 
@@ -71,6 +56,7 @@ export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
                 //    console.log(data['time_left']);
                 //y regresamos como respuesta el data que en este caso solo contiene el time_left
                 //el cual se filtra con el mismo nombre de la etiqueta al recibirse
+                console.log(data);
                 return data;
             }
 

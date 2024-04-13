@@ -5,16 +5,25 @@ import { QueryClient, QueryClientProvider, useQuery } from 'react-query';//Compo
 import './App.css';//
 import { TopNavBar, SideBar } from './components/Home/HomeComponents/MenuTemplates';//Plantilla principal de la pagina
 
-import LoginComponent from './components/Login/LoginComponent';//Componente del Login
+import Login from './components/LoginComponents/Login';//Componente del Login
 import PrivateRoute from './components/PrivateRouteComponent'; // Importa el componente PrivateRoute para el acceso con contraseña
-import { handleLogin, handleLoggedTime } from './components/Login/handleLogin'; // Importa la función handleLogin, todo lo referente al tokenizado
+import { handleLogin, handleLoggedTime } from './components/LoginComponents/handleLogin'; // Importa la función handleLogin, todo lo referente al tokenizado
 
 import '@fortawesome/fontawesome-free/css/all.min.css';//FontAwesome!!
-import { PiecesQueries } from './components/PiecesQueries/PiecesQueries';
+
+//Componente de consultas
+import { PiecesQueries } from './components/PiecesQueriesComponents/PiecesQueries';
+
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "jquery/dist/jquery";
+import $ from 'jquery';
 
 // Crea una instancia de QueryClient con la configuración de la caché
 // horas x minutos x horas x milisegundos
-var cache_time = 10 * /*60 * */ 60 * 1000 // 8 horas
+const cache_time = 4;
+
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -25,15 +34,13 @@ const queryClient = new QueryClient({
 });
 
 const SearchPage = () => <h1>Search Page</h1>
-
-
 //var token;
 
 function App() {
   //Variables para manejar el inicio de sesion tokenizado
   //Este consta de dos variables que nos brinda la librería JWTtoken
   //El funcionamiento esta definido para que con el refresh token
-  //se genere automaticamente el access token una vez que este caduco
+  //se genere automaticamente el access token una vez que esté caduco
   //hasta el vencimiento de refreshToken.
   //Esto nos brinda una fuerte seguridad de tokenizado que se esta renovando.
   //La recomendacion de configuración es:
@@ -46,10 +53,10 @@ function App() {
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
   const [redirectLogin, setRedirectLogin] = useState(false); // Estado para la redireccióna login
-  const [redirectHome, setRedirectHome] = useState(false);
-  const [redirectTest, setRedirectTest] = useState(false);
+  const [redirectHome, setRedirectHome] = useState(false); //Estado para redirigir al Home
 
-  const [forceUpdate, setForceUpdate] = useState(false); // Estado para forzar la actualización
+
+  // const [forceUpdate, setForceUpdate] = useState(false); // Estado para forzar la actualización
   //const [loginError, setLoginError] = useState(null);
 
   useEffect(() => {
@@ -87,24 +94,17 @@ function App() {
       Cookies.remove('refreshToken');
       setAccessToken(null);
       setRefreshToken(null);
-      setForceUpdate(prevState => !prevState);
+      //setForceUpdate(prevState => !prevState);
     } catch (e) {
-      console.log('apoco es le', e);
+      console.log('error', e);
     }
     setRedirectLogin(true);
     setRedirectHome(false);
-    /*
-    // Actualizar los estados locales
-    try {
-      setAccessToken(null);
-      setRefreshToken(null);
-      // Forzar una actualización de la interfaz de usuario
-     
-    } catch (e) {
-      console.log('apoco es le', e);
-    }*/
   };
 
+  //Esta funcion se ejecuta al precionar el boton para ingresar al sistema
+  //esta intenta comunicarse con el servidor para obtener los tokens de login
+  //
   const handleLoginCallback = async ({ email, password }) => {
     // Si ya hay un token almacenado en la cookie, no es necesario obtener uno nuevo  
 
@@ -116,12 +116,12 @@ function App() {
       //si viene time_left, regresamos el tiempo de sobra del token      
       //si viene esta respuesta quiere decir que no se pudo conectar con el refreshToken entonces hay que redirigir a la url de login para
       //renovar tokens
-      if (response === 'login_redirect') {
+      if (response === 'login_redirect' || response === 'error') {
         //console.log('navigate');
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
         // Forzar una actualización de la interfaz de usuario
-        setForceUpdate(prevState => !prevState);
+        //setForceUpdate(prevState => !prevState);
         setAccessToken(null);
         setRefreshToken(null);
         setRedirectLogin(true);
@@ -147,22 +147,15 @@ function App() {
         setRefreshToken(token.refresh);
 
       } else {
-        //  setLoginError(token);
+        if (token === 'not network') {
+          console.error('No hay internet, o el servidor no responde');
+        }
+
       }
       return token;
     }
 
   };
-
-
-  const MainTemplate = () => {
-    return (
-      <>
-        <TopNavBar />
-
-      </>
-    );
-  }
 
   const isLoggedIn = accessToken !== null;
   //console.log('acs', accessToken);
@@ -173,34 +166,37 @@ function App() {
   }
   return (
     // Envolver la aplicación en QueryClientProvider
-    <QueryClientProvider client={queryClient}>
-      <div className='App'>
 
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<Navigate to='/login' />} />
-            <Route path='/login' element={<LoginComponent onLogin={handleLoginCallback} setAccessToken={setAccessToken} setRedirectHome={setRedirectHome} setRedirectLogin={setRedirectLogin} />} />
-            <Route path='/piece_queries//*' element={<PrivateRoute element={
-              <>
-                <MainTemplate />
-                <div className="containers">
-                  <SideBar />
-                  <PiecesQueries accessToken={accessToken} useQuery={useQuery} />
-                  <button onClick={handleLogout}>Cerrar sesión</button>
-                </div>
-              </>
-            } authenticated={isLoggedIn} />} />
-            <Route path='/test/' element={SearchPage()} />
-          </Routes>
-          {redirectLogin && <Navigate to="/login" replace />}
-          {redirectHome && < Navigate to="/piece_queries" />}
-          {redirectTest && < Navigate to="/test" />}
+    <div className='App'>
 
-        </BrowserRouter>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Navigate to='/login' />} />
+          <Route path='/login' element={<Login onLogin={handleLoginCallback} setAccessToken={setAccessToken} setRedirectHome={setRedirectHome} setRedirectLogin={setRedirectLogin} />} />
+          <Route path='/piece_queries//*' element={<PrivateRoute element={
+            <>
+              <TopNavBar />
+              <div className="containers">
+                <SideBar />
+                <PiecesQueries accessToken={accessToken} useQuery={useQuery} />
+                <button onClick={handleLogout}>Cerrar sesión</button>
+              </div>
+            </>
+          } authenticated={isLoggedIn} />} />
+          <Route path='/test/' element={SearchPage()} />
+        </Routes>
 
-      </div>
+        {redirectHome && < Navigate to="/piece_queries" />}
+        {redirectLogin && <Navigate to="/login" />}
 
-    </QueryClientProvider>
+
+      </BrowserRouter>
+
+    </div>
+
+
+
+
   );
 }
 export default App;

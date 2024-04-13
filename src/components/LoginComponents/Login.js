@@ -2,21 +2,22 @@ import Cookies from 'js-cookie';
 import React, { useState, useEffect } from 'react';
 //import { Navigate } from 'react-router-dom';
 //onLogin y setAccess ambas son funciones
-function LoginComponent({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
+function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     //const [redirect, setRedirect] = useState(false); // Estado para la redirección
     // const [redirectSigning, setRedirectSigning] = useState(false); // Estado para la redirección al login
 
+    //Esta funcion se ejecuta cada que el campo email cambia (es precionada una tecla sobre el campo)
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
-
+    //Esta funcion se ejecuta cada que el campo password cambia (es precionada una tecla sobre el campo)
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
     };
-
+    //
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -105,14 +106,7 @@ function LoginComponent({ onLogin, setAccessToken, setRedirectHome, setRedirectL
             }
         });
     }, [onLogin, setAccessToken, setRedirectHome, setRedirectLogin, email, password]);
-    // Redirigir a la ruta '/search_page' si redirect es true
-    /*  if (redirect) {
-          return <Navigate to="/piece_queries" replace />;
-      }*/
 
-    /*   if (redirectSigning) {
-           //   return <Navigate to="/" replace />;
-       }*/
 
     return (
         <div>
@@ -130,10 +124,9 @@ function LoginComponent({ onLogin, setAccessToken, setRedirectHome, setRedirectL
                 </div>
                 <button type="submit">Login</button>
             </form>
-            {/* Botón para redirigir a la ruta '/search_page' */}
-            <button onClick={redirectToHomePage}>Redirigir a la página de búsqueda</button>
+
         </div>
     );
 }
 
-export default LoginComponent;
+export default Login;
