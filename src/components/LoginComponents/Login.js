@@ -6,6 +6,7 @@ function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [mensaje, setMensaje] = useState('');
     //const [redirect, setRedirect] = useState(false); // Estado para la redirección
     // const [redirectSigning, setRedirectSigning] = useState(false); // Estado para la redirección al login
 
@@ -27,13 +28,14 @@ function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
         } else {
             // Guardar el token en una cookie
             if (token !== undefined) {
-                if ('refresh' in token) {
-                    // console.log('token guardado', token.access);
-                    Cookies.set('accessToken', JSON.stringify(token.access));
-                    //console.log('para cookie', token.refresh);
-                    Cookies.set('refreshToken', JSON.stringify(token.refresh));
+                if (token !== 'not network') {
+                    if ('refresh' in token) {
+                        // console.log('token guardado', token.access);
+                        Cookies.set('accessToken', JSON.stringify(token.access));
+                        //console.log('para cookie', token.refresh);
+                        Cookies.set('refreshToken', JSON.stringify(token.refresh));
+                    }
                 }
-
             }
             // Si el token es diferente a 'not authenticated', limpiamos el error
             setError('');
@@ -41,29 +43,35 @@ function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
             //console.log('antes de si pasa por set redirectHome');
             //console.log(token);
             if (token !== undefined) {
-                if ('access' in token) {
-                    //respuesta de que se renovo token
-                    if (!('refresh' in token)) {
-                        // console.log('antes de darle SetAccess', token.access);
-                        setAccessToken(token.access);
-                        Cookies.set('accessToken', JSON.stringify(token.access));
-                        //     console.log('si pasa por set redirectHome');
+                if (token !== 'not network') {
+                    if ('access' in token) {
+                        //respuesta de que se renovo token
+                        if (!('refresh' in token)) {
+                            // console.log('antes de darle SetAccess', token.access);
+                            setAccessToken(token.access);
+                            Cookies.set('accessToken', JSON.stringify(token.access));
+                            //     console.log('si pasa por set redirectHome');
+                            setRedirectHome(true);
+                        } else {
+                            //      console.log('si pasa por set redirectHome else');
+                            setAccessToken(token.access);
+                            setRedirectHome(true);
+                        }
+
+                    }
+                    else if (token === 'not network' || 'time_left' in token) {
+                        //respuesta de que aun tiene vigencia el token
                         setRedirectHome(true);
-                    } else {
-                        //      console.log('si pasa por set redirectHome else');
-                        setAccessToken(token.access);
-                        setRedirectHome(true);
+
+                    } else if (token === 'login_redirect') {
+                        setRedirectLogin(true);
+
                     }
 
-                }
-                else if ('time_left' in token) {
-                    //respuesta de que aun tiene vigencia el token
-                    setRedirectHome(true);
-
-                } else if (token === 'login_redirect') {
-                    setRedirectLogin(true);
 
                 }
+
+
             }
 
         }
@@ -87,23 +95,32 @@ function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
         };
 
         fetchLogin().then(Token => {
+            if (Token !== 'not network') {
+                if (Token === 'not authenticated') {
+                    //console.log('Token', Token);
+                }
 
-            if (Token === 'not authenticated') {
-                //console.log('Token', Token);
-            }
-            else if (Token && 'time_left' in Token) {
-                //console.log('Token', Token);
-                setRedirectHome(true);
-                setRedirectLogin(false);
-                //console.log('llega time left');
 
-            }//aqui nunca lo dejan llegar porque lo capturan antes pero por si acaso
-            else if (Token && 'access' in Token) {
-                setAccessToken(Token.access);
-                setRedirectHome(true);
-                //  console.log('llega access');
-                setRedirectLogin(false);
+
+                else if (Token && 'time_left' in Token) {
+                    //console.log('Token', Token);
+                    setRedirectHome(true);
+                    setRedirectLogin(false);
+                    //console.log('llega time left');
+
+                }//aqui nunca lo dejan llegar porque lo capturan antes pero por si acaso
+                else if (Token && 'access' in Token) {
+                    setAccessToken(Token.access);
+                    setRedirectHome(true);
+                    //  console.log('llega access');
+                    setRedirectLogin(false);
+                }
+            } else {
+                setMensaje('No hay internet, o el servidor no responde');
+
             }
+
+
         });
     }, [onLogin, setAccessToken, setRedirectHome, setRedirectLogin, email, password]);
 
@@ -124,7 +141,7 @@ function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
                 </div>
                 <button type="submit">Login</button>
             </form>
-
+            <div>{mensaje}</div>
         </div>
     );
 }

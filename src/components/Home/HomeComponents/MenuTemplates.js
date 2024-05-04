@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './MenuTemplates.css'; // Asegúrate de importar los estilos CSS
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
+//import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/js/bootstrap.bundle.min";
 
 
 export function TopNavBar() {

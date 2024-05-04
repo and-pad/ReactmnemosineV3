@@ -3,11 +3,13 @@ import { DatatableUserQuery } from '../Datatables/Datatables';//Componente Datat
 import { PieceDetail } from './PieceDetail'
 
 
-export function PiecesQueries({ accessToken, useQuery }) {
+export function PiecesQueries({ accessToken }) {
 
     return (
         <>
-            <DatatableUserQuery accessToken={accessToken} useQuery={useQuery} />
+            <div className="PiecesQueries-container">
+                <DatatableUserQuery accessToken={accessToken} />
+            </div>
             <Routes>
                 {/* Ruta para la página /inicio/piece */}
                 <Route path='/detail' element={<PieceDetail />} />

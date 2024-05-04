@@ -1,7 +1,10 @@
 import Cookies from 'js-cookie';//Librería para el manejo de cookies 
 import React, { useState, useEffect } from 'react';//react, y sus componentes
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';//Componentes de rutas de react de single page
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';//Componente de react para almacenar datos en cache
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+
+
 import './App.css';//
 import { TopNavBar, SideBar } from './components/Home/HomeComponents/MenuTemplates';//Plantilla principal de la pagina
 
@@ -14,24 +17,11 @@ import '@fortawesome/fontawesome-free/css/all.min.css';//FontAwesome!!
 //Componente de consultas
 import { PiecesQueries } from './components/PiecesQueriesComponents/PiecesQueries';
 
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap/dist/js/bootstrap.bundle.js";
-import "jquery/dist/jquery";
-import $ from 'jquery';
 
-// Crea una instancia de QueryClient con la configuración de la caché
-// horas x minutos x horas x milisegundos
-const cache_time = 4;
+//import "bootstrap/dist/css/bootstrap.css";
+//import "bootstrap/dist/js/bootstrap.bundle.js";
 
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // Establece la fecha de caducidad en milisegundos (8 horas en este ejemplo)
-      cacheTime: cache_time,
-    },
-  },
-});
 
 const SearchPage = () => <h1>Search Page</h1>
 //var token;
@@ -159,44 +149,41 @@ function App() {
 
   const isLoggedIn = accessToken !== null;
   //console.log('acs', accessToken);
-  console.log('dsd', check);
+  // console.log('dsd', check);
   if (check === true) {
     console.log('set redirect');
     setRedirectLogin(true);
   }
+
+
   return (
-    // Envolver la aplicación en QueryClientProvider
-
     <div className='App'>
-
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Navigate to='/login' />} />
           <Route path='/login' element={<Login onLogin={handleLoginCallback} setAccessToken={setAccessToken} setRedirectHome={setRedirectHome} setRedirectLogin={setRedirectLogin} />} />
+
           <Route path='/piece_queries//*' element={<PrivateRoute element={
             <>
               <TopNavBar />
               <div className="containers">
                 <SideBar />
-                <PiecesQueries accessToken={accessToken} useQuery={useQuery} />
-                <button onClick={handleLogout}>Cerrar sesión</button>
+                <div className="MainContent">
+                  <PiecesQueries accessToken={accessToken} />
+                </div>
+
               </div>
             </>
           } authenticated={isLoggedIn} />} />
           <Route path='/test/' element={SearchPage()} />
         </Routes>
 
-        {redirectHome && < Navigate to="/piece_queries" />}
+        {redirectHome && <Navigate to="/piece_queries" />}
         {redirectLogin && <Navigate to="/login" />}
-
-
       </BrowserRouter>
-
     </div>
-
-
-
-
   );
 }
+
 export default App;
+
