@@ -1,20 +1,17 @@
-import { Routes, Route } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { DatatableUserQuery } from '../Datatables/Datatables';//Componente Datatable de Consultas
-import { PieceDetail } from './PieceDetail'
 
 
-export function PiecesQueries({ accessToken }) {
+export function PiecesQueries({ accessToken, handleDetailClick }) {
+
+
 
     return (
         <>
             <div className="PiecesQueries-container">
-                <DatatableUserQuery accessToken={accessToken} />
+                <DatatableUserQuery accessToken={accessToken} onDetailClick={handleDetailClick} />
             </div>
-            <Routes>
-                {/* Ruta para la página /inicio/piece */}
-                <Route path='/detail' element={<PieceDetail />} />
-                {/* Otras rutas dentro de la página de inicio */}
-            </Routes>
+
 
         </>
 

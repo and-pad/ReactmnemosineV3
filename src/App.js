@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';//Comp
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
-
 import './App.css';//
 import { TopNavBar, SideBar } from './components/Home/HomeComponents/MenuTemplates';//Plantilla principal de la pagina
 
@@ -16,17 +15,20 @@ import '@fortawesome/fontawesome-free/css/all.min.css';//FontAwesome!!
 
 //Componente de consultas
 import { PiecesQueries } from './components/PiecesQueriesComponents/PiecesQueries';
+import { PieceDetail } from './components/PiecesQueriesComponents/PieceDetail'
 
+import { Inventory, Research, Restoration, Movements } from './components/PiecesQueriesComponents/details'
 
 //import "bootstrap/dist/css/bootstrap.css";
 //import "bootstrap/dist/js/bootstrap.bundle.js";
 
 
 
-const SearchPage = () => <h1>Search Page</h1>
+const SearchPage = () => <h6>Home Page</h6>
 //var token;
 
 function App() {
+
   //Variables para manejar el inicio de sesion tokenizado
   //Este consta de dos variables que nos brinda la librería JWTtoken
   //El funcionamiento esta definido para que con el refresh token
@@ -42,10 +44,7 @@ function App() {
   //
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
-  const [redirectLogin, setRedirectLogin] = useState(false); // Estado para la redireccióna login
-  const [redirectHome, setRedirectHome] = useState(false); //Estado para redirigir al Home
-
-
+  const [user, setUser] = useState('');
   // const [forceUpdate, setForceUpdate] = useState(false); // Estado para forzar la actualización
   //const [loginError, setLoginError] = useState(null);
 
@@ -53,14 +52,16 @@ function App() {
     //Intentamos tomar a las cookies de acceso pero no sabemos si existen
     var storedToken = Cookies.get('accessToken');
     var storedReToken = Cookies.get('refreshToken');
+    var storedUser = Cookies.get('User');
     try {//Revisamos si existe token de ingreso
       //Al intentar parsear a json es cuando ocurre el error ya que no se puede hacer parse sobre undefined
       const parsedToken = JSON.parse(storedToken);
       const parsedReToken = JSON.parse(storedReToken);
+      const parsedUser = JSON.parse(storedUser);
       //Se almacenan en el estado de react los tokens para procesarlos en las API's de acceso
       setAccessToken(parsedToken);
       setRefreshToken(parsedReToken);
-
+      setUser(parsedUser);
       //console.log("stored ", parsedToken);
       //console.log("stored Refresh ", parsedReToken);
     }
@@ -71,63 +72,113 @@ function App() {
       //console.log("Error", error);
     }
 
-  }, []);
+  }, [accessToken]);
   //setForceUpdate(prevState => !prevState);
-  var check;
-  const handleLogout = () => {
-    // Remover las cookies
-    check = true;
 
-    // console.log(check);
-    try {
+  const helperLoginCallBack = (response) => {
+    console.log('respbef', response);
+
+    if (response === 'not network2') {
+      console.log('not network2');
+    } else if (response === 'login_redirect' || response === 'not network1') {
+      console.log('response', response);
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
-      setAccessToken(null);
-      setRefreshToken(null);
-      //setForceUpdate(prevState => !prevState);
-    } catch (e) {
-      console.log('error', e);
+      Cookies.remove('User');
+      return false;
+    } else if ('access' in response) {
+      Cookies.set('accessToken', JSON.stringify(response.access));
+      return true;
+    } else if ('time_left' in response) {
+      console.log('time_left respo');
+      return true;
+    } else {
+      console.log('default', response);
+      return false;
     }
-    setRedirectLogin(true);
-    setRedirectHome(false);
+  };
+
+  /* Una vez ingresado en el sistema cada vista llama a esta funcion para identificarse
+     con el servidor.                                                     
+  ***********************************************************************************/
+  const handleCheckLoginCallback = async () => {
+    var response;
+    if (accessToken) {//si ya existe un token en el sistema solaamente lo enviamos para validarlo
+      console.log('accessYavenido', accessToken);
+      //checa la respuesta y devuelve un booleando.
+      response = await handleLoggedTime(accessToken, refreshToken);
+      console.log('aquires', response);
+
+      if ('user' in response && user !== '') {
+        setUser(response['user']);
+      }
+
+      const toOut = helperLoginCallBack(response);
+      console.log('toout', toOut);
+      return toOut;
+    } else {
+      //Consultamos la Cookie si esta accessToken    
+      const rAccess = Cookies.get('accessToken');
+      var tparsed = false;
+      if (rAccess !== undefined) {
+        tparsed = JSON.parse(rAccess);
+      }
+      console.log('tparsed', tparsed);
+      if (tparsed) {//consultamos refresh Token
+        var refresh = Cookies.get('refreshToken');
+        var Muser = Cookies.get('User');
+        Muser = JSON.parse(Muser);
+        refresh = JSON.parse(refresh);
+
+        //como no existian los ponemos en el sistema
+        setUser(Muser);
+        setAccessToken(tparsed)
+        setRefreshToken(refresh);
+        if (refresh !== undefined) {//comprobamos si no viene vacío refresh
+          const acesstoSend = tparsed;
+          console.log('acesstoSend', acesstoSend);
+          //mandamos a la comprobacion de servidor los tokens existentes en la cookie.
+          response = await handleLoggedTime(acesstoSend, refresh);
+          console.log('Logged', refresh);
+          //regresamos un booleano que viene de la comprobacion de response
+          return helperLoginCallBack(response);
+          //si refresh es undefined quiere decir q  ue no existe la cookie regresamos false para la comprobacion de registro
+        } else { return false; }
+      } else { return false; }
+    }
+
   };
 
   //Esta funcion se ejecuta al precionar el boton para ingresar al sistema
   //esta intenta comunicarse con el servidor para obtener los tokens de login
-  //
+
   const handleLoginCallback = async ({ email, password }) => {
     // Si ya hay un token almacenado en la cookie, no es necesario obtener uno nuevo  
-
     if (accessToken) {
-      //console.log('if access token');
-
-      var response = await handleLoggedTime({ accessToken, refreshToken });
-      //console.log('response', response);
+      var response = await handleLoggedTime(accessToken, refreshToken);
       //si viene time_left, regresamos el tiempo de sobra del token      
       //si viene esta respuesta quiere decir que no se pudo conectar con el refreshToken entonces hay que redirigir a la url de login para
       //renovar tokens
-      if (response === 'login_redirect' || response === 'error') {
+      if (response === 'login_redirect' || response === 'not network') {
         //console.log('navigate');
+        console.log('cookiesRem');
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
         // Forzar una actualización de la interfaz de usuario
         //setForceUpdate(prevState => !prevState);
         setAccessToken(null);
         setRefreshToken(null);
-        setRedirectLogin(true);
+
         return;
 
       } else {
         //si viene una de estas dos etiquetas el token access esta funcionando, ya sea porque se actualizo o aun tenia vigencia el actual
         if ('access' in response || 'time_left' in response) {
-          setRedirectLogin(false);
+
           return response;
         }
-
       }
-
     }
-
     else {
 
       // Si no hay un token almacenado, obtener uno nuevo      
@@ -135,55 +186,66 @@ function App() {
       if (token !== 'not authenticated' && token !== 'not network') {
         setAccessToken(token.access);
         setRefreshToken(token.refresh);
-
+        setUser(token.user);
       } else {
         if (token === 'not network') {
           console.error('No hay internet, o el servidor no responde');
         }
-
       }
       return token;
     }
-
   };
 
-  const isLoggedIn = accessToken !== null;
-  //console.log('acs', accessToken);
-  // console.log('dsd', check);
-  if (check === true) {
-    console.log('set redirect');
-    setRedirectLogin(true);
-  }
+  const handleDetailClick = ({ row }) => {
+    console.log('row', row._id[0]);
+    //return (<Navigate to='/login' />); // Navega a la ruta '/detail'
 
+
+
+  };
 
   return (
     <div className='App'>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Navigate to='/login' />} />
-          <Route path='/login' element={<Login onLogin={handleLoginCallback} setAccessToken={setAccessToken} setRedirectHome={setRedirectHome} setRedirectLogin={setRedirectLogin} />} />
+          <Route path='/login' element={
+            <Login
+              onLogin={handleLoginCallback}
+              setAccessToken={setAccessToken}
 
-          <Route path='/piece_queries//*' element={<PrivateRoute element={
-            <>
-              <TopNavBar />
-              <div className="containers">
-                <SideBar />
-                <div className="MainContent">
-                  <PiecesQueries accessToken={accessToken} />
-                </div>
+              accessToken={accessToken}
+            />} />
 
-              </div>
-            </>
-          } authenticated={isLoggedIn} />} />
+          <Route path='/mnemosine' element={<PrivateRoute element={
+            <TopNavBar user={user} />
+          }
+            checkLogin={handleCheckLoginCallback}
+          />} >
+            <Route path="/mnemosine" element={<h6>Home Page</h6>} />
+            <Route path='piece_queries' element={
+              <PiecesQueries accessToken={accessToken} onDetailClick={handleDetailClick} />
+            } />
+
+            <Route path="piece_queries/detail/:_id" element={<PieceDetail accessToken={accessToken} />}>
+
+              <Route path="inventory" element={<Inventory />} />
+              <Route path="research" element={<Research />} />
+              <Route path="restoration" element={<Restoration />} />
+              <Route path="movements" element={<Movements />} />
+
+            </Route>
+
+
+          </Route>
           <Route path='/test/' element={SearchPage()} />
         </Routes>
 
-        {redirectHome && <Navigate to="/piece_queries" />}
-        {redirectLogin && <Navigate to="/login" />}
       </BrowserRouter>
     </div>
   );
 }
-
+/*
+{ redirectDetail && <Navigate to={`/piece_queries/detail/${encodeURIComponent(Row)}`} /> }*/
 export default App;
 

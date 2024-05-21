@@ -1,14 +1,22 @@
 import Cookies from 'js-cookie';
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 //import { Navigate } from 'react-router-dom';
 //onLogin y setAccess ambas son funciones
-function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
+function Login({ onLogin, setAccessToken, accessToken }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [mensaje, setMensaje] = useState('');
-    //const [redirect, setRedirect] = useState(false); // Estado para la redirección
-    // const [redirectSigning, setRedirectSigning] = useState(false); // Estado para la redirección al login
+    const [redirect, setRedirect] = useState(false);
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (accessToken) {
+            navigate('/mnemosine');
+        }
+    }, [accessToken]);
 
     //Esta funcion se ejecuta cada que el campo email cambia (es precionada una tecla sobre el campo)
     const handleEmailChange = (e) => {
@@ -20,111 +28,80 @@ function Login({ onLogin, setAccessToken, setRedirectHome, setRedirectLogin }) {
     };
     //
     const handleSubmit = async (e) => {
+
         e.preventDefault();
 
         var token = await onLogin({ email, password });
         if (token === 'not authenticated') {
             setError('Usuario o contraseña incorrectos');
+            setAccessToken(false);
+            setRedirect(false);
         } else {
             // Guardar el token en una cookie
-            if (token !== undefined) {
-                if (token !== 'not network') {
-                    if ('refresh' in token) {
-                        // console.log('token guardado', token.access);
-                        Cookies.set('accessToken', JSON.stringify(token.access));
-                        //console.log('para cookie', token.refresh);
-                        Cookies.set('refreshToken', JSON.stringify(token.refresh));
-                    }
+            if (token !== undefined && token !== 'not network') {
+
+                if ('refresh' in token) {
+                    //respuesta de que viene un nuevo token refresh y access
+                    Cookies.set('accessToken', JSON.stringify(token.access));
+                    Cookies.set('refreshToken', JSON.stringify(token.refresh));
+                    Cookies.set('User', JSON.stringify(token.user));
+                    //setRedirectHome(true);
+                    //return true;
                 }
+
+            }
+            else {
+                setAccessToken(false);
             }
             // Si el token es diferente a 'not authenticated', limpiamos el error
             setError('');
 
             //console.log('antes de si pasa por set redirectHome');
             //console.log(token);
-            if (token !== undefined) {
-                if (token !== 'not network') {
-                    if ('access' in token) {
-                        //respuesta de que se renovo token
-                        if (!('refresh' in token)) {
-                            // console.log('antes de darle SetAccess', token.access);
-                            setAccessToken(token.access);
-                            Cookies.set('accessToken', JSON.stringify(token.access));
-                            //     console.log('si pasa por set redirectHome');
-                            setRedirectHome(true);
-                        } else {
-                            //      console.log('si pasa por set redirectHome else');
-                            setAccessToken(token.access);
-                            setRedirectHome(true);
-                        }
+            if (token !== undefined && token !== 'not network') {
+
+                if ('access' in token) {
+                    //respuesta de que se renovo token
+                    if (!('refresh' in token)) {
+                        // console.log('antes de darle SetAccess', token.access);
+                        setAccessToken(token.access);
+                        Cookies.set('accessToken', JSON.stringify(token.access));
+                        Cookies.set('User', JSON.stringify(token.user));
+
+                        //     console.log('si pasa por set redirectHome');
+                        setRedirect(true);
+
+                    } else {
+                        //console.log('si pasa por set redirectHome else');
+                        setAccessToken(token.access);
+                        setRedirect(true);
 
                     }
-                    else if (token === 'not network' || 'time_left' in token) {
-                        //respuesta de que aun tiene vigencia el token
-                        setRedirectHome(true);
-
-                    } else if (token === 'login_redirect') {
-                        setRedirectLogin(true);
-
-                    }
-
 
                 }
+                else if ('time_left' in token) {
+                    //respuesta de que aun tiene vigencia el token
+                    setRedirect(true);
+                    setAccessToken(token.access);
 
+
+                } else if (token === 'login_redirect') {
+
+                    setAccessToken(false);
+
+                }
 
             }
 
         }
 
-
-
-    };
-
-    // Función para activar la redirección
-    const redirectToHomePage = () => {
-        //  setRedirect(true);
     };
 
     useEffect(() => {
-        const fetchLogin = () => {
-            //console.log('useEffect LoginComponent');
-            return onLogin({ email: "user", password: "pass" }).catch(error => {
-                console.error('Error', error)
-                return null; // Si ocurre un error, retornar null para que el flujo continúe
-            });
-        };
-
-        fetchLogin().then(Token => {
-            if (Token !== 'not network') {
-                if (Token === 'not authenticated') {
-                    //console.log('Token', Token);
-                }
-
-
-
-                else if (Token && 'time_left' in Token) {
-                    //console.log('Token', Token);
-                    setRedirectHome(true);
-                    setRedirectLogin(false);
-                    //console.log('llega time left');
-
-                }//aqui nunca lo dejan llegar porque lo capturan antes pero por si acaso
-                else if (Token && 'access' in Token) {
-                    setAccessToken(Token.access);
-                    setRedirectHome(true);
-                    //  console.log('llega access');
-                    setRedirectLogin(false);
-                }
-            } else {
-                setMensaje('No hay internet, o el servidor no responde');
-
-            }
-
-
-        });
-    }, [onLogin, setAccessToken, setRedirectHome, setRedirectLogin, email, password]);
-
-
+        if (redirect) {
+            navigate('/mnemosine');
+        }
+    }, [redirect]);
     return (
         <div>
             <h2>Ingreso</h2>

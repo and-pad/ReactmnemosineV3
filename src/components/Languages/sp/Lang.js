@@ -2,6 +2,27 @@
 const research_keys = ['title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card'];*/
 
 const langData = {
+    StartMenu: {
+        home: 'Inicio',
+        queries: 'Consultas',
+        inventory: 'Inventario',
+        research: 'Investigación',
+        restoration: 'Restauración',
+        movements: 'Movimientos',
+        manage: 'Gestionar',
+        loans: 'Préstamos',
+        search: 'Buscar',
+        institutions: 'Instituciones',
+        contacts: 'Contactos',
+        expositions: 'Exposiciones',
+        venues: 'Sedes',
+        reports: 'Reportes',
+        appraisals: 'Avalúos',
+        users: 'Usuarios',
+        catalogs: 'Catalogos',
+        genders: 'Géneros',
+
+    },
     dataTableUserQueryNames: {
         inventory_number: 'No. inventario',
         catalog_number: 'No. catálogo',
@@ -35,7 +56,8 @@ const langData = {
         measure_with: 'Medidas con base/marco',
         measure_without: 'Medidas sin base/marco',
         photo_thumb_info: 'Foto',
-    }
+    },
+
 }
 
 export default langData;

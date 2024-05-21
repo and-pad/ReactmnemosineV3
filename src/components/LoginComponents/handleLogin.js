@@ -28,12 +28,12 @@ export var handleLogin = async ({ email, password }) => {
 
 };
 
-
-
-export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
+export var handleLoggedTime = async (accessToken, refreshToken) => {
     //Esta función maneja el accessToken y el refreshToken en funcion de mantener 
-    //actualizado y protegido el sistema siempre con un nuevo token, y un sistema de 
+    //actualizado y protegido el sistema siempre con un nuevo token, y un sistema de
     //doble tokenizado.
+    console.log('accessT', accessToken);
+    console.log('refresh', refreshToken);
     try {//intentamos hacer una llamada API al servidor para checar el token actual
         // console.log('acces que llega a handle', accessToken);
         //Si funciona este nos responde un json de nombre {'time_left':200.185} en segundos y fracciones,
@@ -90,16 +90,17 @@ export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
                         //console.log('rastreo access data', data);
                         return data;
                     } else {
+                        console.log('cookiesRem');
                         Cookies.remove('refreshToken');
                         Cookies.remove('accessToken');
                         /*Cookies.get('refreshToken');
                         Cookies.get('accessToken');*/
-                        return 'login_redirect'//<Navigate to="/" replace />;
+                        return 'login_redirect';//<Navigate to="/" replace />;
                     }
                 } catch (e) {
                     console.log(e);
                     //En caso que no se pueda renovar el refreshToken, redirigimos al login
-                    return 'not network';
+                    return 'not network1';
                 }
 
                 /*
@@ -119,7 +120,9 @@ export var handleLoggedTime = async ({ accessToken, refreshToken }) => {
         }
 
     } catch (error) {
-        return 'not network'
+        console.error(error);
+
+        return 'not network2'
         // Manejar errores de red
     }
 

@@ -1,5 +1,4 @@
 import { applyLogicToColumn } from "./columnDriver";
-import SETTINGS from "../Config/settings"
 
 const research_keys = ['title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card'];
 
@@ -51,14 +50,10 @@ function push_array_data(orderedData, column) {
     }
     else if (column === 'photo_thumb_info') {
         //  console.log('aqui si entra', orderedData);
-        if (orderedData) {
-            const AddrImgName = SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.thumbnails + orderedData['file_name'];
 
-            data_c.push(
-                <div key={column + 'xa'} className="text-center frameThmb">
-                    <img src={AddrImgName} width="66px" height="66px" />
-                </div>
-            );
+        if (orderedData && 'file_name' in orderedData) {
+
+            data_c.push(orderedData['file_name']);
             //       console.log('si', orderedData['file_name']);
         }
 
@@ -89,6 +84,7 @@ function structData(orderedData = null, column = null) {
         case 'description_inventory':
         case 'measure_with':
         case 'measure_without':
+        case '_id':
 
 
             return orderedData ? push_data(orderedData, column) : []; // Devuelve el resultado de push_data solo si orderedData no es nulo
@@ -148,17 +144,15 @@ export function ConstructElementsToHide(defColumns, size, hideConstructor = []) 
 
         out = omitingElements(size, hideConstructorLoc, defColumns);
         return out;
-
-
     }
 
 };
-export function formatData(Dataquery, size, isNeededApplyDefault, defColumnsUp = null, tableDataUp = null) {
+export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick, defColumnsUp = null, tableDataUp = null) {
 
     var StructuredData = [];
     var StructuredColumns = [];
 
-    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info'];
+    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info', "_id"];
 
     const orderedData = {};
     var defColumns = [];
@@ -169,6 +163,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, defColumnsUp =
             var data_column = {};
 
             order_columns.forEach((column, index) => {
+
                 if (column === 'measure_with') {
 
                     var measure_w = item['height_with_base'] + ' X ' + item['width_with_base'] + ' X ' + item['depth_with_base'] + ' ø' + item['diameter_with_base'];
@@ -189,6 +184,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, defColumnsUp =
                 else if (column in item) {
                     orderedData[column] = item[column];
                     data_column[column] = structData(orderedData[column], column);
+
 
                     if (column === 'description_origin') {
                         let Cdat = data_column[column][0];
@@ -243,6 +239,13 @@ export function formatData(Dataquery, size, isNeededApplyDefault, defColumnsUp =
                     else {
                         StructuredColumns.push(column);
                     }
+                    if (column === '_id') {
+                        let Cdat = data_column[column][0];
+                        // console.log('CdatID', Cdat);
+                        var htmldat = [];
+                        htmldat.push(Cdat);
+                        data_column[column][0] = htmldat;
+                    }
                 }
                 else {
                     orderedData[column] = null;
@@ -284,7 +287,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, defColumnsUp =
                 //compact: true,
             }
             //aplica los valores por default
-            columnProps = applyLogicToColumn(column, columnProps);
+            columnProps = applyLogicToColumn(column, columnProps, onDetailClick);
             //declara los valores que son para el expander component del datatables
             if (columnProps.show) {
                 hideConstructor.push(columnProps);
