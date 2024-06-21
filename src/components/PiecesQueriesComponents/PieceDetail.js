@@ -11,11 +11,10 @@ export const PieceDetail = ({ accessToken }) => {
     const navigate = useNavigate();
     useEffect(() => {
         const fetchDetail = async () => {
-
             var data;
             try {
 
-                const response = await fetch('http://127.0.0.1:8000/authenticated/user_query/detail/', {
+                const response = await fetch('http://192.168.1.105:8000/authenticated/user_query/detail/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -44,7 +43,7 @@ export const PieceDetail = ({ accessToken }) => {
                 navigate('/login');
             }
         });
-    }, [_id, accessToken, navigate]);
+    }, [_id, accessToken]);
 
 
     return (

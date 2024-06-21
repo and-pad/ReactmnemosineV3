@@ -26,28 +26,21 @@ export const filterSearch = (defColumns, tableData, filterText, rm_accents, uppe
             //some nos regresa true o false, para indicarle a filter si se incluira el termino en su busqueda
             return itemsToFilter.some(column => {
                 let columnValue = String(item[column]); // Convierte el valor a cadena de texto
-
-
                 // Si se requiere eliminar acentos
                 if (rm_accents) {
                     columnValue = removeAccents(columnValue);//Enviamos la variable a la función para remover acentos
                     handlefilterText = removeAccents(filterText);//Removemos los acentos de la caja de texto también por si los colocaron quitarlos
                 }
-
                 // Si no se requiere convertir a minúsculas
                 if (!upper_lower) {
                     //Normalmente no toma en cuenta las Mayuculas al habilitar este boton quita el lower case
                     columnValue = columnValue.toLowerCase();
                 }
-
                 // Búsqueda por palabra
                 if (wordComplete) {
                     const searchPattern = new RegExp(`(?:^|[^\\p{L}])${handlefilterText}(?:$|[^\\p{L}])`, !upper_lower ? 'iu' : 'u');
                     return searchPattern.test(columnValue);
                 }
-
-
-
                 // Verificar la inclusión
                 return columnValue.includes(upper_lower ? handlefilterText : handlefilterText.toLowerCase());
             });

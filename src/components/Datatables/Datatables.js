@@ -61,8 +61,6 @@ const ExpandableComponent = props => {
                                             </div>
                                         ))}
                                     </div>
-
-
                                 </div>
                             )
                                 :
@@ -314,7 +312,7 @@ export function DatatableUserQuery({ accessToken, onDetailClick }) {
     useEffect(() => {
         setFilteredTableData(filterSearch(defColumns, tableData, filterText, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks));
 
-    }, [tableData, filterText, defColumns, rm_accents, upper_lower, , wordComplete, checkboxSearchValues]);
+    }, [tableData, filterText, defColumns, rm_accents, upper_lower, wordComplete, checkboxSearchValues]);
 
     const subHeaderComponentMemo = useMemo(() => {
         return (

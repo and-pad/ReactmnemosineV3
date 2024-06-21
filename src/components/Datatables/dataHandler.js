@@ -492,7 +492,7 @@ const fetchAndCacheData = async (accessToken) => {
         },
     };
 
-    const response = await fetch('http://localhost:8000/authenticated/user_query/', requestOptions);
+    const response = await fetch('http://192.168.1.105:8000/authenticated/user_query/', requestOptions);
     const data = await response.json();
     const queryData = data.query;
 

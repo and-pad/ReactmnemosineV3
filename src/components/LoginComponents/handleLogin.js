@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 export var handleLogin = async ({ email, password }) => {
     // var data_response;
     try {
-        const response = await fetch('http://127.0.0.1:8000/auth/signin/', {
+        const response = await fetch('http://192.168.1.105:8000/auth/signin/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
         // console.log('acces que llega a handle', accessToken);
         //Si funciona este nos responde un json de nombre {'time_left':200.185} en segundos y fracciones,
         //la cantidad restante de tiempo de vida del token.
-        var response = await fetch('http://127.0.0.1:8000/auth/check/', {
+        var response = await fetch('http://192.168.1.105:8000/auth/check/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
                 //Intentamos hacer un fetch de refrescado de toquen
                 try {
                     //En esta url de api es para refrescar la el accessToken con el refreshToken
-                    response = await fetch('http://127.0.0.1:8000/auth/signin/', {
+                    response = await fetch('http://192.168.1.105:8000/auth/signin/', {
                         method: 'PUT',//En el metodo PUT es donde renovamos el accessToken
                         headers: {
                             'Content-Type': 'application/json',

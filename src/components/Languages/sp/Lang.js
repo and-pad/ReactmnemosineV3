@@ -57,6 +57,35 @@ const langData = {
         measure_without: 'Medidas sin base/marco',
         photo_thumb_info: 'Foto',
     },
+    //Si bien estan repetidos y pude haber usado los de datatables es mejor tenerlos por separado
+    //para que lleve mas orden
+    pieceDetailDescriptors: {
+        inventory: {
+            inventory_number: 'No. inventario',
+            catalog_number: 'No. catálogo',
+            origin_number: 'No. procedencia',
+            gender: 'Género',
+            subgenders_info: 'Subgénero',
+            type_object_info: 'Tipo de objeto',
+            dominant_material_info: 'Material dominante',
+            location_info: 'Ubicación',
+            tags: 'Mueble',
+            description_origin: 'Descripción de origen',
+            description_inventory: 'Descripción de inventario',
+            appraisal: "Avalúo",
+            departure_date: "Fecha de salida",
+            arrival_date: "Fecha de entrada",
+            measure_without: "Medidas sin base (cm)",
+            measure_with: "Medidas con base (cm)",
+            height: "Alto",
+            width: "Ancho",
+            depth: "Profundo",
+            diameter: "Diámetro",
+
+        }
+
+
+    }
 
 }
 
