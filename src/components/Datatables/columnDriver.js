@@ -16,7 +16,7 @@ const CustomTag = ({ row, column }) => {
     let Arrayelements;
     if (textColumn !== undefined) {
         Arrayelements = textColumn.split(",");
-    }
+    }//
     else { Arrayelements = [] };
     return (
         <div className="mt-2">
