@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import Datatable from 'react-data-table-component';
 import GoogleFontLoader from 'react-google-font-loader';
 import { formatData, fetchData, ConstructElementsToHide } from './dataHandler'; // Importamos fetchData
@@ -17,11 +17,11 @@ const ExpandableComponent = props => {
             fonts={[
                 {
                     font: 'Marko One',
-                    weights: [400],
+                    weights: [300],
                 },
                 {
                     font: 'Asap Condensed',
-                    weights: [500],
+                    weights: [300],
                 },
             ]}
         />
@@ -57,7 +57,7 @@ const ExpandableComponent = props => {
                                     <div className="d-flex flex-wrap" key={`${element.name + '1'}-${index}`} style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1.1em' }}>
                                         {Arrayelements.map((element, index) => (
                                             <div key={`${element}-${index}`} className="me-2 mb-2">
-                                                <a href='' style={{ textDecoration: 'none', height: '1.2em', paddingTop: '1px' }} className="badge rounded-pill text-bg-info">{element}</a>
+                                                <a href='#temp' style={{ textDecoration: 'none', height: '1.2em', paddingTop: '1px',  backgroundColor:"#1e80e1" }} className="badge rounded-pill text-dark ">{element}</a>
                                             </div>
                                         ))}
                                     </div>
@@ -92,7 +92,7 @@ const ExpandableComponent = props => {
     );
 };
 //var arrayTabColOut;
-export function DatatableUserQuery({ accessToken, onDetailClick }) {
+export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick }) {
     const [defColumns, setDefColumns] = useState([]);
     const [tableData, setTableData] = useState([]);
 
@@ -109,126 +109,142 @@ export function DatatableUserQuery({ accessToken, onDetailClick }) {
     const [wordComplete, setWordComplete] = useState(false);
 
     const [checkboxSearchValues, setCheckboxSearchValues] = useState('');
-    const [disableChecks, setdisbleChecks] = useState(true);
-
-
-    let timerId;
-    const handleResize = () => {
-        const width = window.innerWidth;
-        let newSize = size;
-
-        if (width >= 1463 && width < 2000) {
-            newSize = 11;
-        } else if (width >= 1249 && width < 1463) {
-            newSize = 9;
-        } else if (width >= 1040 && width < 1249) {
-            newSize = 7;
-        } else if (width >= 800 && width < 1040) {
-            newSize = 6;
-        }
-        else if (width >= 600 && width < 800) {
-            newSize = 5;
-        }
-        else if (width >= 550 && width < 600) {
-            newSize = 4;
-        }
-        else if (width >= 300 && width < 550) {
-            newSize = 3;
-        }
-        if (newSize !== size) {
-            clearTimeout(timerId);
-            timerId = setTimeout(() => {
-                setSize(newSize);
-            }, 1);
-        }
-    };
+    const [disableChecks, setdisbleChecks] = useState(true);   
+    
 
     //var size;
     /***************************************************************************** */
+    const timerIdRef = useRef();
     useEffect(() => {
+      
+        const handleResize = () => {
+            const width = window.innerWidth;
+            let newSize = size;
+            
+    
+            if (width >= 1463 && width < 2000) {
+                newSize = 11;
+            } else if (width >= 1249 && width < 1463) {
+                newSize = 9;
+            } else if (width >= 1040 && width < 1249) {
+                newSize = 7;
+            } else if (width >= 800 && width < 1040) {
+                newSize = 6;
+            }
+            else if (width >= 600 && width < 800) {
+                newSize = 5;
+            }
+            else if (width >= 550 && width < 600) {
+                newSize = 4;
+            }
+            else if (width >= 300 && width < 550) {
+                newSize = 3;
+            }
+            if (newSize !== size) {
+                clearTimeout(timerIdRef.current);
+                timerIdRef.current = setTimeout(() => {
+                    setSize(newSize);
+                }, 10);
+            }
+        };
         handleResize();
         window.addEventListener('resize', handleResize);
         return () => {
-            clearTimeout(timerId);
+            clearTimeout(timerIdRef.current);
             window.removeEventListener('resize', handleResize);
         };
-    }, [size]);
+    }, [size,timerIdRef ]);
 
     // var prop ;
     useEffect(() => {
+        const filtered = () => {
+            return filterSearch(defColumns, tableData, filterText, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks);
+     
+         };
         const fetchDataAndFormat = async () => {
-
             try {
-
-                var fetch;
-                var first;
+                let fetch;
+                let first;
                 if (dataQuery.length === 0) {
-                    fetch = await fetchData(accessToken);
+                    fetch = await fetchData(accessToken, refreshToken);
+                   // console.log(fetch);
                     setDataQuery(fetch);
                     first = true;
                 } else {
                     fetch = dataQuery;
                     first = false;
                 }
-                var arrayTabColOut;
+    
+                let arrayTabColOut;
+    
                 if (first) {
-
                     arrayTabColOut = formatData(fetch, size, true, onDetailClick);
-                    setFilteredTableData(arrayTabColOut[0])
-                } else {
+                    setFilteredTableData(arrayTabColOut[0]);
 
+                } else {
                     arrayTabColOut = formatData(dataQuery, size, false, onDetailClick, defColumns, tableData);
                 }
+    
+                // Guardar en estado local y actualizar referencias
                 setTableData(arrayTabColOut[0]);
-
                 setDefColumnsOut(arrayTabColOut[2]);
-                /***********************************************/
-                /*Comprobar si existe guardado de config
-                /******************************************** */
-                var getdefColumn = localStorage.getItem('showColumns');
-                // var getdefColumnOut = localStorage.getItem('showColumnsOut');
-                /*  Si no estan vacias las definiciones en el navegador se usan*/
-
+               // setArrayTabColOutState(arrayTabColOut); // Guardar en estado local
+    
+                // Actualizar almacenamiento local si es necesario
+                const getdefColumn = localStorage.getItem('showColumns');
                 if (getdefColumn === null || getdefColumn === 'undefined') {
-                    // Si no se toman del prellenado
-                    console.log('null');
+                    //console.log('null');
                     setDefColumns(arrayTabColOut[1]);
                     setDefColumnsOut(arrayTabColOut[2]);
-                    // Y se guardan en el navegador
                     localStorage.setItem('showColumns', JSON.stringify(arrayTabColOut[1]));
-
                 } else {
-                    console.log('not null');
-
+                //    console.log('not null');
                     const savedColumns = JSON.parse(getdefColumn);
-
                     const tdefColumn = arrayTabColOut[1];
                     tdefColumn.forEach((column, index) => {
-
-                        //   column.omit = savedColumns[index].omit;
                         column.show = savedColumns[index].show;
                         if (!savedColumns[index].show) {
                             column.omit = true;
                         }
-
                     });
-
                     setDefColumns(tdefColumn);
-                    console.log('tDef', tdefColumn, 'size', size);
                     const Cout = ConstructElementsToHide(tdefColumn, size);
-                    console.log('Cout', Cout);
                     setDefColumnsOut(Cout);
-
                 }
-
+    
             } catch (error) {
                 console.error('Error al procesar los datos:', error);
             }
         };
-
+    
         fetchDataAndFormat();
+        setFilteredTableData(filtered());
 
-    }, [accessToken, size]);
+          // Inicializar checkboxValues con valores predeterminados
+        // aqui podemos hacer un guardado de localstorage para traer los datos locales
+        // de que columnas se muestran
+        const Values = {};
+        //const initialValuesSearch = {};
+        defColumns.forEach(element => {
+            if (!element.show) {
+                Values[element.id] = false;
+                // initialValuesSearch[element.id] = false;
+            } else {
+                Values[element.id] = true;
+                //initialValuesSearch[element.id] = false;
+            }
+        });
+        setCheckboxValues(Values);
+        // setCheckboxSearchValues(initialValuesSearch);
+        //filtered();
+    }, [ accessToken, size, dataQuery, onDetailClick, checkboxSearchValues,disableChecks ,filterText,rm_accents,upper_lower,wordComplete,setTableData,setDefColumns ]);
+    
+    // Estado local para almacenar arrayTabColOut
+    
+    
+    // Puedes acceder a arrayTabColOutState donde lo necesites en el componente
+    
+    
 
     /*****************************************************************************
      *****************************************************************************/
@@ -247,7 +263,15 @@ export function DatatableUserQuery({ accessToken, onDetailClick }) {
         // console.log(checkboxSearchValues[id]);
 
     };
-    /******************************************************************************** */
+  
+    /*Effect para la busqueda*/
+   // useEffect(() => {
+        
+
+    //}, [tableData, filterText, defColumns, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks]);
+
+    const subHeaderComponentMemo = useMemo(() => {
+          /******************************************************************************** */
     // Función para manejar el cambio en el orden de las columnas
     // Objeto para almacenar el nuevo orden
     var hideConstructor = [];
@@ -278,16 +302,12 @@ export function DatatableUserQuery({ accessToken, onDetailClick }) {
             });
             setDefColumns(updatedColumns);
             setDefColumnsOut([]);
-            //esto es necesario para guardar el selector que es una funcion, como cadena
-
-            //console.log('stringify', JSON.stringify(updatedColumns));
+            //esto es necesario para guardar el selector que es una funcion, como cadena        
             localStorage.setItem('showColumns', JSON.stringify(updatedColumns));
-            // localStorage.setItem('showColumnsOut', '');
-
         }
 
         var out;
-        // console.log('hdC', hideConstructor);
+        
         if (hideConstructor.length >= size) {
             let quitElements = hideConstructor.length - size;
             quitElements = (quitElements + 1) * -1;
@@ -308,13 +328,6 @@ export function DatatableUserQuery({ accessToken, onDetailClick }) {
         }
     };
 
-    /*Effect para la busqueda*/
-    useEffect(() => {
-        setFilteredTableData(filterSearch(defColumns, tableData, filterText, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks));
-
-    }, [tableData, filterText, defColumns, rm_accents, upper_lower, wordComplete, checkboxSearchValues]);
-
-    const subHeaderComponentMemo = useMemo(() => {
         return (
             <div className="container-fluid ">
                 <div className="row justify-content-center">
@@ -344,29 +357,8 @@ export function DatatableUserQuery({ accessToken, onDetailClick }) {
             </div>
         );
 
-    }, [filterText, checkboxValues, checkboxSearchValues, disableChecks]);
-    // Ejecutar SelectColumn al inicio del programa
-    // console.log('tableData', tableData);
-    useEffect(() => {
-        // Inicializar checkboxValues con valores predeterminados
-        // aqui podemos hacer un guardado de localstorage para traer los datos locales
-        // de que columnas se muestran
-        const Values = {};
-        //const initialValuesSearch = {};
-        defColumns.forEach(element => {
-            if (!element.show) {
-                Values[element.id] = false;
-                // initialValuesSearch[element.id] = false;
-            } else {
-                Values[element.id] = true;
-                //initialValuesSearch[element.id] = false;
-            }
-        });
-        setCheckboxValues(Values);
-        // setCheckboxSearchValues(initialValuesSearch);
-
-    }, [defColumns]);
-
+    }, [filterText, checkboxValues, checkboxSearchValues, disableChecks, defColumns ,size]);
+    
     return (
         <div className="container-fluid  mt-3">
 
@@ -401,6 +393,5 @@ export function DatatableUserQuery({ accessToken, onDetailClick }) {
                 theme={'dark'}
             />
         </div>
-
     );
 }

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+
 import { Link, Outlet } from 'react-router-dom';
 import langData from '../../Languages/sp/Lang';
-
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import './MenuTemplates.css'; // Asegúrate de importar los estilos CSS
 //import "bootstrap/dist/css/bootstrap.min.css";
 //import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -19,8 +19,10 @@ export function TopNavBar({ user }) {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul className="navbar-nav">
-                            <li className="nav-item ">
-                                <Link to="/mnemosine" className="nav-link  text-white" aria-current="page" >{langData.StartMenu.home}</Link>
+                            <li className="nav-item">
+                                <Link to="/mnemosine/start" className="nav-link text-white" aria-current="page">
+                                    <i className="bi bi-eyeglasses"></i> {langData.StartMenu.home}
+                                </Link>
                             </li>
                             <li className="nav-item">
                                 <Link to="/mnemosine/piece_queries" className="nav-link text-white" >{langData.StartMenu.queries}</Link>
@@ -36,9 +38,9 @@ export function TopNavBar({ user }) {
                             </li>
 
                             <li className="nav-item dropdown">
-                                <a className="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div className="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     {langData.StartMenu.movements}
-                                </a>
+                                </div>
                                 <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownMenuLink">
                                     <li><Link to='/mnemosine/movements/manage' className="dropdown-item" >{langData.StartMenu.manage}</Link></li>
                                     <li><Link to='/mnemosine/movements/loans' className="dropdown-item" >{langData.StartMenu.loans}</Link></li>
@@ -56,7 +58,7 @@ export function TopNavBar({ user }) {
                                 <Link to='/mnemosine/appraisals' className="nav-link text-white" >{langData.StartMenu.appraisals}</Link>
                             </li>
 
-                            <span class="navbar-text">
+                            <span className="navbar-text">
                                 Usuario conectado: {user}
                             </span>
                         </ul>

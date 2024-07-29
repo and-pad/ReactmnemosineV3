@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Tooltip } from 'react-tooltip';
+import langData from '../../Languages/sp/Lang';
 
 const removeAccents = (str) => {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -53,11 +55,9 @@ export const filterSearch = (defColumns, tableData, filterText, rm_accents, uppe
     return filteredItems;
 };
 
-
 export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkboxSearchValues, handleCheckboxChange, setRmAccents, setUpperLower, disableChecks, setdisbleChecks, setWordComplete }) => {
     //const [searchText, setSearchText] = useState('');
     const [checks, setChecks] = useState([]);
-
 
     useEffect(() => {
         const checksList = columns.map((element, index) => {
@@ -92,11 +92,9 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
     if (modP !== 0) {
         numPerColumn += modP;
     }
-
     // Dividiendo la lista de checks en dos sublistas
     const checksFirstColumn = checks.slice(0, numPerColumn);
     const checksSecondColumn = checks.slice(numPerColumn);
-
 
     return (
         <>
@@ -105,12 +103,11 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                     <input
                         style={{ fontFamily: 'Asap Condensed', height: '1.6em' }}
                         type="text"
-                        className="form-control"
+                        className="form-control "
                         onChange={onFilter}
                         id="search"
                         placeholder={placeholder}
                         value={filterText}
-
                     />
                 </div>
                 <button type="button" className="btn btn-primary pb-4 pt-0 ms-2 me-3" style={{ fontFamily: 'Asap Condensed', height: '1.6em' }} data-bs-toggle="collapse" data-bs-target="#AdvancedSearch">Busqueda avanzada</button>
@@ -121,7 +118,10 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                     <div className="d-flex justify-content-between " style={{ color: 'whitesmoke', background: '#daebff', borderRadius: '5px' }}>
                         <div className="d-flex ms-1" style={{ fontFamily: 'Asap Condensed', fontSize: '.9em', flex: '1' }}>
 
-                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Busca solo en los campos seleccionados, si no hay ninguno seleccionado se seguira buscando en todos">
+                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2"  data-tooltip-id="selection-tooltip"
+                      data-tooltip-content={langData.dataTablesSearch.tooltip_selection}
+                      data-tooltip-place="top">
+                        <Tooltip id="selection-tooltip" />
                                 <input
                                     style={{ width: '1.8em' }}
                                     className="form-check-input mt-1 "
@@ -129,11 +129,15 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                                     id="flexSwitchCheckDefault1"
                                     onChange={() => setdisbleChecks(prevState => !prevState)}
                                 />
-                                <label className="form-check-label " htmlFor="flexSwitchCheckDefault1">Busqueda por selección</label>
+                                <label className="form-check-label " htmlFor="flexSwitchCheckDefault1">{langData.dataTablesSearch.search_by_selection}</label>
                             </div>
-
-
-                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hacer coincidir sin acentos">
+                            
+                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2" 
+                            data-tooltip-id="accents-tooltip"
+                            data-tooltip-content={langData.dataTablesSearch.tooltip_accents}
+                            data-tooltip-place="top"                            
+                             >
+                                <Tooltip id="accents-tooltip" />
                                 <input
                                     style={{ width: '1.8em' }}
                                     className="form-check-input mt-1 "
@@ -144,7 +148,12 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                                 <label className="form-check-label " htmlFor="flexSwitchCheckDefault1">áa</label>
                             </div>
 
-                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hacer coincidir mayúsculas y minúsculas">
+                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2"
+                            data-tooltip-id="upper-tooltip"
+                            data-tooltip-content={langData.dataTablesSearch.tooltip_upper_lower}
+                            data-tooltip-place="top"    
+                             >
+                            <Tooltip id="upper-tooltip" />
                                 <input
                                     style={{ width: '1.8em' }}
                                     className="form-check-input mt-1"
@@ -155,7 +164,12 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                                 <label className="form-check-label" htmlFor="flexSwitchCheckDefault2">Aa</label>
                             </div>
 
-                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Hacer coincidir palabras completas">
+                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2"
+                            data-tooltip-id="whole-tooltip"
+                            data-tooltip-content={langData.dataTablesSearch.tooltip_whole_word}
+                            data-tooltip-place="top"
+                            >
+                                <Tooltip id="whole-tooltip" />
                                 <input
                                     style={{ width: '1.8em' }}
                                     className="form-check-input mt-1"
@@ -165,10 +179,7 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                                 />
                                 <label className="form-check-label" htmlFor="flexSwitchCheckDefault2">Palabra</label>
                             </div>
-
-
                         </div>
-
                     </div>
                     <div className="d-flex flex-wrap">
                         <div className="d-flex flex-column" style={{ flex: '1' }}>
@@ -183,8 +194,6 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
         </>
     );
 };
-
-
 
 export const SelectColumn = ({ handleChange, columns, checkboxValues, }) => {
 
@@ -263,10 +272,6 @@ export const SelectColumn = ({ handleChange, columns, checkboxValues, }) => {
                     </div>
                 </div>
             </div>
-
         </>
-
     );
-
 };
-

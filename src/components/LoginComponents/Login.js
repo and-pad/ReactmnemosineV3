@@ -7,16 +7,16 @@ function Login({ onLogin, setAccessToken, accessToken }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [mensaje, setMensaje] = useState('');
+    
     const [redirect, setRedirect] = useState(false);
     const navigate = useNavigate();
 
 
     useEffect(() => {
         if (accessToken) {
-            navigate('/mnemosine');
+            navigate('/mnemosine/start');
         }
-    }, [accessToken]);
+    }, [accessToken, navigate]);
 
     //Esta funcion se ejecuta cada que el campo email cambia (es precionada una tecla sobre el campo)
     const handleEmailChange = (e) => {
@@ -99,9 +99,9 @@ function Login({ onLogin, setAccessToken, accessToken }) {
 
     useEffect(() => {
         if (redirect) {
-            navigate('/mnemosine');
+            navigate('/mnemosine/start');
         }
-    }, [redirect]);
+    }, [redirect, navigate]);
     return (
         <div>
             <h2>Ingreso</h2>
@@ -118,7 +118,7 @@ function Login({ onLogin, setAccessToken, accessToken }) {
                 </div>
                 <button type="submit">Login</button>
             </form>
-            <div>{mensaje}</div>
+            <div>{}</div>
         </div>
     );
 }

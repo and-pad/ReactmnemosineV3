@@ -1,11 +1,14 @@
 import Cookies from 'js-cookie';//Librería para el manejo de cookies 
 import React, { useState, useEffect } from 'react';//react, y sus componentes
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';//Componentes de rutas de react de single page
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
-import './App.css';//
-import { TopNavBar, SideBar } from './components/Home/HomeComponents/MenuTemplates';//Plantilla principal de la pagina
+
+
+import './App.css';
+import { TopNavBar } from './components/Home/HomeComponents/MenuTemplates';//Plantilla principal de la pagina
 
 import Login from './components/LoginComponents/Login';//Componente del Login
 import PrivateRoute from './components/PrivateRouteComponent'; // Importa el componente PrivateRoute para el acceso con contraseña
@@ -48,6 +51,7 @@ function App() {
   // const [forceUpdate, setForceUpdate] = useState(false); // Estado para forzar la actualización
   //const [loginError, setLoginError] = useState(null);
 
+
   useEffect(() => {
     //Intentamos tomar a las cookies de acceso pero no sabemos si existen
     var storedToken = Cookies.get('accessToken');
@@ -77,20 +81,35 @@ function App() {
 
   const helperLoginCallBack = (response) => {
     console.log('respbef', response);
-
+    //filtramos la respuesta, si viene access o time_left esta authenticado
     if (response === 'not network2') {
-      console.log('not network2');
+      //si no hay internet o no responde el servidor igual quitamos las cookies de ingreso por seguridad
+      //console.log('not network2');
+      Cookies.remove('accessToken');
+      Cookies.remove('refreshToken');
+      Cookies.remove('User');
+      setAccessToken(null);
+      setRefreshToken(null);
+      return false;
     } else if (response === 'login_redirect' || response === 'not network1') {
-      console.log('response', response);
+      // Si llega login_redirect es porque ya no esta activo el usuario
+      //borramos cookies
+      //console.log('response', response);
+      setAccessToken(null);
+      setRefreshToken(null);
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
       Cookies.remove('User');
       return false;
     } else if ('access' in response) {
+      //Solo cambiamos la cookie access, que fue la que se renovo, las otras cookies siguen igual
+      console.log("se esta cambiando ", response.access);
       Cookies.set('accessToken', JSON.stringify(response.access));
+      setAccessToken(response.access);
       return true;
     } else if ('time_left' in response) {
-      console.log('time_left respo');
+      //Aqui no hay nada que hacer mas que regreasar true, si hay time_left es porque a la cookie le queda tiempo
+      //console.log('time_left respo');
       return true;
     } else {
       console.log('default', response);
@@ -104,13 +123,14 @@ function App() {
   const handleCheckLoginCallback = async () => {
     var response;
     if (accessToken) {//si ya existe un token en el sistema solaamente lo enviamos para validarlo
-      console.log('accessYavenido', accessToken);
+      //console.log('accessYavenido', accessToken);
       //checa la respuesta y devuelve un booleando.
       response = await handleLoggedTime(accessToken, refreshToken);
-      console.log('aquires', response);
+      //console.log('aquires', response);
 
-      if ('user' in response && user !== '') {
+      if (typeof response === 'object' && response !== null && 'user' in response && response.user !== '') {
         setUser(response['user']);
+
       }
 
       const toOut = helperLoginCallBack(response);
@@ -164,6 +184,7 @@ function App() {
         console.log('cookiesRem');
         Cookies.remove('accessToken');
         Cookies.remove('refreshToken');
+        Cookies.remove('User')
         // Forzar una actualización de la interfaz de usuario
         //setForceUpdate(prevState => !prevState);
         setAccessToken(null);
@@ -196,12 +217,10 @@ function App() {
     }
   };
 
+
   const handleDetailClick = ({ row }) => {
     console.log('row', row._id[0]);
     //return (<Navigate to='/login' />); // Navega a la ruta '/detail'
-
-
-
   };
 
   return (
@@ -213,31 +232,36 @@ function App() {
             <Login
               onLogin={handleLoginCallback}
               setAccessToken={setAccessToken}
-
               accessToken={accessToken}
             />} />
 
-          <Route path='/mnemosine' element={<PrivateRoute element={
+          <Route path='/mnemosine' element={
             <TopNavBar user={user} />
-          }
-            checkLogin={handleCheckLoginCallback}
-          />} >
-            <Route path="/mnemosine" element={<h6>Home Page</h6>} />
-            <Route path='piece_queries' element={
-              <PiecesQueries accessToken={accessToken} onDetailClick={handleDetailClick} />
-            } />
+          }>
+            <Route path='/mnemosine/start' element={<div>Start</div>} />
+            <Route path='piece_queries' element={<PrivateRoute element={
 
-            <Route path="piece_queries/detail/:_id" element={<PieceDetail accessToken={accessToken} />}>
+              <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} />
+            } checkLogin={handleCheckLoginCallback}
+           /> } /> 
 
-              <Route path="inventory" element={<Inventory />} />
-              <Route path="research" element={<Research />} />
-              <Route path="restoration" element={<Restoration />} />
-              <Route path="movements" element={<Movements />} />
+            <Route path="piece_queries/detail/:_id/" element={ <PrivateRoute element={
+              
+              <PieceDetail accessToken={accessToken} refreshToken={refreshToken} />
 
+            } checkLogin={handleCheckLoginCallback}
+             /> } >
+              <Route index element={<Navigate to="inventory" />} />
+              <Route path="inventory" element={<PrivateRoute element={<Inventory />} checkLogin={handleCheckLoginCallback} />}/>
+              <Route path="research" element={<PrivateRoute element={<Research />} checkLogin={handleCheckLoginCallback} />} />
+              <Route path="restoration" element={<PrivateRoute element={<Restoration />} checkLogin={handleCheckLoginCallback} /> } />
+              <Route path="movements" element={<PrivateRoute element={<Movements />} checkLogin={handleCheckLoginCallback} /> } />
             </Route>
 
 
           </Route>
+
+
           <Route path='/test/' element={SearchPage()} />
         </Routes>
 

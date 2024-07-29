@@ -1,6 +1,6 @@
 import langData from '../Languages/sp/Lang';
 import SETTINGS from "../Config/settings";
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 
 
 const CustomCell = ({ row, column }) => (
@@ -22,7 +22,7 @@ const CustomTag = ({ row, column }) => {
         <div className="mt-2">
             {Arrayelements.map((element, index) => (
                 <div key={`${element}-${index}`}>
-                    <a href='' style={{ textDecoration: 'none', height: '1.2em', paddingTop: '1px' }} className="badge rounded-pill text-bg-info ">{element}</a>
+                    <div style={{ textDecoration: 'none', height: '1.2em', paddingTop: '1px', backgroundColor: '#1e80e1' }} className="badge rounded-pill text-dark ">{element}</div>
                     <div style={{ height: '.2em' }}></div>
                 </div>
             ))}
@@ -31,8 +31,7 @@ const CustomTag = ({ row, column }) => {
 };
 
 const detailClick = ({ row, navigate }) => {
-    //console.log('row', row._id[0]);
-    navigate(`/mnemosine/piece_queries/detail/${encodeURIComponent(row._id[0])}`);
+    navigate(`/mnemosine/piece_queries/detail/${encodeURIComponent(row._id[0])}/inventory`);
 };
 
 // `/piece_queries/detail / ${ encodeURIComponent(Row) }`
@@ -55,7 +54,7 @@ const CustomPhoto = ({ row, column, onDetailClick }) => {
                 </div>
 
                 <div key={fileName + column} className="text-center frameThmb" style={{ width: "100px" }}>
-                    <img src={AddrImgName} />
+                    <img alt="Thumbnail" src={AddrImgName} />
                 </div>
             </div>
         </>

@@ -1,5 +1,5 @@
 import { applyLogicToColumn } from "./columnDriver";
-
+import SETTINGS from "../Config/settings";
 const research_keys = ['title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card'];
 
 function push_data(orderedData, column) {
@@ -56,7 +56,6 @@ function push_array_data(orderedData, column) {
             data_c.push(orderedData['file_name']);
             //       console.log('si', orderedData['file_name']);
         }
-
     }
 
     else {
@@ -147,7 +146,7 @@ export function ConstructElementsToHide(defColumns, size, hideConstructor = []) 
     }
 
 };
-export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick, defColumnsUp = null, tableDataUp = null) {
+export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick, defColumnsUp = null, tableDataUp = null ){
 
     var StructuredData = [];
     var StructuredColumns = [];
@@ -185,35 +184,35 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                     orderedData[column] = item[column];
                     data_column[column] = structData(orderedData[column], column);
 
-
+                    var htmldat = [];
                     if (column === 'description_origin') {
                         let Cdat = data_column[column][0];
-                        var htmldat = [];
+                        htmldat = [];
                         htmldat.push(Cdat);
                         data_column[column][0] = htmldat;
                     }
                     if (column === 'description_inventory') {
                         let Cdat = data_column[column][0];
-                        var htmldat = [];
+                        htmldat = [];
                         htmldat.push(Cdat);
 
                         data_column[column][0] = htmldat;
                     }
                     if (column === 'subgenders_info') {
                         let Cdat = data_column[column][0];
-                        var htmldat = [];
+                        htmldat = [];
                         htmldat.push(Cdat);
                         data_column[column][0] = htmldat;
                     }
                     if (column === 'type_object_info') {
                         let Cdat = data_column[column][0];
-                        var htmldat = [];
+                        htmldat = [];
                         htmldat.push(Cdat);
                         data_column[column][0] = htmldat;
                     }
                     if (column === 'location_info') {
                         let Cdat = data_column[column][0];
-                        var htmldat = [];
+                        htmldat = [];
                         htmldat.push(Cdat);
                         data_column[column][0] = htmldat;
                     }
@@ -242,7 +241,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                     if (column === '_id') {
                         let Cdat = data_column[column][0];
                         // console.log('CdatID', Cdat);
-                        var htmldat = [];
+                        htmldat = [];
                         htmldat.push(Cdat);
                         data_column[column][0] = htmldat;
                     }
@@ -301,10 +300,12 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
 
     } else {
 
-        if (defColumnsUp !== null) {
-            out = ConstructElementsToHide(defColumnsUp, size)
-            tableData = [...tableDataUp];
+        if (defColumnsUp !== null  ) {
+            out = ConstructElementsToHide(defColumnsUp, size) ;          
+           
+           
             defColumns = [...defColumnsUp];
+            tableData = [...tableDataUp];
             // console.log('tabledataUP', out);
         }
 
@@ -323,6 +324,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
     //console.log('StructuredData', StructuredData);
     //console.log('tableData', tableData);
     TabColOut.push(tableData);
+    
     TabColOut.push(defColumns);
     TabColOut.push(out);
     // console.log('tabledataOUT', out);
@@ -380,7 +382,10 @@ export const saveToCache = (dataQuery) => {
             transaction = db.transaction([storageName], 'readwrite');
             store = transaction.objectStore(storageName);
             const putRequest = store.put(JSON.stringify(dataQuery), dataName);
-            store.put(new Date().getTime() + 1 * 60 * 60 * 1000, queryDateName);
+            //le agregamos mas una hora en milisegundos, es el tiempo que dura vivo el dato
+            const OneHour =  1 * 60 * 60 * 1000;
+            store.put(new Date().getTime() + OneHour, queryDateName);
+            
             putRequest.onsuccess = function () {
                 db.close(); // Cerrar la base de datos después de completar la operación
                 resolve('query saved');
@@ -483,7 +488,7 @@ const getDataFromCache = async () => {
     }
 };
 
-const fetchAndCacheData = async (accessToken) => {
+const fetchAndCacheData = async (accessToken, refreshToken) => {
     const requestOptions = {
         method: 'GET',
         headers: {
@@ -491,29 +496,69 @@ const fetchAndCacheData = async (accessToken) => {
             'Authorization': `Bearer ${accessToken}`
         },
     };
+    const url = SETTINGS.URL_ADDRESS.server_url_commands + 'authenticated/user_query/';
+    const response = await fetch(url, requestOptions);
+    var data;
+    var queryData;
+    if (response.ok) {
+         data = await response.json();
+        // console.log("data ptm",data);
+         queryData = data.query;
+        
+    } else {
+        const errorData = await response.json();
+        if (errorData.code === "token_not_valid") {
 
-    const response = await fetch('http://192.168.1.105:8000/authenticated/user_query/', requestOptions);
-    const data = await response.json();
-    const queryData = data.query;
+            try {
+                //En esta url de api es para refrescar la el accessToken con el refreshToken
+                const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/signin/';
+                const response2 = await fetch(url, {
+                    method: 'PUT',//En el metodo PUT es donde renovamos el accessToken
+                    headers: {
+                        'Content-Type': 'application/json',
+                        /* 'Authorization': `Bearer ${accessToken}`,*/
+
+                    },
+                    body: JSON.stringify({ 'refresh': refreshToken }),//ponemos el RefreshToken en el body para que intente hacer la renovacion                        
+                });
+
+                //console.log({ refresh: refreshToken });
+                if (response2.ok) {
+                    //Esperamos a que nos de respuesta y lo convertimos en un objeto json.
+                    //viene un json con un elemento llamado "access" que es el nuevo accessToken con tiempo renovado
+                    const data2 = await response2.json();
+                    //console.log('rastreo access data', data);
+                    return data2;
+                } 
+
+            } catch (e) {
+                console.log(e);
+                //En caso que no se pueda renovar el refreshToken, redirigimos al login
+                return 'not network1';
+            }
+        }
+    }
 
     try {
         await saveToCache(queryData); // Guardamos los datos en la caché
+      //  console.log("quewryData",queryData);
         return queryData; // Devolvemos los datos obtenidos
     } catch (error) {
-        console.error('Error al guardar datos en la caché:', error);
+        console.error('Error trying to save the data to cache :', error);
         throw error; // Relanzamos el error para que se maneje en un nivel superior
     }
-};
 
-export const fetchData = async (accessToken) => {
+}
+
+export const fetchData = async (accessToken, refreshToken) => {
     try {
         const cachedData = await getDataFromCache();
-        console.log('Datos recuperados de la caché:');
+        console.log('Data get from cache...');
         return cachedData;
     } catch (error) {
-        console.log('No hay datos almacenados en la caché. Obteniendo datos del servidor...');
-        const freshData = await fetchAndCacheData(accessToken);
-        console.log('Datos obtenidos del servidor y guardados en la caché:', freshData);
+        console.log('No data cached. Obtaining data from server...');
+        const freshData = await fetchAndCacheData(accessToken, refreshToken);
+        console.log('Data obtained from server and saved to cache:', freshData);
         return freshData;
     }
 };

@@ -1,11 +1,13 @@
 
 //import { Navigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import SETTINGS from '../Config/settings';
 
 export var handleLogin = async ({ email, password }) => {
     // var data_response;
     try {
-        const response = await fetch('http://192.168.1.105:8000/auth/signin/', {
+        const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/signin/';
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -14,7 +16,7 @@ export var handleLogin = async ({ email, password }) => {
         });
         const data = await response.json();
         if (response.ok) {
-            //refresh y access
+            //refresh, access y Nombre de usuario
             return data;
         } else {
             // Manejar errores de autenticación
@@ -38,7 +40,8 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
         // console.log('acces que llega a handle', accessToken);
         //Si funciona este nos responde un json de nombre {'time_left':200.185} en segundos y fracciones,
         //la cantidad restante de tiempo de vida del token.
-        var response = await fetch('http://192.168.1.105:8000/auth/check/', {
+        const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/check/';
+        var response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,7 +75,8 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
                 //Intentamos hacer un fetch de refrescado de toquen
                 try {
                     //En esta url de api es para refrescar la el accessToken con el refreshToken
-                    response = await fetch('http://192.168.1.105:8000/auth/signin/', {
+                    const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/signin/';
+                    response = await fetch(url, {
                         method: 'PUT',//En el metodo PUT es donde renovamos el accessToken
                         headers: {
                             'Content-Type': 'application/json',

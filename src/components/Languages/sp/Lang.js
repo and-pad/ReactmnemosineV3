@@ -23,6 +23,14 @@ const langData = {
         genders: 'Géneros',
 
     },
+    dataTablesSearch:{
+        search_by_selection: "Busqueda por selección",
+        tooltip_selection: "Busca solo en los campos seleccionados",
+        tooltip_accents:"Hacer coincidir sin acentos",
+        tooltip_upper_lower:"Hacer coincidir mayúsculas y minúsculas",
+        tooltip_whole_word: "Hacer coincidir solo palabras completas"
+
+    },
     dataTableUserQueryNames: {
         inventory_number: 'No. inventario',
         catalog_number: 'No. catálogo',
@@ -68,13 +76,68 @@ const langData = {
             subgenders_info: 'Subgénero',
             type_object_info: 'Tipo de objeto',
             dominant_material_info: 'Material dominante',
+            set: 'Conjunto',
             location_info: 'Ubicación',
             tags: 'Mueble',
             description_origin: 'Descripción de origen',
             description_inventory: 'Descripción de inventario',
             appraisal: "Avalúo",
-            departure_date: "Fecha de salida",
-            arrival_date: "Fecha de entrada",
+            date_start_string: "Fecha de ",
+            departure_date: "salida",
+            arrival_date: "entrada",
+            measure_without: "Medidas sin base (cm)",
+            measure_with: "Medidas con base (cm)",
+            height: "Alto",
+            width: "Ancho",
+            depth: "Profundo",
+            diameter: "Diámetro",
+            appraisal_history_tooltip: "Ver historial de avalúo",            
+            associated_documents: "Documentos asociados",
+            incidence: "Incidencias",
+            created_by: "Creado por",
+            updated_by: "Actualizado por",
+
+        },
+        research :{
+            title: "Título",
+            autor_s_:"Autor(es)",
+            set: "Conjunto",
+            involved_creation_info: "Involucrados en su creación",
+            technique: "Técnica",
+            materials: "Materiales",
+            place_of_creation: "Procedencia",
+            period: "Epoca",
+            creation_date: "Fecha de creación",
+            keywords: "Palabras clave",
+            acquisition_form: "Forma",
+            acquisition_source: "Fuente/lugar",
+            acquisition_date: "Fecha",            
+            firm_description: "Firmas o marcas",
+            description: "Descripción",
+            short_description: "Descripción abreviada",
+            formal_description: "Descripción formal",
+            observation: "Observaciones",
+            publications: "Publicaciones en las que aparece la obra",
+            card: "Cédula",
+            foot_notes: "Notas al pie",
+            bibliography: "Bibliografía",
+            associated_documents: "Documentos asociados",
+            provenance: "Proveniencia",            
+            //firm description
+            firm_yes: "Si",
+            firm_no: "No",
+
+        },
+        restoration: {
+            preliminary_examination: "Exámen preliminar",
+            laboratory_analysis: "Análisis de laboratorio",
+            proposal_of_treatment: "Propuesta de tratamiento",
+            treatment_description: "Descripción de tratamiento",
+            results: "Resultado y recomendaciones",
+            observations: "Observaciones",
+            treatment_date: "Fecha de tratamiento",
+            responsible_restorer: "Restaurador responsable",
+
             measure_without: "Medidas sin base (cm)",
             measure_with: "Medidas con base (cm)",
             height: "Alto",
@@ -82,9 +145,34 @@ const langData = {
             depth: "Profundo",
             diameter: "Diámetro",
 
-        }
+            associated_documents: "Documentos asociados",
+
+            created_by: "Creado por",
+            //updated_by: "Actualizado por",
+            modified_by: "Modificado por",
 
 
+
+
+
+
+
+        },
+
+    },
+    pieceDetailMenu:{
+        nameMenu: "Detalle de la pieza",
+        inventory: "Inventario",
+        research: "Investigación",
+        restoration: "Restauración",
+        movements: "Movimientos",
+    },
+    pieceDetailAppraisalModal: {
+            modalHeader: "Historico de avalúo",
+            appraisal: "Avalúo",
+            modified_by: "Modificado por",
+            date: "Fecha",
+            close: "Cerrar",
     }
 
 }
