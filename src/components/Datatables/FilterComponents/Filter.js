@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Tooltip } from 'react-tooltip';
-import langData from '../../Languages/sp/Lang';
+//import langData from '../../Languages/en/Lang';
+
+import { getTranslations } from '../../Languages/i18n';
+const langData = getTranslations();
 
 const removeAccents = (str) => {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -110,7 +113,7 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                         value={filterText}
                     />
                 </div>
-                <button type="button" className="btn btn-primary pb-4 pt-0 ms-2 me-3" style={{ fontFamily: 'Asap Condensed', height: '1.6em' }} data-bs-toggle="collapse" data-bs-target="#AdvancedSearch">Busqueda avanzada</button>
+                <button type="button" className="btn btn-primary pb-4 pt-0 ms-2 me-3" style={{ fontFamily: 'Asap Condensed', height: '1.6em' }} data-bs-toggle="collapse" data-bs-target="#AdvancedSearch">{langData.dataTablesSearch.advanced_search}</button>
             </div>
             <div id="AdvancedSearch" className="collapse">
                 <div className="card p-3" style={{ borderRadius: '5px', color: 'whitesmoke', background: '#8F8F8F', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -256,7 +259,7 @@ export const SelectColumn = ({ handleChange, columns, checkboxValues, }) => {
 
     return (
         <><div className='text-end'>
-            <button type="button" className="btn btn-primary pb-4 pt-0 mb-3 ms-2 me-3" style={{ fontFamily: 'Asap Condensed', height: '1.6em' }} data-bs-toggle="collapse" data-bs-target="#SelectColumn">Seleccionar columnas</button>
+            <button type="button" className="btn btn-primary pb-4 pt-0 mb-3 ms-2 me-3" style={{ fontFamily: 'Asap Condensed', height: '1.6em' }} data-bs-toggle="collapse" data-bs-target="#SelectColumn">{langData.dataTablesSearch.select_columns}</button>
         </div>
             <div className='text-start'>
                 <div id="SelectColumn" className="collapse">

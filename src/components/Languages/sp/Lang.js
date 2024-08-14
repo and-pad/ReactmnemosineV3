@@ -2,6 +2,11 @@
 const research_keys = ['title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card'];*/
 
 const langData = {
+    LangDispo: {
+        spanish: "Español",
+        english: "Ingles",
+        french: "Frances"
+    },
     StartMenu: {
         home: 'Inicio',
         queries: 'Consultas',
@@ -21,13 +26,17 @@ const langData = {
         users: 'Usuarios',
         catalogs: 'Catalogos',
         genders: 'Géneros',
+        language: 'Idioma',
 
     },
-    dataTablesSearch:{
+    dataTablesSearch: {
+        place_holder: "Busca algo...",
+        select_columns: "Seleccionar columnas",
+        advanced_search: "Busqueda avanzada",
         search_by_selection: "Busqueda por selección",
         tooltip_selection: "Busca solo en los campos seleccionados",
-        tooltip_accents:"Hacer coincidir sin acentos",
-        tooltip_upper_lower:"Hacer coincidir mayúsculas y minúsculas",
+        tooltip_accents: "Hacer coincidir sin acentos",
+        tooltip_upper_lower: "Hacer coincidir mayúsculas y minúsculas",
         tooltip_whole_word: "Hacer coincidir solo palabras completas"
 
     },
@@ -85,22 +94,24 @@ const langData = {
             date_start_string: "Fecha de ",
             departure_date: "salida",
             arrival_date: "entrada",
-            measure_without: "Medidas sin base (cm)",
-            measure_with: "Medidas con base (cm)",
+            measure_without: "Medidas sin {} (cm)",
+            measure_with: "Medidas con {} (cm)",
+            base: "base",
+            frame: "marco",
             height: "Alto",
             width: "Ancho",
             depth: "Profundo",
             diameter: "Diámetro",
-            appraisal_history_tooltip: "Ver historial de avalúo",            
+            appraisal_history_tooltip: "Ver historial de avalúo",
             associated_documents: "Documentos asociados",
             incidence: "Incidencias",
             created_by: "Creado por",
             updated_by: "Actualizado por",
 
         },
-        research :{
+        research: {
             title: "Título",
-            autor_s_:"Autor(es)",
+            autor_s_: "Autor(es)",
             set: "Conjunto",
             involved_creation_info: "Involucrados en su creación",
             technique: "Técnica",
@@ -111,7 +122,7 @@ const langData = {
             keywords: "Palabras clave",
             acquisition_form: "Forma",
             acquisition_source: "Fuente/lugar",
-            acquisition_date: "Fecha",            
+            acquisition_date: "Fecha",
             firm_description: "Firmas o marcas",
             description: "Descripción",
             short_description: "Descripción abreviada",
@@ -122,7 +133,7 @@ const langData = {
             foot_notes: "Notas al pie",
             bibliography: "Bibliografía",
             associated_documents: "Documentos asociados",
-            provenance: "Proveniencia",            
+            provenance: "Proveniencia",
             //firm description
             firm_yes: "Si",
             firm_no: "No",
@@ -151,16 +162,10 @@ const langData = {
             //updated_by: "Actualizado por",
             modified_by: "Modificado por",
 
-
-
-
-
-
-
         },
 
     },
-    pieceDetailMenu:{
+    pieceDetailMenu: {
         nameMenu: "Detalle de la pieza",
         inventory: "Inventario",
         research: "Investigación",
@@ -168,12 +173,21 @@ const langData = {
         movements: "Movimientos",
     },
     pieceDetailAppraisalModal: {
-            modalHeader: "Historico de avalúo",
-            appraisal: "Avalúo",
-            modified_by: "Modificado por",
-            date: "Fecha",
-            close: "Cerrar",
-    }
+        modalHeader: "Historico de avalúo",
+        appraisal: "Avalúo",
+        modified_by: "Modificado por",
+        date: "Fecha",
+        close: "Cerrar",
+    },
+    pieceDetailMovements: {
+        headerTableMovements: {
+            departure_date: "Fecha salida",
+            arrival_date: "Fecha entrada",
+            institution: "Institucion",
+            location_exhibition: "Ubicación / Exposición",
+            venue: "Sede",
+        }
+    },
 
 }
 

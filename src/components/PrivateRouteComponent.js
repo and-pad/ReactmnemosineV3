@@ -14,7 +14,7 @@ const PrivateRoute = ({ element, checkLogin, ...rest }) => {
                 //hacemos la consulta, la respuesta es booleana
                 const response = await checkLogin();
                 //ponemos el valor del authenticated, para responder, o el elemento, o la redireccion
-                console.log('respos', response);
+                //console.log('respos', response);
                 setAuthenticated(response);
             } catch (error) {//en caso de error
                 console.error('Error occurred while checking authentication:', error);
@@ -30,7 +30,7 @@ const PrivateRoute = ({ element, checkLogin, ...rest }) => {
 
     if (loading) {
         return (<h6>Cargando...</h6>);
-    } else { console.log(authenticated); }
+    } else { /*console.log(authenticated);*/ }
     // Muestra un componente de carga mientras se verifica la autenticación
     return authenticated ? (
         <>{element}</>

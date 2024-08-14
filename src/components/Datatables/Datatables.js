@@ -5,7 +5,11 @@ import { formatData, fetchData, ConstructElementsToHide } from './dataHandler'; 
 import customStyles from './datatableCustomCellStyle';
 import '../Datatables/datatable.css';
 import { SearchBox, SelectColumn, filterSearch } from './FilterComponents/Filter';
+import { getTranslations } from '../Languages/i18n';
+const langData = getTranslations();
+
 //columnas del datatables
+
 const columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card', 'photo_thumb_info', '_id'];
 // Define el componente personalizado para la fila expandida
 const ExpandableComponent = props => {
@@ -99,7 +103,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
     const [filteredTableData, setFilteredTableData] = useState([]);
 
     const [defColumnsOut, setDefColumnsOut] = useState([]);
-    const [size, setSize] = useState();
+    const [size, setSize] = useState(null);
     const [dataQuery, setDataQuery] = useState([]);
     const [checkboxValues, setCheckboxValues] = useState([]);
     const [filterText, setFilterText] = useState('');
@@ -140,11 +144,11 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
             else if (width >= 300 && width < 550) {
                 newSize = 3;
             }
-            if (newSize !== size) {
+            if (newSize !== size || size == null) {
                 clearTimeout(timerIdRef.current);
                 timerIdRef.current = setTimeout(() => {
                     setSize(newSize);
-                }, 10);
+                }, 2);
             }
         };
         handleResize();
@@ -255,7 +259,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
     // Función para manejar el cambio de las checkboses de seacrh
     //
     const handleSearchboxChange = (id) => {
-        console.log('id', id);
+       // console.log('id', id);
         setCheckboxSearchValues(prevState => ({
             ...prevState,
             [id]: !prevState[id]
@@ -281,7 +285,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
             ...prevState,
             [id]: !prevState[id]
         }));
-        console.log(checkboxValues[id]);
+       // console.log(checkboxValues[id]);
         const index = defColumns.findIndex(column => column.id === id);
         var updatedColumns;
         if (index !== -1) {
@@ -333,7 +337,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
                 <div className="row justify-content-center">
                     <div className="col-6 mb-2 mt-2 text-start">
                         <SearchBox
-                            placeholder="Busqueda..."
+                            placeholder={langData.dataTablesSearch.place_holder}
                             columns={defColumns}
                             onFilter={event => setFilterText(event.target.value)}
                             filterText={filterText}
@@ -376,7 +380,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
                 columns={defColumns}
                 data={filteredTableData}
                 pagination
-                fixedHeader
+                
                 dense
                 responsive
                 // onColumnOrderChange={handleColumnOrderChange}

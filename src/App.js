@@ -80,7 +80,7 @@ function App() {
   //setForceUpdate(prevState => !prevState);
 
   const helperLoginCallBack = (response) => {
-    console.log('respbef', response);
+    //console.log('respbef', response);
     //filtramos la respuesta, si viene access o time_left esta authenticado
     if (response === 'not network2') {
       //si no hay internet o no responde el servidor igual quitamos las cookies de ingreso por seguridad
@@ -112,7 +112,7 @@ function App() {
       //console.log('time_left respo');
       return true;
     } else {
-      console.log('default', response);
+      //console.log('default', response);
       return false;
     }
   };
@@ -134,7 +134,7 @@ function App() {
       }
 
       const toOut = helperLoginCallBack(response);
-      console.log('toout', toOut);
+     // console.log('toout', toOut);
       return toOut;
     } else {
       //Consultamos la Cookie si esta accessToken    
@@ -143,7 +143,7 @@ function App() {
       if (rAccess !== undefined) {
         tparsed = JSON.parse(rAccess);
       }
-      console.log('tparsed', tparsed);
+      //console.log('tparsed', tparsed);
       if (tparsed) {//consultamos refresh Token
         var refresh = Cookies.get('refreshToken');
         var Muser = Cookies.get('User');
@@ -156,10 +156,10 @@ function App() {
         setRefreshToken(refresh);
         if (refresh !== undefined) {//comprobamos si no viene vacío refresh
           const acesstoSend = tparsed;
-          console.log('acesstoSend', acesstoSend);
+          //console.log('acesstoSend', acesstoSend);
           //mandamos a la comprobacion de servidor los tokens existentes en la cookie.
           response = await handleLoggedTime(acesstoSend, refresh);
-          console.log('Logged', refresh);
+          //console.log('Logged', refresh);
           //regresamos un booleano que viene de la comprobacion de response
           return helperLoginCallBack(response);
           //si refresh es undefined quiere decir q  ue no existe la cookie regresamos false para la comprobacion de registro

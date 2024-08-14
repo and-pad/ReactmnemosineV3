@@ -510,7 +510,7 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
         if (errorData.code === "token_not_valid") {
 
             try {
-                //En esta url de api es para refrescar la el accessToken con el refreshToken
+                //En esta url de api es para refrescar el accessToken con el refreshToken
                 const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/signin/';
                 const response2 = await fetch(url, {
                     method: 'PUT',//En el metodo PUT es donde renovamos el accessToken

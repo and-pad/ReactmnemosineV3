@@ -2,8 +2,10 @@ import { useParams, Link, Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState, createContext, useContext } from 'react';
 
 import SETTINGS from '../Config/settings';
-import langData from '../Languages/sp/Lang';
+//import langData from '../Languages/en/Lang';
 import "./fileColors.css"
+import { getTranslations } from '../Languages/i18n';
+const langData = getTranslations();
 
 // Crea el contexto
 const DataContext = createContext();
@@ -17,7 +19,7 @@ export const PieceDetail = ({ accessToken , refreshToken }) => {
 
         const fetchDetail = async () => {
             var data;
-            console.log('accesTokn', accessToken);
+            //console.log('accesTokn', accessToken);
             try {
                 const url = SETTINGS.URL_ADDRESS.server_url_commands + 'authenticated/user_query/detail/';
                 const response = await fetch(url, {

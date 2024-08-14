@@ -1,6 +1,9 @@
-import langData from '../Languages/sp/Lang';
+//import langData from '../Languages/en/Lang';
 import SETTINGS from "../Config/settings";
 import {  useNavigate } from 'react-router-dom';
+
+import { getTranslations } from '../Languages/i18n';
+const langData = getTranslations();
 
 
 const CustomCell = ({ row, column }) => (
@@ -66,6 +69,7 @@ export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
     // Aplica la lógica según el nombre de la columna
     switch (columnName) {
         case "inventory_number":
+            
             return {
                 ...columnProps,
                 name: langData.dataTableUserQueryNames.inventory_number,

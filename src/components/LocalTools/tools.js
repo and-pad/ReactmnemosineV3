@@ -2,12 +2,14 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
 import { faFilePdf, faFileWord, faFileExcel, faFilePowerpoint, faFileAlt, faFileCode } from '@fortawesome/free-solid-svg-icons';
+import React, {  useRef } from 'react';
 
 
-export const formatTimeAgo = (date) => {
+
+export const formatTimeAgo = (date, language) => {
     const diff = moment.preciseDiff(date, moment(), true);
     let timeAgo = '';
-  
+   if(language === 'sp'){
     if (diff.years > 0) {
       timeAgo = `hace ${diff.years} ${diff.years === 1 ? 'año' : 'años'}`;
     } else if (diff.months > 0) {
@@ -21,6 +23,25 @@ export const formatTimeAgo = (date) => {
     } else {
       timeAgo = `hace unos segundos`;
     }
+  } 
+  else if(language === 'en'){
+
+    if (diff.years > 0) {
+      timeAgo = `${diff.years} ${diff.years === 1 ? 'year' : 'years'} ago`;
+    } else if (diff.months > 0) {
+      timeAgo = `${diff.months} ${diff.months === 1 ? 'month' : 'months'} ago`;
+    } else if (diff.days > 0) {
+      timeAgo = `${diff.days} ${diff.days === 1 ? 'day' : 'days'} ago`;
+    } else if (diff.hours > 0) {
+      timeAgo = `${diff.hours} ${diff.hours === 1 ? 'hour' : 'hours'} ago`;
+    } else if (diff.minutes > 0) {
+      timeAgo = `${diff.minutes} ${diff.minutes === 1 ? 'minute' : 'minutes'} ago`;
+    } else {
+      timeAgo = `a few seconds ago`;
+    }
+
+  }
+    
   
     return timeAgo;
   };
@@ -35,6 +56,35 @@ export const CopyToClipboard = (text) => {
         toast.error('Error al copiar al portapapeles');
       });
   };
+
+
+export const ClipboardButton = ({ btLabel, btId, btText }) => {
+    const buttonRef = useRef(null); 
+
+    return (
+      <div className="d-flex align-items-center">          
+        <h6 className="mb-0 me-2">{btLabel} </h6>
+        <button 
+          style={{ fontSize: '.85rem' }} 
+          ref={buttonRef} 
+          className="btn btn-link btn-lg p-0 clipboard" 
+          data-toggle="tooltip" 
+          title="Copiar al portapapeles" 
+          data-clipboard-target={`#${btId}`}
+        >
+          <i className="fa fa-copy" onClick={() => CopyToClipboard(btText)}></i>
+        </button>          
+        <span 
+          style={{ display: 'none' }} 
+          id={btId} 
+          dangerouslySetInnerHTML={{ __html: btText.replace(/\n/g, '<br>') }} 
+        ></span>
+      </div>
+    );
+    
+    
+  };
+
 
 
   // Función para formatear el tamaño del archivo

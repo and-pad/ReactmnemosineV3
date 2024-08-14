@@ -1,35 +1,30 @@
 import { useData } from './PieceDetail';
-import langData from '../Languages/sp/Lang';
+//import langData from '../Languages/en/Lang';
 import SETTINGS from '../Config/settings';
 import moment from 'moment';
 import 'moment/locale/es-mx'; // Importa el paquete de locales dentro de moment
 import 'moment-precise-range-plugin';
 import { Tooltip } from 'react-tooltip';
-
-//import React, { useRef } from 'react';
-
-
+import { getTranslations, getActualLang } from '../Languages/i18n';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CopyToClipboard, formatSize, formatCurrency, formatTimeAgo, fileTypes, mimeIcons, colorFile } from '../LocalTools/tools';
-
+import { CopyToClipboard, formatSize, formatCurrency, formatTimeAgo, fileTypes, mimeIcons, colorFile, ClipboardButton } from '../LocalTools/tools';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons'; // Asegúrate de importar el ícono necesario
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// Función para formatear la fecha como "hace X cantidad de tiempo"
+
+const langData = getTranslations();
 
 const DownloadButton = ({ key, document, module }) => {
   var fileUrl;
   if (module === langData.pieceDetailMenu.inventory) {
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/inventario/documentos/' + document.file_name;
   }
-  else if (module === langData.pieceDetailMenu.research) {
+  else if (module === 'investigacion') {
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/investigacion/documentos/' + document.file_name;
   }
-  else if (module === langData.pieceDetailMenu.restoration){
-
+  else if (module === "restauracion") {
+    fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/restauracion/documentos/' + document.file_name;
   }
-
-
   // const downloadLinkRef = useRef(null);
   const handleDownload = () => {
     window.open(fileUrl, '_blank');
@@ -37,7 +32,6 @@ const DownloadButton = ({ key, document, module }) => {
   //const file_type_name = fileTypes;
 
   const fileIcon = mimeIcons[document.mime_type] || faFileAlt; // Fallback icon
-
   const fileColor = colorFile[fileTypes[document.mime_type]];
   return (
     <div className={`card my-0 text-white bg-${fileColor}`}>
@@ -60,18 +54,15 @@ const DownloadButton = ({ key, document, module }) => {
   );
 };
 
-
-
 export const Inventory = () => {
 
   const data = useData();
-  console.log('data', data);
+  //console.log('data', data);
   const item = data?.detail[0] ? data.detail[0] : null;
 
-  //console.log('item', item);
+  moment.locale(getActualLang());
 
-  moment.locale('es-mx');
-  const arrival_date_exists = item?.movements_info ? item.movements_info[0].arrival_date ? true : false : false;
+  const arrival_date_exists = item?.movements_info[0]?.arrival_date ? item.movements_info[0].arrival_date ? true : false : false;
   var FdateArrival;
   var FdateDeparture;
 
@@ -79,13 +70,13 @@ export const Inventory = () => {
     const dateArrival = moment(item?.movements_info[0].arrival_date);
     FdateArrival = dateArrival.format('LL');
   } else {
-    const dateDeparture = moment(item?.movements_info[0].departure_date ? item?.movements_info[0].departure_date : '0000-00-00');
+    const dateDeparture = moment(item?.movements_info[0]?.departure_date ? item?.movements_info[0].departure_date : '0000-00-00');
     FdateDeparture = dateDeparture.format('LL');
   }
 
-
   return (
     <>
+      <ToastContainer />
       <div className="container col-9 d-flex justify-content-center mt-3">
         <div className="card card-body justify-content-end col-12 bg-gradient" style={{ backgroundColor: 'rgb(190,180,180)' }}>
           <p className="card col-5 mb-2 bg-color bg-gradient" style={{ backgroundColor: 'rgb(145,145,145)', margin: '0 auto' }}>
@@ -114,31 +105,27 @@ export const Inventory = () => {
                 {langData.pieceDetailDescriptors.inventory.description_origin}
               </a>
             </p>
-            <div className="collapse mt-0" id="collapseDescription">
+            <div className={`collapse ${item?.description_origin ? 'show' : ''}  mt-0`} id="collapseDescription">
 
               <div className="form-floating mb-3" style={{ backgroundColor: 'rgb(190,190,190)' }}>
                 <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                   <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.description_origin}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary " onClick={() => CopyToClipboard(item?.description_origin ? item.description_origin : 'N/D')}></i>
-                    <ToastContainer /></h6>
-
+                  </h6>
                   <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.description_origin ? item.description_origin : 'N/D'}</p>
                 </div>
               </div>
-
             </div>
-
           </div>
-
           <div className="row justify-content-center">
             <p className="mb-1">
               <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapseInventory" role="button" aria-expanded="false" aria-controls="collapseInventory">
                 {langData.pieceDetailDescriptors.inventory.description_inventory}
               </a>
             </p>
-            <div className="collapse mt-0" id="collapseInventory">
+            <div className={`collapse ${item?.description_inventory ? 'show' : ''}  mt-0`} id="collapseInventory">
               <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                 <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.description_inventory}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.description_inventory ? item.description_inventory : 'N/D')}></i>
-                  <ToastContainer /></h6>
+                </h6>
                 <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.description_inventory ? item.description_inventory : 'N/D'}</p>
               </div>
             </div>
@@ -153,14 +140,12 @@ export const Inventory = () => {
                   </h6>
                   <p style={{ fontSize: '.90em' }}>{item?.genders_info.title ? item.genders_info.title : "N/D"}</p>
                 </span>
-
                 <span className="col-4 mb-2 mb-md-0 mx-md-2">
                   <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>
                     {langData.pieceDetailDescriptors.inventory.subgenders_info}:
                   </h6>
                   <p style={{ fontSize: '.90em' }}>{item?.subgenders_info.title ? item.subgenders_info.title : "N/D"}</p>
                 </span>
-
                 <span className="col-4 mb-2 mb-md-0 mx-md-2">
                   <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>
                     {langData.pieceDetailDescriptors.inventory.type_object_info}:
@@ -183,7 +168,6 @@ export const Inventory = () => {
                   </h6>
                   <p style={{ fontSize: '.90em' }}>{item?.dominant_material_info.title ? item.dominant_material_info.title : "N/D"}</p>
                 </span>
-
                 <span className="mb-2 mb-md-0 mx-md-2 col-4">
                   <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>
                     {langData.pieceDetailDescriptors.inventory.tags}:
@@ -239,7 +223,7 @@ export const Inventory = () => {
                                         data-tooltip-id="dateModal-tooltip"
                                         data-tooltip-content={moment(appraisal.created_at).format('LL')}
                                         data-tooltip-place="right">
-                                        {formatTimeAgo(moment(appraisal.created_at))}
+                                        {formatTimeAgo(moment(appraisal.created_at), getActualLang())}
                                       </td>
                                     </tr>
                                   ))
@@ -271,16 +255,11 @@ export const Inventory = () => {
                   </h6>
                   <p style={{ fontSize: '.90em' }}>{arrival_date_exists ? FdateArrival : FdateDeparture}</p>
                 </span>
-
               </div>
-
-
               <div className='border border-primary mb-2 '>
                 <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
-                  {langData.pieceDetailDescriptors.inventory.measure_without}
+                  {langData.pieceDetailDescriptors.inventory.measure_without.replace(/{}/g, item?.base_or_frame ? item.base_or_frame === "base" ? langData.pieceDetailDescriptors.inventory.base : langData.pieceDetailDescriptors.inventory.frame : "")}
                 </div>
-
-
                 <div className="d-flex p-2">
                   <div className="flex-fill text-center">
                     <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.height}:</h6></div>
@@ -299,12 +278,10 @@ export const Inventory = () => {
                     <div>{item?.diameter ? item.diameter : 'N/D'}</div>
                   </div>
                 </div>
-
               </div>
-
               <div className='border border-primary mb-2'>
                 <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
-                  {langData.pieceDetailDescriptors.inventory.measure_with}
+                  {langData.pieceDetailDescriptors.inventory.measure_with.replace(/{}/g, item?.base_or_frame ? item.base_or_frame === "base" ? langData.pieceDetailDescriptors.inventory.base : langData.pieceDetailDescriptors.inventory.frame : "")}
                 </div>
                 <div className="d-flex p-2">
                   <div className="flex-fill text-center">
@@ -319,16 +296,12 @@ export const Inventory = () => {
                     <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.depth}:</h6></div>
                     <div>{item?.depth_with_base ? item.depth_with_base : 'N/D'}</div>
                   </div>
-
                   <div className="flex-fill text-center">
                     <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.diameter}:</h6></div>
                     <div>{item?.diameter_with_base ? item.diameter_with_base : 'N/D'}</div>
                   </div>
                 </div>
               </div>
-
-
-
               <div className='border border-primary mb-2 '>
                 <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
                   {langData.pieceDetailDescriptors.inventory.associated_documents}
@@ -338,7 +311,9 @@ export const Inventory = () => {
 
                   {item?.documents_info ? (
                     item.documents_info.map((document, index) => (
-                      document.module_info[0] === langData.pieceDetailMenu.inventory ? (
+
+                      /*document.module_info[0] === langData.pieceDetailMenu.inventory ?*/
+                      document.module_info[0] === "inventario" ? (
                         <div className="flex-fill me-2 ">
                           <DownloadButton
                             key={index}
@@ -351,11 +326,8 @@ export const Inventory = () => {
                   ) : (
                     "N/D"
                   )}
-
                 </div>
               </div>
-
-
               <div className='border border-primary mb-2 '>
                 <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
                   {langData.pieceDetailDescriptors.inventory.incidence}
@@ -373,7 +345,7 @@ export const Inventory = () => {
                     {langData.pieceDetailDescriptors.inventory.created_by} <strong>{item?.created_by_piece_info ? item.created_by_piece_info.username : "N/D"}</strong>,                     <span data-tooltip-id="created-tooltip"
                       data-tooltip-content={item?.created_at ? moment(item.created_at).format('LL') : "N/D"}
                       data-tooltip-place="top"
-                    >{item?.created_at ? formatTimeAgo(moment(item.created_at)) : "N/D"}</span>
+                    >{item?.created_at ? formatTimeAgo(moment(item.created_at), getActualLang()) : "N/D"}</span>
                     <Tooltip id='created-tooltip' />
                   </div>
                 </div>
@@ -384,7 +356,7 @@ export const Inventory = () => {
                     <span data-tooltip-id="updated-tooltip"
                       data-tooltip-content={item?.updated_at ? moment(item.updated_at).format('LL') : "N/D"}
                       data-tooltip-place="top"
-                    >{item?.updated_at ? formatTimeAgo(moment(item.updated_at)) : "N/D"}</span>
+                    >{item?.updated_at ? formatTimeAgo(moment(item.updated_at), getActualLang()) : "N/D"}</span>
                     <Tooltip id='updated-tooltip' />
                   </div>
                 </div>
@@ -400,18 +372,17 @@ export const Inventory = () => {
 export const Research = () => {
   const data = useData();
   const item = data?.detail ? data.detail[0] : null;
-
+  moment.locale(getActualLang());
   return (
     <>
+      <ToastContainer />
       <div className="container col-9 d-flex justify-content-center mt-3">
 
         <div className="card card-body justify-content-end col-12 bg-gradient mb-0 pb-1" style={{ backgroundColor: 'rgb(190,180,180)' }}>
           <p className="card col-5 mb-2 bg-color bg-gradient" style={{ backgroundColor: 'rgb(145,145,145)', margin: '0 auto' }}>
             {langData.pieceDetailMenu.research}
           </p>
-
           <div className="row justify-content-start mb-2 pb-2 mb-md-0 mx-md-2">
-
             <div className="card bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
               <div className="row">
                 <div className="col-12 col-md-6">
@@ -427,12 +398,10 @@ export const Research = () => {
                       {item?.research_info[0]?.authors_info?.[0]?.length
                         ? item.research_info[0].authors_info[0].map((author, index) => <p key={index}>{author.title}</p>)
                         : "N/D"}
-
                     </div>
                   </div>
                 </div>
               </div>
-
               <div className="row">
                 <div className="col-6">
                   <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.set}:</h6>
@@ -446,43 +415,39 @@ export const Research = () => {
                 </div>
               </div>
             </div>
-
             <div className="row justify-content-center mt-1 pe-0 ps-0 me-0 ms-0 w-100">
               <p className="mb-1">
-                <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapseTechnique" role="button" aria-expanded="false" aria-controls="collapseDescription">
+                <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapseTechnique" role="button" aria-expanded="false" aria-controls="collapseTechnique">
                   {langData.pieceDetailDescriptors.research.technique}
                 </a>
               </p>
-              <div className="collapse mt-0" id="collapseTechnique">
+              <div className={`collapse ${item?.research_info[0]?.technique ? 'show' : ''}  mt-0`} id="collapseTechnique">
 
                 <div className="form-floating" style={{ backgroundColor: 'rgb(190,190,190)' }}>
                   <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                     <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.technique}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.research_info[0].technique ? item.research_info[0].technique : 'N/D')}></i>
-                      <ToastContainer /></h6>
-                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0].technique ? item.research_info[0].technique : 'N/D'}</p>
+                    </h6>
+                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0]?.technique ? item.research_info[0].technique : 'N/D'}</p>
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="row justify-content-center mt-1 pe-0 ps-0 me-0 ms-0">
               <p className="mb-1">
-                <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapseMaterials" role="button" aria-expanded="false" aria-controls="collapseDescription">
+                <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapseMaterials" role="button" aria-expanded="false" aria-controls="collapseMaterials">
                   {langData.pieceDetailDescriptors.research.materials}
                 </a>
               </p>
-              <div className="collapse mt-0" id="collapseMaterials">
-
+              <div className={`collapse ${item?.research_info[0]?.materials ? 'show' : ''}  mt-0`} id="collapseMaterials">
                 <div className="form-floating " style={{ backgroundColor: 'rgb(190,190,190)' }}>
                   <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                     <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.materials}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.research_info[0].materials ? item.research_info[0].materials : 'N/D')}></i>
-                      <ToastContainer /></h6>
-                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0].materials ? item.research_info[0].materials : 'N/D'}</p>
+                    </h6>
+                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0]?.materials ? item.research_info[0].materials : 'N/D'}</p>
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="card bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
               <div className="row">
                 <div className="col-12 col-md-6">
@@ -496,12 +461,11 @@ export const Research = () => {
                   <div className="d-flex flex-column mb-2 mb-md-0 mt-1">
                     <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.creation_date}:</h6>
                     <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>
-                      {item?.research_info[0].creation_date ? item.research_info[0].creation_date : "N/D"}
+                      {item?.research_info[0]?.creation_date ? item.research_info[0].creation_date : "N/D"}
                     </div>
                   </div>
                 </div>
               </div>
-
               <div className="row mt-4 mb-1">
                 <div className="col-6">
                   <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.period}:</h6>
@@ -510,13 +474,10 @@ export const Research = () => {
                 </div>
                 <div className="col-6">
                   <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.keywords}:</h6>
-                  <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>{item?.research_info[0].keywords ? item.research_info[0].keywords : "N/D"}</div>
+                  <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>{item?.research_info[0]?.keywords ? item.research_info[0].keywords : "N/D"}</div>
                 </div>
               </div>
-
             </div>
-
-
             <div className='border border-primary mb-1 mt-2 ps-0 pe-0'>
               <div className='bg-primary text-white w-100 ps-0 pe-0' style={{ fontSize: '.90em', height: '20px' }}>
                 {langData.pieceDetailDescriptors.research.provenance}
@@ -525,32 +486,29 @@ export const Research = () => {
               <div className="d-flex p-2">
                 <div className="flex-fill text-center">
                   <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.acquisition_form}:</h6></div>
-                  <div>{item?.research_info[0].acquisition_form ? item.research_info[0].acquisition_form : 'N/D'}</div>
+                  <div>{item?.research_info[0]?.acquisition_form ? item.research_info[0].acquisition_form : 'N/D'}</div>
                 </div>
                 <div className="flex-fill text-center">
                   <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.acquisition_source}:</h6></div>
-                  <div>{item?.research_info[0].acquisition_source ? item.research_info[0].acquisition_source : 'N/D'}</div>
+                  <div>{item?.research_info[0]?.acquisition_source ? item.research_info[0].acquisition_source : 'N/D'}</div>
                 </div>
                 <div className="flex-fill text-center">
                   <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.acquisition_date}:</h6></div>
-                  <div>{item?.research_info[0].acquisition_date ? item.research_info[0].acquisition_date : 'N/D'}</div>
+                  <div>{item?.research_info[0]?.acquisition_date ? item.research_info[0].acquisition_date : 'N/D'}</div>
                 </div>
               </div>
             </div>
-
-
             <div className='border border-primary mb-2 mt-1 ps-0 pe-0'>
               <div className='bg-primary text-white w-100 ps-0 pe-0' style={{ fontSize: '.90em', height: '20px' }}>
                 {langData.pieceDetailDescriptors.research.firm_description}
               </div>
-
               <div className="d-flex p-2">
                 <div className="flex-fill text-center">
 
                   <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.description}: <i style={{ cursor: 'pointer' }} className=" col-11 fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.research_info[0].firm_description ? item.research_info[0].firm_description : 'N/D')}></i>
-                    <ToastContainer /></h6></div>
-                  <div className="col-1">{item?.research_info[0] ? item.research_info[0].firm ? langData.pieceDetailDescriptors.research.firm_yes : langData.pieceDetailDescriptors.research.firm_no : "N/D"}</div>
-                  <div>{item?.research_info[0].firm_description ? item.research_info[0].firm_description : 'N/D'}</div>
+                  </h6></div>
+                  <div className="col-1">{item?.research_info[0]?.firm ? item.research_info[0].firm ? langData.pieceDetailDescriptors.research.firm_yes : langData.pieceDetailDescriptors.research.firm_no : "N/D"}</div>
+                  <div>{item?.research_info[0]?.firm_description ? item.research_info[0].firm_description : 'N/D'}</div>
                 </div>
               </div>
             </div>
@@ -561,85 +519,73 @@ export const Research = () => {
                   {langData.pieceDetailDescriptors.research.short_description}
                 </a>
               </p>
-              <div className="collapse mt-0" id="collapseShort_description">
+              <div className={`collapse ${item?.research_info[0]?.short_description ? 'show' : ''}  mt-0`} id="collapseShort_description">
 
                 <div className="form-floating" style={{ backgroundColor: 'rgb(190,190,190)' }}>
                   <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                     <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.short_description}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.research_info[0].short_description ? item.research_info[0].short_description : 'N/D')}></i>
-                      <ToastContainer /></h6>
-                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0] ? item.research_info[0].short_description ? item.research_info[0].short_description : "N/D" : 'N/D'}</p>
+                    </h6>
+                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0]?.short_description ? item.research_info[0].short_description : "N/D"}</p>
                   </div>
                 </div>
               </div>
             </div>
-
-
             <div className="row justify-content-center mt-1 pe-0 ps-0 me-0 ms-0 w-100">
               <p className="mb-1">
                 <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapseFormal_description" role="button" aria-expanded="false" aria-controls="collapseFormal_description">
                   {langData.pieceDetailDescriptors.research.formal_description}
                 </a>
               </p>
-              <div className="collapse mt-0" id="collapseFormal_description">
+              <div className={`collapse ${item?.research_info[0]?.formal_description ? 'show' : ''}  mt-0`} id="collapseFormal_description">
 
                 <div className="form-floating" style={{ backgroundColor: 'rgb(190,190,190)' }}>
                   <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                     <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.formal_description}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.research_info[0].formal_description ? item.research_info[0].formal_description : 'N/D')}></i>
-                      <ToastContainer /></h6>
-                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0] ? item.research_info[0].formal_description : 'N/D'}</p>
+                    </h6>
+                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0]?.formal_description ? item.research_info[0].formal_description : 'N/D'}</p>
                   </div>
                 </div>
               </div>
             </div>
-
-
             <div className="row justify-content-center mt-1 pe-0 ps-0 me-0 ms-0 w-100">
               <p className="mb-1">
                 <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapseObservation" role="button" aria-expanded="false" aria-controls="collapseObservation">
                   {langData.pieceDetailDescriptors.research.observation}
                 </a>
               </p>
-              <div className="collapse mt-0" id="collapseObservation">
-
+              <div className={`collapse ${item?.research_info[0]?.observation ? 'show' : ''}  mt-0`} id="collapseObservation">
                 <div className="form-floating" style={{ backgroundColor: 'rgb(190,190,190)' }}>
                   <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                     <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.observation}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.research_info[0].observation ? item.research_info[0].observation : 'N/D')}></i>
-                      <ToastContainer /></h6>
-                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0] ? item.research_info[0].observation : 'N/D'}</p>
+                    </h6>
+                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0]?.observation ? item.research_info[0].observation : 'N/D'}</p>
                   </div>
                 </div>
               </div>
             </div>
-
             <div className="row justify-content-center mt-1 pe-0 ps-0 me-0 ms-0 w-100">
               <p className="mb-1">
                 <a className="btn btn-primary btn-sm col-12 bg-gradient" data-bs-toggle="collapse" href="#collapsePublications" role="button" aria-expanded="false" aria-controls="collapsePublications">
                   {langData.pieceDetailDescriptors.research.publications}
                 </a>
               </p>
-              <div className="collapse mt-0" id="collapsePublications">
+              <div className={`collapse ${item?.research_info[0]?.publications ? 'show' : ''}  mt-0`} id="collapsePublications">
 
                 <div className="form-floating" style={{ backgroundColor: 'rgb(190,190,190)' }}>
                   <div className="card card-body pt-1 pb-1 mb-1 bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
                     <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.publications}: <i style={{ cursor: 'pointer' }} className="fa fa-copy me-2 text-primary" onClick={() => CopyToClipboard(item?.research_info[0].publications ? item.research_info[0].publications : 'N/D')}></i>
-                      <ToastContainer /></h6>
-                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0] ? item.research_info[0].publications : 'N/D'}</p>
+                    </h6>
+                    <p className="card-text mb-0 pb-0" style={{ fontSize: '.90em' }}>{item?.research_info[0]?.publications ? item.research_info[0].publications : 'N/D'}</p>
                   </div>
                 </div>
               </div>
             </div>
-
-
-
             <div className=' border border-primary mb-1 mt-2 ps-0 pe-0'>
               <div className='bg-primary text-white w-100 ps-0 pe-0' style={{ fontSize: '.90em', height: '20px' }}>
                 {langData.pieceDetailDescriptors.research.foot_notes}
               </div>
-
               <div className="text-start p-2">
-
-
-                {item?.research_info[0]?.footnotes_info?.[0]?.map((footnote, index) => (
+                {item?.research_info[0]?.footnotes_info?.map((footnote, index) => (
                   <>
                     <ul className="nav nav-tabs" role="tablist">
                       <li className="nav-item">
@@ -678,20 +624,14 @@ export const Research = () => {
                     </div>
                   </>
                 )) ?? "N/D"}
-
               </div>
             </div>
-
-
             <div className=' border border-primary mb-1 mt-2 ps-0 pe-0'>
               <div className='bg-primary text-white w-100 ps-0 pe-0' style={{ fontSize: '.90em', height: '20px' }}>
                 {langData.pieceDetailDescriptors.research.bibliography}
               </div>
-
               <div className="text-start p-2">
-
-
-                {item?.research_info[0]?.bibliographies_info?.[0]?.map((bibliography, index) => (
+                {item?.research_info[0]?.bibliographies_info?.map((bibliography, index) => (
                   <>
                     <ul className="nav nav-tabs" role="tablist">
                       <li className="nav-item">
@@ -734,10 +674,8 @@ export const Research = () => {
                     </div>
                   </>
                 )) ?? "N/D"}
-
               </div>
             </div>
-
             <div className='border border-primary mb-2 '>
               <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
                 {langData.pieceDetailDescriptors.inventory.associated_documents}
@@ -747,12 +685,12 @@ export const Research = () => {
 
                 {item?.documents_info ? (
                   item.documents_info.map((document, index) => (
-                    document.module_info[0] === langData.pieceDetailMenu.research ? (
+                    document.module_info[0] === 'investigacion' ? (
                       <div className="flex-fill me-2 ">
                         <DownloadButton
                           key={index}
                           document={document}
-                          module={langData.pieceDetailMenu.research}
+                          module={'investigacion'}
                         />
                       </div>
                     ) : null
@@ -763,9 +701,6 @@ export const Research = () => {
 
               </div>
             </div>
-
-
-
             <div className='border border-primary mb-1 mt-2 ps-0 pe-0'>
               <div className='bg-primary text-white w-100 ps-0 pe-0' style={{ fontSize: '.90em', height: '20px' }}>
                 {langData.pieceDetailDescriptors.research.card}
@@ -774,20 +709,17 @@ export const Research = () => {
               <div className="d-flex p-2">
                 <div className="flex-fill text-center">
                   <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.research.card}:</h6></div>
-                  <div>{item?.research_info[0].card ? item.research_info[0].card : 'N/D'}</div>
+                  <div>{item?.research_info[0] ? item.research_info[0].card : 'N/D'}</div>
                 </div>
-
               </div>
             </div>
-
-
             <div style={{ fontSize: '.90em' }} className='mb-2 d-flex justify-content-around'>
               <div className="p-2">
                 <div className="text-center">
-                  {langData.pieceDetailDescriptors.inventory.created_by} <strong>{item?.research_info[0].created_by_info ? item.research_info[0].created_by_info[0] : "N/D"}</strong>,                     <span data-tooltip-id="created-tooltip"
+                  {langData.pieceDetailDescriptors.inventory.created_by} <strong>{item?.research_info[0] ? item.research_info[0].created_by_info[0] : "N/D"}</strong>,                     <span data-tooltip-id="created-tooltip"
                     data-tooltip-content={item?.created_at ? moment(item.created_at).format('LL') : "N/D"}
                     data-tooltip-place="top"
-                  >{item?.research_info[0].created_at ? formatTimeAgo(moment(item.research_info[0].created_at)) : "N/D"}</span>
+                  >{item?.research_info[0]?.created_at ? formatTimeAgo(moment(item.research_info[0].created_at), getActualLang()) : "N/D"}</span>
                   <Tooltip id='created-tooltip' />
                 </div>
               </div>
@@ -795,10 +727,10 @@ export const Research = () => {
 
               <div className="p-2">
                 <div className="text-center" >
-                  {langData.pieceDetailDescriptors.inventory.updated_by} <strong>{item?.research_info[0].updated_by_info ? item.research_info[0].updated_by_info[0] : "N/D"}</strong>,                    <span data-tooltip-id="updated-tooltip"
-                    data-tooltip-content={item?.research_info[0].updated_at ? moment(item.research_info[0].updated_at).format('LL') : "N/D"}
+                  {langData.pieceDetailDescriptors.inventory.updated_by} <strong>{item?.research_info[0] ? item.research_info[0].updated_by_info[0] : "N/D"}</strong>,                    <span data-tooltip-id="updated-tooltip"
+                    data-tooltip-content={item?.research_info[0]?.updated_at ? moment(item.research_info[0].updated_at).format('LL') : "N/D"}
                     data-tooltip-place="top"
-                  >{item?.research_info[0].updated_at ? formatTimeAgo(moment(item.research_info[0].updated_at)) : "N/D"}</span>
+                  >{item?.research_info[0]?.updated_at ? formatTimeAgo(moment(item.research_info[0].updated_at), getActualLang()) : "N/D"}</span>
                   <Tooltip id='updated-tooltip' />
                 </div>
               </div>
@@ -814,58 +746,265 @@ export const Research = () => {
   );
 };
 export const Restoration = () => {
+
   const data = useData();
 
-  moment.locale('es-mx');
-  
-  console.log('data', data);
+  moment.locale(getActualLang());
+
+  //console.log('data', data);
   const item = data?.detail[0] ? data.detail[0] : null;
+
+  //const modules = data?.modules ? data.modules : null;
+
   return (
     <>
+      <ToastContainer />
       <div className="container col-9 d-flex justify-content-center mt-3">
         <div className="card card-body justify-content-end col-12 bg-gradient mb-0 pb-1" style={{ backgroundColor: 'rgb(190,180,180)' }}>
           <p className="card col-5 mb-2 bg-color bg-gradient" style={{ backgroundColor: 'rgb(145,145,145)', margin: '0 auto' }}>
             {langData.pieceDetailMenu.restoration}
           </p>
-          <div className="row justify-content-start mb-2 pb-2 mb-md-0 mx-md-2">             
-          
+          <div className="row justify-content-start mb-2 pb-2 mb-md-0 mx-md-2">
+
             {item?.restorations_info?.map((restorations, index) => (
-              <>          
-              <div>
-              </div>
-              
-              <div className="card bg-gradient" style={{ backgroundColor: 'rgb(170,170,170)' }}>
-              <div>{langData.pieceDetailDescriptors.restoration.preliminary_examination}: {restorations.preliminary_examination}</div>
-              <div>{langData.pieceDetailDescriptors.restoration.laboratory_analysis}: {restorations.laboratory_analysis}</div>
-              <div>{langData.pieceDetailDescriptors.restoration.proposal_of_treatment}: {restorations.proposal_of_treatment}</div>
-              <div>{langData.pieceDetailDescriptors.restoration.proposal_of_treatment}: {restorations.proposal_of_treatment}</div>
-              <div>{langData.pieceDetailDescriptors.restoration.results}: {restorations.results}</div>
-              <div>{langData.pieceDetailDescriptors.restoration.observations}: {restorations.observations}</div>
-              <div>{langData.pieceDetailDescriptors.restoration.treatment_date}: {restorations.treatment_date}</div>
-              <div>{langData.pieceDetailDescriptors.restoration.responsible_restorer}: {restorations.responsible_info.title}</div>
-              </div>
+              <>
+
+
+                <div className="card bg-gradient pb-2 mb-1" style={{ backgroundColor: 'rgb(170,190,170)' }}>
+
+                  <a className="btn btn-primary btn-sm col-12 bg-gradient mt-2" data-bs-toggle="collapse" href={`#collapseResearch${index}`} role="button" aria-expanded="false" aria-controls={`collapseResearch${index}`}>
+                    {moment(restorations.treatment_date).format('LL')}
+                  </a>
+
+
+
+                  <div className='collapse pb-2' id={`collapseResearch${index}`}>
+
+                    <div className="card card-body mt-1" style={{ backgroundColor: 'rgb(180,180,180)' }}>
+                      <div className="d-flex align-items-center">
+                        <ClipboardButton
+                          btLabel={langData.pieceDetailDescriptors.restoration.preliminary_examination}
+                          btId={`preliminary${index}`}
+                          btText={restorations?.preliminary_examination ? restorations.preliminary_examination : "N/D"}
+                        />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        {restorations?.preliminary_examination ? restorations.preliminary_examination : "N/D"}
+                      </div>
+
+                      <div className="d-flex align-items-center">
+                        <ClipboardButton
+                          btLabel={langData.pieceDetailDescriptors.restoration.laboratory_analysis}
+                          btId={`laboratory${index}`}
+                          btText={restorations?.laboratory_analysis ? restorations.laboratory_analysis : "N/D"}
+                        />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        {restorations?.laboratory_analysis ? restorations.laboratory_analysis : "N/D"}
+                      </div>
+
+                      <div className="d-flex align-items-center">
+                        <ClipboardButton
+                          btLabel={langData.pieceDetailDescriptors.restoration.proposal_of_treatment}
+                          btId={`proposal${index}`}
+                          btText={restorations?.proposal_of_treatment ? restorations.proposal_of_treatment : "N/D"}
+                        />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        {restorations?.proposal_of_treatment ? restorations.proposal_of_treatment : "N/D"}
+                      </div>
+
+                      <div className="d-flex align-items-center">
+                        <ClipboardButton
+                          btLabel={langData.pieceDetailDescriptors.restoration.results}
+                          btId={`results${index}`}
+                          btText={restorations?.results ? restorations.results : "N/D"}
+                        />
+                      </div>
+                      <div className="d-flex align-items-center">
+                        {restorations?.results ? restorations.results : "N/D"}
+                      </div>
+
+                      <div className="d-flex align-items-center">
+                        <ClipboardButton
+                          btLabel={langData.pieceDetailDescriptors.restoration.observations}
+                          btId={`observations${index}`}
+                          btText={restorations?.observations ? restorations.observations : "N/D"}
+                        />
+                      </div>
+
+                      <div className="d-flex align-items-center">
+                        {restorations?.observations ? restorations.observations : "N/D"}
+                      </div>
+
+                    </div>
+                    <div className="d-flex justify-content-evenly flex-wrap">
+                      <div className="d-flex flex-column align-items-center me-2">
+                        <ClipboardButton
+                          btLabel={langData.pieceDetailDescriptors.restoration.treatment_date}
+                          btId={`treatmentDate${index}`}
+                          btText={restorations?.treatment_date ? moment(restorations.treatment_date).format('LL') : "N/D"}
+                        />
+                        <div>
+                          {restorations?.treatment_date ? moment(restorations.treatment_date).format('LL') : "N/D"}
+                        </div>
+                      </div>
+
+                      <div className="d-flex flex-column align-items-center me-2">
+                        <ClipboardButton
+                          btLabel={langData.pieceDetailDescriptors.restoration.responsible_restorer}
+                          btId={`responsible${index}`}
+                          btText={restorations?.responsible_info?.title ? restorations.responsible_info.title : "N/D"}
+                        />
+                        <div>
+                          {restorations?.responsible_info?.title ? restorations.responsible_info.title : "N/D"}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className='border border-primary mb-2 '>
+                      <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
+                        {langData.pieceDetailDescriptors.inventory.measure_without.replace(/{}/g, restorations?.base_or_frame ? restorations.base_or_frame === "base" ? langData.pieceDetailDescriptors.inventory.base : langData.pieceDetailDescriptors.inventory.frame : "")}
+                      </div>
+
+                      <div className="d-flex p-2">
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.height}:</h6></div>
+                          <div>{restorations?.height ? restorations.height : 'N/D'}</div>
+                        </div>
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.width}:</h6></div>
+                          <div>{restorations?.width ? restorations.width : 'N/D'}</div>
+                        </div>
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.depth}:</h6></div>
+                          <div>{restorations?.depth ? restorations.depth : 'N/D'}</div>
+                        </div>
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.diameter}:</h6></div>
+                          <div>{restorations?.diameter ? restorations.diameter : 'N/D'}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='border border-primary mb-2'>
+                      <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
+                        {langData.pieceDetailDescriptors.inventory.measure_with.replace(/{}/g, restorations?.base_or_frame ? restorations.base_or_frame === "base" ? langData.pieceDetailDescriptors.inventory.base : langData.pieceDetailDescriptors.inventory.frame : "")}
+                      </div>
+                      <div className="d-flex p-2">
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.height}:</h6></div>
+                          <div>{restorations?.height_with_base ? restorations.height_with_base : 'N/D'}</div>
+                        </div>
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.width}:</h6></div>
+                          <div>{restorations?.width_with_base ? restorations.width_with_base : 'N/D'}</div>
+                        </div>
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.depth}:</h6></div>
+                          <div>{restorations?.depth_with_base ? restorations.depth_with_base : 'N/D'}</div>
+                        </div>
+
+                        <div className="flex-fill text-center">
+                          <div><h6 style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.diameter}:</h6></div>
+                          <div>{restorations?.diameter_with_base ? restorations.diameter_with_base : 'N/D'}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='border border-primary mb-2 '>
+                      <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
+                        {langData.pieceDetailDescriptors.restoration.associated_documents}
+                      </div>
+
+                      <div className='d-flex align-items-center justify-content-start p-2'>
+                        {item?.documents_info ? (
+                          item.documents_info.map((document, index) => (
+                            restorations.documents_ids && restorations.documents_ids.includes(document._id) ? (
+                              <div className="flex-fill me-2" key={index}>
+                                <DownloadButton
+                                  document={document}
+                                  module={'restauracion'}
+                                />
+                              </div>
+                            ) : null
+                          ))
+                        ) : (
+                          "N/D"
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </>
-               )) ?? ""}
+            )) ?? ""}
           </div>
         </div>
       </div>
-
-
-
-
-
-
-
-
-
-      <pre>{JSON.stringify(item, null, 2)}</pre>
-
+      {/*modules?.map((module, index) => (
+        <pre>{JSON.stringify(module, null, 2)}</pre>
+      )) ?? ""*/}
     </>
   );
-
-
 };
 
 export const Movements = () => {
-  return (<h6>Movimientos</h6>);
+  const data = useData();
+  moment.locale(getActualLang());
+  const item = data?.detail[0] ? data.detail[0] : null;
+  return (
+    <>
+      <div className="container col-9 d-flex justify-content-center mt-3">
+        <div className="card card-body justify-content-end col-12 bg-gradient ps-5 pe-5 pb-3" style={{ backgroundColor: 'rgb(190,180,180)' }}>
+          <p className="card col-5 mb-2 bg-color bg-gradient" style={{ backgroundColor: 'rgb(145,145,145)', margin: '0 auto' }}>
+            {langData.pieceDetailMenu.movements}
+          </p>
+
+          <table className="table table-striped m-0">
+            <thead>
+              <tr>
+                <th>{langData.pieceDetailMovements.headerTableMovements.departure_date}</th>
+                <th>{langData.pieceDetailMovements.headerTableMovements.arrival_date}</th>
+                <th>{langData.pieceDetailMovements.headerTableMovements.institution}</th>
+                <th>{langData.pieceDetailMovements.headerTableMovements.location_exhibition}</th>
+                <th>{langData.pieceDetailMovements.headerTableMovements.venue}</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              {item?.all_movements_info.map((movement) => {
+                let arrivalDate = ''; // Valor predeterminado
+
+                if (movement.arrival_information && movement.arrival_information.length > 0) {
+                  for (let index2 = 0; index2 < movement.arrival_information.length; index2++) {
+                    const arrival_info = movement.arrival_information[index2];
+                    if (
+                      (Array.isArray(arrival_info.pieces) && arrival_info.pieces.includes(item._id)) ||
+                      item._id === arrival_info.pieces
+                    ) {
+                      arrivalDate = arrival_info?.arrival_date ? moment(arrival_info.arrival_date).format('LL') : "N/D";
+                      break;
+                    }
+                  }
+                }else if(movement.arrival_date){
+                  arrivalDate = moment(movement.arrival_date).format('LL');
+              }
+                return (
+                  <tr key={movement._id}>
+                    <td>{movement.departure_date ? moment(movement.departure_date).format('LL') : 'N/D'}</td>
+                    <td>{arrivalDate}</td>
+                    <td>{movement?.institutions_info.map((name, index)=>(
+                      <>{name} </>
+                    ))}</td>
+                    <td>{movement.location_info ? movement.location_info : 'N/D'}</td>
+                    <td>{movement.venues_info ? movement.venues_info : 'N/D'}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {/*<pre>{JSON.stringify(item, null, 2)}</pre>*/}
+    </>
+
+  );
 };

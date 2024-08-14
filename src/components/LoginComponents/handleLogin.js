@@ -34,8 +34,8 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
     //Esta función maneja el accessToken y el refreshToken en funcion de mantener 
     //actualizado y protegido el sistema siempre con un nuevo token, y un sistema de
     //doble tokenizado.
-    console.log('accessT', accessToken);
-    console.log('refresh', refreshToken);
+    //console.log('accessT', accessToken);
+    //console.log('refresh', refreshToken);
     try {//intentamos hacer una llamada API al servidor para checar el token actual
         // console.log('acces que llega a handle', accessToken);
         //Si funciona este nos responde un json de nombre {'time_left':200.185} en segundos y fracciones,
@@ -59,7 +59,7 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
                 //    console.log(data['time_left']);
                 //y regresamos como respuesta el data que en este caso solo contiene el time_left
                 //el cual se filtra con el mismo nombre de la etiqueta al recibirse
-                console.log(data);
+                //console.log(data);
                 return data;
             }
 
