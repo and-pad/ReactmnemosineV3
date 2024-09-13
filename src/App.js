@@ -27,7 +27,7 @@ import { Inventory, Research, Restoration, Movements } from './components/Pieces
 
 
 
-const SearchPage = () => <h6>Home Page</h6>
+const SearchPage = () => <h6>Home Page :-0</h6>
 //var token;
 
 function App() {

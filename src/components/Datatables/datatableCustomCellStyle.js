@@ -6,7 +6,7 @@ const customStyles = {
 
     header: {
         style: {
-            minHeight: '200px',
+            minheight: '200px',
         },
     },
 
@@ -53,8 +53,8 @@ const customStyles = {
             marginRight: '3px',
             //overflowWrap: 'break-word',
             // minHeight: '60px',
-            maxHeight: '100px',
-            maxWidth: '300px',
+           // maxHeight: '100px',
+            //maxWidth: '300px',
             //wordWrap: 'break-word',
 
 

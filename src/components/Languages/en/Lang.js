@@ -181,6 +181,17 @@ const langData = {
             venue: "Venue",
         }
     },
+    pieceDetailImages:{
+        inventory:{
+            inventory_images:"Inventory images",
+        },
+        research:{
+            research_images: "Research images"
+        },
+        restoration:{
+        restoration_images: "Restoration images"
+        },
+    }
 
 
 }

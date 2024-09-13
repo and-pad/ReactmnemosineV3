@@ -160,11 +160,14 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
     }, [size,timerIdRef ]);
 
     // var prop ;
+    const [hasFetched, setHasFetched] = useState(false);
     useEffect(() => {
         const filtered = () => {
             return filterSearch(defColumns, tableData, filterText, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks);
      
          };
+         if (!hasFetched) {
+         
         const fetchDataAndFormat = async () => {
             try {
                 let fetch;
@@ -222,6 +225,8 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
         };
     
         fetchDataAndFormat();
+        setHasFetched(true);
+    }
         setFilteredTableData(filtered());
 
           // Inicializar checkboxValues con valores predeterminados
@@ -241,14 +246,13 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
         setCheckboxValues(Values);
         // setCheckboxSearchValues(initialValuesSearch);
         //filtered();
-    }, [ accessToken, size, dataQuery, onDetailClick, checkboxSearchValues,disableChecks ,filterText,rm_accents,upper_lower,wordComplete,setTableData,setDefColumns ]);
-    
-    // Estado local para almacenar arrayTabColOut
-    
-    
-    // Puedes acceder a arrayTabColOutState donde lo necesites en el componente
-    
-    
+        // Si cambian ciertas dependencias clave, reiniciar el estado
+    return () => {
+        setHasFetched(false);
+    };
+    }, [ accessToken,refreshToken, size,setHasFetched, dataQuery, onDetailClick, checkboxSearchValues,disableChecks ,filterText,rm_accents,upper_lower,wordComplete,setTableData,setDefColumns ]);    
+    // Estado local para almacenar arrayTabColOut        
+    // Puedes acceder a arrayTabColOutState donde lo necesites en el componente     
 
     /*****************************************************************************
      *****************************************************************************/
@@ -266,13 +270,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
         }));
         // console.log(checkboxSearchValues[id]);
 
-    };
-  
-    /*Effect para la busqueda*/
-   // useEffect(() => {
-        
-
-    //}, [tableData, filterText, defColumns, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks]);
+    };   
 
     const subHeaderComponentMemo = useMemo(() => {
           /******************************************************************************** */

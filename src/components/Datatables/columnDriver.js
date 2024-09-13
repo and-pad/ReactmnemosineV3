@@ -43,7 +43,7 @@ const CustomPhoto = ({ row, column, onDetailClick }) => {
     //   const navigatess = useNavigate();
     //  const history = useHistory();    
     const fileName = row[column];
-    const AddrImgName = SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.thumbnails + fileName;
+    const AddrImgName = SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.inventory_thumbnails + fileName;
     // console.log('addrImg', AddrImgName);
     const navigate = useNavigate();
 
@@ -76,7 +76,7 @@ export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
                 reorder: true,
                 show: true,
                 width: '110',
-                minWidth: '90px',
+                //minWidth: '90px',
                 // Otras propiedades específicas de "inventory_number" aquí
             };
         case "catalog_number":
@@ -317,7 +317,7 @@ export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
                 name: langData.dataTableUserQueryNames.photo_thumb_info,
                 sortable: false,
                 show: true,
-                maxWidth: '125px',
+               // maxWidth: '125px',
                 cell: row => <CustomPhoto row={row} column={columnName} onDetailClick={onDetailClick} />,
                 // Otras propiedades específicas de "measure_without" aquí
             };

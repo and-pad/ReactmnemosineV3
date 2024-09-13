@@ -188,6 +188,17 @@ const langData = {
             venue: "Sede",
         }
     },
+    pieceDetailImages:{
+        inventory:{
+            inventory_images:"Imagenes de inventario",
+        },
+        research:{
+            research_images: "Imagenes de investigación"
+        },
+        restoration:{
+        restoration_images: "Imagenes de restauración"
+        },
+    }
 
 }
 

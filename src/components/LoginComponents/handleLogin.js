@@ -6,7 +6,7 @@ import SETTINGS from '../Config/settings';
 export var handleLogin = async ({ email, password }) => {
     // var data_response;
     try {
-        const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/signin/';
+        const url = SETTINGS.URL_ADDRESS.server_api_commands + 'auth/signin/';
         const response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -40,7 +40,7 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
         // console.log('acces que llega a handle', accessToken);
         //Si funciona este nos responde un json de nombre {'time_left':200.185} en segundos y fracciones,
         //la cantidad restante de tiempo de vida del token.
-        const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/check/';
+        const url = SETTINGS.URL_ADDRESS.server_api_commands + 'auth/check/';
         var response = await fetch(url, {
             method: 'POST',
             headers: {
@@ -67,15 +67,11 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
             const errorData = await response.json();
             //Si la respuesta no es ok, entonces verificamos si es por token invalido
             if (errorData.code === "token_not_valid") {
-                /*
-                console.log("Error: Token no válido.");
-                console.log("Detalle:", errorData.detail);
-                console.log("Mensaje:", errorData.messages[0].message);
-                */
+               
                 //Intentamos hacer un fetch de refrescado de toquen
                 try {
                     //En esta url de api es para refrescar la el accessToken con el refreshToken
-                    const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/signin/';
+                    const url = SETTINGS.URL_ADDRESS.server_api_commands + 'auth/signin/';
                     response = await fetch(url, {
                         method: 'PUT',//En el metodo PUT es donde renovamos el accessToken
                         headers: {

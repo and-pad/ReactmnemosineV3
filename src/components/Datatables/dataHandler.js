@@ -280,9 +280,9 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                 omit: false,
                 sortable: true,
                 show: false,
-                maxWidth: '400px',
+                //maxWidth: '400px',
                 //Width: '110',
-                minWidth: '90px',
+                //minWidth: '90px',
                 //compact: true,
             }
             //aplica los valores por default
@@ -496,7 +496,7 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
             'Authorization': `Bearer ${accessToken}`
         },
     };
-    const url = SETTINGS.URL_ADDRESS.server_url_commands + 'authenticated/user_query/';
+    const url = SETTINGS.URL_ADDRESS.server_api_commands + 'authenticated/user_query/';
     const response = await fetch(url, requestOptions);
     var data;
     var queryData;
@@ -511,7 +511,7 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
 
             try {
                 //En esta url de api es para refrescar el accessToken con el refreshToken
-                const url = SETTINGS.URL_ADDRESS.server_url_commands + 'auth/signin/';
+                const url = SETTINGS.URL_ADDRESS.server_api_commands + 'auth/signin/';
                 const response2 = await fetch(url, {
                     method: 'PUT',//En el metodo PUT es donde renovamos el accessToken
                     headers: {
