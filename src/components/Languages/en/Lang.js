@@ -26,6 +26,8 @@ const langData = {
         users: 'Users',
         catalogs: 'Catalogs',
         genders: 'Genders',
+        administration: 'Administration',
+        
         language: 'Language',
     },
     dataTablesSearch: {

@@ -22,6 +22,8 @@ import { PieceDetail } from './components/PiecesQueriesComponents/PieceDetail'
 
 import { Inventory, Research, Restoration, Movements } from './components/PiecesQueriesComponents/details'
 
+import { PermissionRoute } from './components/Permissions/permissions'
+
 //import "bootstrap/dist/css/bootstrap.css";
 //import "bootstrap/dist/js/bootstrap.bundle.js";
 
@@ -48,6 +50,7 @@ function App() {
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
   const [user, setUser] = useState('');
+  const [permissions, setPermissions] = useState([]);
   // const [forceUpdate, setForceUpdate] = useState(false); // Estado para forzar la actualización
   //const [loginError, setLoginError] = useState(null);
 
@@ -57,6 +60,7 @@ function App() {
     var storedToken = Cookies.get('accessToken');
     var storedReToken = Cookies.get('refreshToken');
     var storedUser = Cookies.get('User');
+    var vpermissions = Cookies.get('permissions');
     try {//Revisamos si existe token de ingreso
       //Al intentar parsear a json es cuando ocurre el error ya que no se puede hacer parse sobre undefined
       const parsedToken = JSON.parse(storedToken);
@@ -66,6 +70,7 @@ function App() {
       setAccessToken(parsedToken);
       setRefreshToken(parsedReToken);
       setUser(parsedUser);
+      setPermissions(vpermissions);
       //console.log("stored ", parsedToken);
       //console.log("stored Refresh ", parsedReToken);
     }
@@ -88,8 +93,10 @@ function App() {
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
       Cookies.remove('User');
+      Cookies.remove('permissions');
       setAccessToken(null);
       setRefreshToken(null);
+      setPermissions(null);
       return false;
     } else if (response === 'login_redirect' || response === 'not network1') {
       // Si llega login_redirect es porque ya no esta activo el usuario
@@ -97,6 +104,7 @@ function App() {
       //console.log('response', response);
       setAccessToken(null);
       setRefreshToken(null);
+      setPermissions(null);
       Cookies.remove('accessToken');
       Cookies.remove('refreshToken');
       Cookies.remove('User');
@@ -134,7 +142,7 @@ function App() {
       }
 
       const toOut = helperLoginCallBack(response);
-     // console.log('toout', toOut);
+      // console.log('toout', toOut);
       return toOut;
     } else {
       //Consultamos la Cookie si esta accessToken    
@@ -147,11 +155,16 @@ function App() {
       if (tparsed) {//consultamos refresh Token
         var refresh = Cookies.get('refreshToken');
         var Muser = Cookies.get('User');
+        var permissions = Cookies.get('permissions');
         Muser = JSON.parse(Muser);
         refresh = JSON.parse(refresh);
+        var parsed_permissions = JSON.parse(permissions);
+
+
 
         //como no existian los ponemos en el sistema
         setUser(Muser);
+        setPermissions(parsed_permissions);
         setAccessToken(tparsed)
         setRefreshToken(refresh);
         if (refresh !== undefined) {//comprobamos si no viene vacío refresh
@@ -189,6 +202,8 @@ function App() {
         //setForceUpdate(prevState => !prevState);
         setAccessToken(null);
         setRefreshToken(null);
+        setPermissions(null);
+        setUser(null);
 
         return;
 
@@ -203,17 +218,18 @@ function App() {
     else {
 
       // Si no hay un token almacenado, obtener uno nuevo      
-      const token = await handleLogin({ email, password });
-      if (token !== 'not authenticated' && token !== 'not network') {
-        setAccessToken(token.access);
-        setRefreshToken(token.refresh);
-        setUser(token.user);
+      const response = await handleLogin({ email, password });
+      if (response !== 'not authenticated' && response !== 'not network') {
+        setAccessToken(response.access);
+        setRefreshToken(response.refresh);
+        setUser(response.user);
+        setPermissions(response.permissions);
       } else {
-        if (token === 'not network') {
+        if (response === 'not network') {
           console.error('No hay internet, o el servidor no responde');
         }
       }
-      return token;
+      return response;
     }
   };
 
@@ -236,26 +252,26 @@ function App() {
             />} />
 
           <Route path='/mnemosine' element={
-            <TopNavBar user={user} />
+            <TopNavBar user={user} permissions={permissions} />
           }>
             <Route path='/mnemosine/start' element={<div>Start</div>} />
             <Route path='piece_queries' element={<PrivateRoute element={
 
               <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} />
             } checkLogin={handleCheckLoginCallback}
-           /> } /> 
+            />} />
 
-            <Route path="piece_queries/detail/:_id/" element={ <PrivateRoute element={
-              
+            <Route path="piece_queries/detail/:_id/" element={<PrivateRoute element={
               <PieceDetail accessToken={accessToken} refreshToken={refreshToken} />
-
             } checkLogin={handleCheckLoginCallback}
-             /> } >
+            />} >
               <Route index element={<Navigate to="inventory" />} />
-              <Route path="inventory" element={<PrivateRoute element={<Inventory />} checkLogin={handleCheckLoginCallback} />}/>
+
+              <Route path="inventory" element={<PrivateRoute element={<Inventory />} checkLogin={handleCheckLoginCallback} /> } />
+              
               <Route path="research" element={<PrivateRoute element={<Research />} checkLogin={handleCheckLoginCallback} />} />
-              <Route path="restoration" element={<PrivateRoute element={<Restoration />} checkLogin={handleCheckLoginCallback} /> } />
-              <Route path="movements" element={<PrivateRoute element={<Movements />} checkLogin={handleCheckLoginCallback} /> } />
+              <Route path="restoration" element={<PrivateRoute element={<Restoration />} checkLogin={handleCheckLoginCallback} />} />
+              <Route path="movements" element={<PrivateRoute element={<Movements />} checkLogin={handleCheckLoginCallback} />} />
             </Route>
 
 

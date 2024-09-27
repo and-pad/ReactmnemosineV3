@@ -6,9 +6,9 @@ import React, { useState, useEffect } from 'react';
 function Login({ onLogin, setAccessToken, accessToken }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    
+    const [error, setError] = useState('');    
     const [redirect, setRedirect] = useState(false);
+
     const navigate = useNavigate();
 
 
@@ -31,20 +31,24 @@ function Login({ onLogin, setAccessToken, accessToken }) {
 
         e.preventDefault();
 
-        var token = await onLogin({ email, password });
-        if (token === 'not authenticated') {
+        var response = await onLogin({ email, password });
+        if (response === 'not authenticated') {
             setError('Usuario o contraseña incorrectos');
             setAccessToken(false);
             setRedirect(false);
         } else {
             // Guardar el token en una cookie
-            if (token !== undefined && token !== 'not network') {
+            if (response !== undefined && response !== 'not network') {
 
-                if ('refresh' in token) {
+                if ('refresh' in response) {
                     //respuesta de que viene un nuevo token refresh y access
-                    Cookies.set('accessToken', JSON.stringify(token.access));
-                    Cookies.set('refreshToken', JSON.stringify(token.refresh));
-                    Cookies.set('User', JSON.stringify(token.user));
+                    Cookies.set('accessToken', JSON.stringify(response.access));
+                    Cookies.set('refreshToken', JSON.stringify(response.refresh));
+                    Cookies.set('User', JSON.stringify(response.user));
+                    Cookies.set('permissions',JSON.stringify(response.permissions));
+
+
+
                     //setRedirectHome(true);
                     //return true;
                 }
@@ -58,34 +62,30 @@ function Login({ onLogin, setAccessToken, accessToken }) {
 
             //console.log('antes de si pasa por set redirectHome');
             //console.log(token);
-            if (token !== undefined && token !== 'not network') {
+            if (response !== undefined && response !== 'not network') {
 
-                if ('access' in token) {
+                if ('access' in response) {
                     //respuesta de que se renovo token
-                    if (!('refresh' in token)) {
-                        // console.log('antes de darle SetAccess', token.access);
-                        setAccessToken(token.access);
-                        Cookies.set('accessToken', JSON.stringify(token.access));
-                        Cookies.set('User', JSON.stringify(token.user));
-
-                        //     console.log('si pasa por set redirectHome');
+                    if (!('refresh' in response)) {
+                        
+                        setAccessToken(response.access);
+                        Cookies.set('accessToken', JSON.stringify(response.access));
+                        Cookies.set('User', JSON.stringify(response.user));
+                       
                         setRedirect(true);
-
-                    } else {
-                        //console.log('si pasa por set redirectHome else');
-                        setAccessToken(token.access);
+                    } /*else {                       
+                        setAccessToken(response.access);
                         setRedirect(true);
-
-                    }
+                    }*/
 
                 }
-                else if ('time_left' in token) {
-                    //respuesta de que aun tiene vigencia el token
+                else if ('time_left' in response) {
+                    //respuesta de que aun tiene vigencia el response
                     setRedirect(true);
-                    setAccessToken(token.access);
+                    setAccessToken(response.access);
 
 
-                } else if (token === 'login_redirect') {
+                } else if (response === 'login_redirect') {
 
                     setAccessToken(false);
 

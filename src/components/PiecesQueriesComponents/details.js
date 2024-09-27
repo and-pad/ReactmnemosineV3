@@ -395,7 +395,9 @@ export const Research = () => {
                 <div className="d-flex flex-column mb-2 mb-md-0 mt-1">
                   <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.autor_s_}:</h6>
                   <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>
-                    {item?.research_info[0]?.authors_info?.[0] ? (<p>{item.research_info[0].authors_info[0].title}</p>) : "N/D"}
+                    {item?.research_info[0]?.authors_info?.map((author, index) => 
+                      (<p key={index}>{author.title}</p>))}
+                    
                   </div>
                 </div>
               </div>
@@ -469,7 +471,7 @@ export const Research = () => {
             <div className="row mt-4 mb-1">
               <div className="col-6">
                 <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.period}:</h6>
-                <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>{item?.research_info[0]?.period_info?.[0]?.[0] ?? "N/D"}
+                <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>{item?.research_info[0]?.period_info[0]?.title ? item.research_info[0].period_info[0].title : "N/A"}
                 </div>
               </div>
               <div className="col-6">

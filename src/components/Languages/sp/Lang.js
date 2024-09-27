@@ -24,13 +24,16 @@ const langData = {
         reports: 'Reportes',
         appraisals: 'Avalúos',
         users: 'Usuarios',
-        catalogs: 'Catalogos',
+        catalogs: 'Catálogos',
         genders: 'Géneros',
+        administration: 'Administración',
+        
+        
         language: 'Idioma',
 
     },
     dataTablesSearch: {
-        place_holder: "Busca algo...",
+        place_holder: "Encuentra algo...",
         select_columns: "Seleccionar columnas",
         advanced_search: "Busqueda avanzada",
         search_by_selection: "Busqueda por selección",

@@ -12,64 +12,101 @@ import { getTranslations, setLanguage } from '../../Languages/i18n';
 const langData = getTranslations();
 
 
-export function TopNavBar({ user }) {
+export function TopNavBar({ user, permissions }) {
     const changeLang = (lang) => {
         const reload = setLanguage(lang);
         reload && window.location.reload();
     }
+    console.log(permissions, 'desde aca');
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-dark " style={{ backgroundColor: 'rgba(0, 90, 145, 0.912)' }}>
 
                 <div className="container-fluid">
-                <Logo style={{height:"40px", width:"40px"}}/>
-                    <span className="navbar-brand text-dark" >Mnemosine</span>                    
+                    <Logo style={{ height: "40px", width: "40px" }} />
+                    <span className="navbar-brand text-dark" >Mnemosine</span>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul className="navbar-nav">
+
                             <li className="nav-item">
                                 <Link to="/mnemosine/start" className="nav-link text-white" aria-current="page">
                                     <i className="bi bi-eyeglasses"></i> {langData.StartMenu.home}
                                 </Link>
                             </li>
-                            <li className="nav-item">
-                                <Link to="/mnemosine/piece_queries" className="nav-link text-white" >{langData.StartMenu.queries}</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to='/mnemosine/inventory' className="nav-link text-white" >{langData.StartMenu.inventory}</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to='/mnemosine/research' className="nav-link text-white" >{langData.StartMenu.research}</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to='/mnemosine/restoration' className="nav-link text-white" >{langData.StartMenu.restoration}</Link>
-                            </li>
+                            {permissions.includes('ver_consultas') ? (
+
+                                <li className="nav-item">
+                                    <Link to="/mnemosine/piece_queries" className="nav-link text-white" >{langData.StartMenu.queries}</Link>
+                                </li>
+                            ) : null
+                            }
+
+                            {permissions.includes('ver_inventario') ? (
+
+                                <li className="nav-item">
+                                    <Link to='/mnemosine/inventory' className="nav-link text-white" >{langData.StartMenu.inventory}</Link>
+                                </li>
+
+                            ) : null}
+
+                            {permissions.includes('ver_research') ? (
+                                <li className="nav-item">
+                                    <Link to='/mnemosine/research' className="nav-link text-white" >{langData.StartMenu.research}</Link>
+                                </li>
+                            ) : null
+                            }
+
+
+                            {permissions.includes('ver_restauracion') ? (
+                                <li className="nav-item">
+                                    <Link to='/mnemosine/restoration' className="nav-link text-white" >{langData.StartMenu.restoration}</Link>
+                                </li>
+                            ) : null
+                            }
+
+
+
+
+
+                            {permissions.includes('ver_movimientos') ? (
+
+                                <li className="nav-item dropdown">
+                                    <div className="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {langData.StartMenu.movements}
+                                    </div>
+                                    <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownMenuLink">
+                                        <li><Link to='/mnemosine/movements/manage' className="dropdown-item" >{langData.StartMenu.manage}</Link></li>
+                                        <li><Link to='/mnemosine/movements/loans' className="dropdown-item" >{langData.StartMenu.loans}</Link></li>
+                                        <li><Link to='/mnemosine/movements/search' className="dropdown-item" >{langData.StartMenu.search}</Link></li>
+                                        <li><Link to='/mnemosine/movements/institutions' className="dropdown-item" >{langData.StartMenu.institutions}</Link></li>
+                                        <li><Link to='/mnemosine/movements/contacts' className="dropdown-item" >{langData.StartMenu.contacts}</Link></li>
+                                        <li><Link to='/mnemosine/movements/venues' className="dropdown-item" >{langData.StartMenu.venues}</Link></li>
+
+                                    </ul>
+                                </li>
+
+                            ) : null
+                            }
+
+                            {permissions.includes('ver_reportes') ? (
+                                <li className="nav-item">
+                                    <Link to='/mnemosine/reports' className="nav-link text-white" >{langData.StartMenu.reports}</Link>
+                                </li>
+                            ) : null
+                            }
+
+                            {permissions.includes('ver_avaluos') ? (
+                                <li className="nav-item">
+                                    <Link to='/mnemosine/appraisals' className="nav-link text-white" >{langData.StartMenu.appraisals}</Link>
+                                </li>
+                            ) : null
+                            }
 
                             <li className="nav-item dropdown">
-                                <div className="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    {langData.StartMenu.movements}
-                                </div>
-                                <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><Link to='/mnemosine/movements/manage' className="dropdown-item" >{langData.StartMenu.manage}</Link></li>
-                                    <li><Link to='/mnemosine/movements/loans' className="dropdown-item" >{langData.StartMenu.loans}</Link></li>
-                                    <li><Link to='/mnemosine/movements/search' className="dropdown-item" >{langData.StartMenu.search}</Link></li>
-                                    <li><Link to='/mnemosine/movements/institutions' className="dropdown-item" >{langData.StartMenu.institutions}</Link></li>
-                                    <li><Link to='/mnemosine/movements/contacts' className="dropdown-item" >{langData.StartMenu.contacts}</Link></li>
-                                    <li><Link to='/mnemosine/movements/venues' className="dropdown-item" >{langData.StartMenu.venues}</Link></li>
-
-                                </ul>
-                            </li>
-                            <li className="nav-item">
-                                <Link to='/mnemosine/reports' className="nav-link text-white" >{langData.StartMenu.reports}</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to='/mnemosine/appraisals' className="nav-link text-white" >{langData.StartMenu.appraisals}</Link>
-                            </li>
-                            
-                            <li className="nav-item dropdown">
-                            <div className="nav-link dropdown-toggle text-white" id="navbarDropdownLang" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div className="nav-link dropdown-toggle text-white" id="navbarDropdownLang" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     {langData.StartMenu.language}
                                 </div>
                                 <ul className="dropdown-menu bg-info" aria-labelledby='navbarDropDownLang'>
@@ -79,13 +116,73 @@ export function TopNavBar({ user }) {
 
                             </li>
 
+                            {['ver_usuarios', 'ver_roles', 'ver_catalogos', 'ver_configuraciones'].some(perm => permissions.includes(perm)) && (
+                                <li className="nav-item dropdown">
+                                    <div className="nav-link dropdown-toggle text-white" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {langData.StartMenu.administration}
+                                    </div>
+                                    <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownAdmin">
+
+                                        {/* Sección de Usuarios */}
+                                        {['ver_usuarios', 'ver_roles'].some(perm => permissions.includes(perm)) && (
+                                            <li className="nav-item dropdown">
+                                                <div className="dropdown-item dropdown-toggle" id="navbarDropdownUsers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i className="nav-icon icon-user"></i> {langData.StartMenu.users}
+                                                </div>
+                                                <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownUsers">
+                                                    {permissions.includes('ver_usuarios') && (
+                                                        <li className="dropdown-item">
+                                                            <Link to="/mnemosine/administration/user_manage" className="dropdown-item">
+                                                                <i className="nav-icon fa fa-cogs"></i> {langData.StartMenu.manage}
+                                                            </Link>
+                                                        </li>
+                                                    )}
+                                                    {permissions.includes('ver_roles') && (
+                                                        <li className="dropdown-item">
+                                                            <Link to="/mnemosine/administration/user_roles" className="dropdown-item">
+                                                                <i className="nav-icon icon-people"></i> {langData.StartMenu.roles}
+                                                            </Link>
+                                                        </li>
+                                                    )}
+                                                </ul>
+                                            </li>
+                                        )}
+
+                                        {/* Sección de Catálogos */}
+                                        {permissions.includes('ver_catalogos') && (
+                                            <li className="nav-item dropdown">
+                                                <div className="dropdown-item dropdown-toggle" id="navbarDropdownCatalogs" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i className="nav-icon icon-notebook"></i> {langData.StartMenu.catalogs}
+                                                </div>
+                                                <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownCatalogs">
+                                                    <li className="dropdown-item">
+                                                        <Link to="/mnemosine/administration/catalogs_manage" className="dropdown-item">
+                                                            <i className="nav-icon fa fa-cogs"></i> {langData.StartMenu.manage}
+                                                        </Link>
+                                                    </li>
+                                                    <li className="dropdown-item">
+                                                        <Link to="/mnemosine/administration/catalog_genres" className="dropdown-item">
+                                                            <i className="nav-icon icon-layers"></i> {langData.StartMenu.genres}
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        )}
+
+                                    </ul>
+                                </li>
+                            )}
+
+
+
+
                             <span className="navbar-text">
                                 Usuario conectado: {user}
                             </span>
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </nav >
             <Outlet />
         </>
     );
