@@ -16,15 +16,13 @@ function push_array_data(orderedData, column) {
     var column_c;
     //console.log(column);
     if (column === 'research_info') {
-
+        //Del objeto orderedData extraemos la info de research_info
         for (var i = 0; i < research_keys.length; i++) {
             column_c = research_keys[i];
             data_c.push(push_data(orderedData[column_c], research_keys[i]));
         }
-
         return data_c;
     }
-
     else if (column === 'location_info') {
         column_c = 'name';
     }
@@ -39,7 +37,6 @@ function push_array_data(orderedData, column) {
         if (orderedData && orderedData.length > 0 && 'title' in orderedData[0]) {
             data_c.push(orderedData[0]['title']);
         }
-
     }
     else if (column === 'period_info') {
 
@@ -57,19 +54,12 @@ function push_array_data(orderedData, column) {
             //       console.log('si', orderedData['file_name']);
         }
     }
-
     else {
         column_c = 'title';
     }
-
     data_c.push(orderedData[column_c]);
     data_c.push(column);
-    // console.log("este es el que si jala: ", data_c);
-    // console.log(data_c);
     return data_c;
-    // console.log(column);
-
-
 }
 
 
@@ -84,7 +74,7 @@ function structData(orderedData = null, column = null) {
         case 'measure_with':
         case 'measure_without':
         case '_id':
-
+        case 'actions':
 
             return orderedData ? push_data(orderedData, column) : []; // Devuelve el resultado de push_data solo si orderedData no es nulo
 
@@ -122,8 +112,6 @@ function omitingElements(size, hideConstructor, defColumns) {
         });
     }
     return out;
-
-
 }
 // Define una función que aplique la lógica específica para cada propiedad de la columna
 export function ConstructElementsToHide(defColumns, size, hideConstructor = []) {
@@ -140,80 +128,55 @@ export function ConstructElementsToHide(defColumns, size, hideConstructor = []) 
                 hideConstructorLoc.push(element);
             }
         });
-
         out = omitingElements(size, hideConstructorLoc, defColumns);
         return out;
     }
 
 };
-export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick, defColumnsUp = null, tableDataUp = null ){
-
+export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick, defColumnsUp = null, tableDataUp = null, module) {
     var StructuredData = [];
     var StructuredColumns = [];
-
-    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info', "_id"];
+    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info', "_id", "actions"];
 
     const orderedData = {};
     var defColumns = [];
-
     var tableData = [];
     if (isNeededApplyDefault) {
-        const orderedDataArray = Dataquery.map(item => {
+         const orderedDataArray = Dataquery.map(item => {
             var data_column = {};
-
             order_columns.forEach((column, index) => {
-
                 if (column === 'measure_with') {
-
                     var measure_w = item['height_with_base'] + ' X ' + item['width_with_base'] + ' X ' + item['depth_with_base'] + ' ø' + item['diameter_with_base'];
                     orderedData[column] = measure_w;
                     data_column[column] = structData(orderedData[column], column);
                     // console.log(measure_w);
                     StructuredColumns.push(column);
-
-
                 }
-
                 else if (column === 'measure_without') {
                     var measure_wo = item['height'] + ' X ' + item['width'] + ' X ' + item['depth'] + ' ø ' + item['diameter'];
                     orderedData[column] = measure_wo;
                     data_column[column] = structData(orderedData[column], column);
                     StructuredColumns.push(column);
                 }
+                else if (column === 'actions' && module === 'Inventory'){                                           
+                        StructuredColumns.push(column);
+                }
                 else if (column in item) {
                     orderedData[column] = item[column];
                     data_column[column] = structData(orderedData[column], column);
-
+                    
                     var htmldat = [];
-                    if (column === 'description_origin') {
-                        let Cdat = data_column[column][0];
-                        htmldat = [];
-                        htmldat.push(Cdat);
-                        data_column[column][0] = htmldat;
-                    }
-                    if (column === 'description_inventory') {
-                        let Cdat = data_column[column][0];
-                        htmldat = [];
-                        htmldat.push(Cdat);
+                    const columnsToCheck = [
+                        'description_origin',
+                        'description_inventory',
+                        'subgenders_info',
+                        'type_object_info',
+                        'location_info'
+                    ];
 
-                        data_column[column][0] = htmldat;
-                    }
-                    if (column === 'subgenders_info') {
+                    if (columnsToCheck.includes(column)) {
                         let Cdat = data_column[column][0];
-                        htmldat = [];
-                        htmldat.push(Cdat);
-                        data_column[column][0] = htmldat;
-                    }
-                    if (column === 'type_object_info') {
-                        let Cdat = data_column[column][0];
-                        htmldat = [];
-                        htmldat.push(Cdat);
-                        data_column[column][0] = htmldat;
-                    }
-                    if (column === 'location_info') {
-                        let Cdat = data_column[column][0];
-                        htmldat = [];
-                        htmldat.push(Cdat);
+                        htmldat = [Cdat];
                         data_column[column][0] = htmldat;
                     }
                     if (data_column['research_info']) {
@@ -221,15 +184,13 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                             data_column[item[1]] = []
                             data_column[item[1]].push(item[0]);
                             data_column[item[1]].push(item[1]);
-
                         });
-
                         if (data_column.hasOwnProperty(column)) {
                             // Elimina la propiedad del objeto
                             delete data_column[column];//elimina research_info y en su lugar pone todos los campos que esta trae como nuevas columnas
                         }
-                    }
-                    // Agregar la columna solo si no está presente
+                    }                    
+                    
                     if (column === 'research_info') {
                         research_keys.forEach(item => {
                             StructuredColumns.push(item);
@@ -271,6 +232,8 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
         var hideConstructor = [];
         var out;
 
+        
+
         defColumns = [...new Set(StructuredColumns)].map(column => {
             //Se declaran los valores en general de los campos
             let columnProps = {
@@ -300,35 +263,18 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
 
     } else {
 
-        if (defColumnsUp !== null  ) {
-            out = ConstructElementsToHide(defColumnsUp, size) ;          
-           
-           
+        if (defColumnsUp !== null) {
+            out = ConstructElementsToHide(defColumnsUp, size);
+
             defColumns = [...defColumnsUp];
             tableData = [...tableDataUp];
-            // console.log('tabledataUP', out);
         }
-
     }
-
-    /*.map(item => {
-    }
-    //console.log('hideCosntruc', hideConstructor.length);
-    // Mapear los datos para crear un array de arrays para la tabla
-   
-        return defColumns.map(column => item[column.name] || ''); // Usar el título de la columna como clave
-    });*/
-
 
     var TabColOut = [];
-    //console.log('StructuredData', StructuredData);
-    //console.log('tableData', tableData);
     TabColOut.push(tableData);
-    
     TabColOut.push(defColumns);
     TabColOut.push(out);
-    // console.log('tabledataOUT', out);
-    //  console.log('TabColOut', TabColOut);
     return TabColOut;
 
 }
@@ -383,9 +329,9 @@ export const saveToCache = (dataQuery) => {
             store = transaction.objectStore(storageName);
             const putRequest = store.put(JSON.stringify(dataQuery), dataName);
             //le agregamos mas una hora en milisegundos, es el tiempo que dura vivo el dato
-            const OneHour =  1 * 60 * 60 * 1000;
+            const OneHour = 1 * 60 * 60 * 1000;
             store.put(new Date().getTime() + OneHour, queryDateName);
-            
+
             putRequest.onsuccess = function () {
                 db.close(); // Cerrar la base de datos después de completar la operación
                 resolve('query saved');
@@ -402,6 +348,35 @@ export const saveToCache = (dataQuery) => {
         };
     });
 };
+
+export const delCache = () => {
+    //Funcion para borrar los datos de consultas, generalmente para hacer logout
+    return new Promise((resolve, reject) => {
+        let db;
+        let store;
+        const request = indexedDB.open(dataBaseName, 1)
+        request.onsuccess = function (event) {
+            db = event.target.result;
+            if (db.objectStoreNames.contains(storageName)) {
+                //store = event.target.transaction.objectStore(storageName);
+                const transaction = db.transaction([storageName], 'readwrite');
+                //obtenemos la tabla
+                store = transaction.objectStore(storageName);
+
+                store.delete(dataName);
+                store.delete(queryDateName);
+                db.close();
+                resolve(true);
+            }
+            else {
+                db.close();
+                resolve(false);
+            }
+            reject('error');
+        }
+    })
+}
+
 
 export const getFromCache = () => {
     return new Promise((resolve, reject) => {
@@ -477,7 +452,6 @@ export const getFromCache = () => {
     });
 };
 
-
 const getDataFromCache = async () => {
     try {
         const data = await getFromCache();
@@ -501,14 +475,12 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
     var data;
     var queryData;
     if (response.ok) {
-         data = await response.json();
+        data = await response.json();
         // console.log("data ptm",data);
-         queryData = data.query;
-        
+        queryData = data.query;
     } else {
         const errorData = await response.json();
         if (errorData.code === "token_not_valid") {
-
             try {
                 //En esta url de api es para refrescar el accessToken con el refreshToken
                 const url = SETTINGS.URL_ADDRESS.server_api_commands + 'auth/signin/';
@@ -521,7 +493,6 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
                     },
                     body: JSON.stringify({ 'refresh': refreshToken }),//ponemos el RefreshToken en el body para que intente hacer la renovacion                        
                 });
-
                 //console.log({ refresh: refreshToken });
                 if (response2.ok) {
                     //Esperamos a que nos de respuesta y lo convertimos en un objeto json.
@@ -529,8 +500,7 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
                     const data2 = await response2.json();
                     //console.log('rastreo access data', data);
                     return data2;
-                } 
-
+                }
             } catch (e) {
                 console.log(e);
                 //En caso que no se pueda renovar el refreshToken, redirigimos al login
@@ -538,18 +508,15 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
             }
         }
     }
-
     try {
         await saveToCache(queryData); // Guardamos los datos en la caché
-      //  console.log("quewryData",queryData);
+        //  console.log("quewryData",queryData);
         return queryData; // Devolvemos los datos obtenidos
     } catch (error) {
         console.error('Error trying to save the data to cache :', error);
         throw error; // Relanzamos el error para que se maneje en un nivel superior
     }
-
 }
-
 export const fetchData = async (accessToken, refreshToken) => {
     try {
         const cachedData = await getDataFromCache();

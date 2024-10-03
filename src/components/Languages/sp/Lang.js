@@ -27,6 +27,7 @@ const langData = {
         catalogs: 'Catálogos',
         genders: 'Géneros',
         administration: 'Administración',
+        connected_user: "Usuario conectado:",
         
         
         language: 'Idioma',
@@ -43,6 +44,7 @@ const langData = {
         tooltip_whole_word: "Hacer coincidir solo palabras completas"
 
     },
+    
     dataTableUserQueryNames: {
         inventory_number: 'No. inventario',
         catalog_number: 'No. catálogo',
@@ -76,6 +78,7 @@ const langData = {
         measure_with: 'Medidas con base/marco',
         measure_without: 'Medidas sin base/marco',
         photo_thumb_info: 'Foto',
+        actions: 'Acciones',
     },
     //Si bien estan repetidos y pude haber usado los de datatables es mejor tenerlos por separado
     //para que lleve mas orden

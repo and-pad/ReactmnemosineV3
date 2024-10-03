@@ -1,5 +1,5 @@
 
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 //import langData from '../../Languages/en/Lang';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './MenuTemplates.css'; // Asegúrate de importar los estilos CSS
@@ -12,12 +12,15 @@ import { getTranslations, setLanguage } from '../../Languages/i18n';
 const langData = getTranslations();
 
 
-export function TopNavBar({ user, permissions }) {
+export function TopNavBar({ user, permissions, handleLogout }) {
     const changeLang = (lang) => {
         const reload = setLanguage(lang);
         reload && window.location.reload();
     }
     console.log(permissions, 'desde aca');
+
+    const navigate = useNavigate();
+
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-dark " style={{ backgroundColor: 'rgba(0, 90, 145, 0.912)' }}>
@@ -47,7 +50,7 @@ export function TopNavBar({ user, permissions }) {
                             {permissions.includes('ver_inventario') ? (
 
                                 <li className="nav-item">
-                                    <Link to='/mnemosine/inventory' className="nav-link text-white" >{langData.StartMenu.inventory}</Link>
+                                    <Link to='/mnemosine/inventory_queries' className="nav-link text-white" >{langData.StartMenu.inventory}</Link>
                                 </li>
 
                             ) : null}
@@ -177,8 +180,12 @@ export function TopNavBar({ user, permissions }) {
 
 
                             <span className="navbar-text">
-                                Usuario conectado: {user}
+                                {langData.StartMenu.connected_user} {user}
                             </span>
+                            <span >
+                                <button className="btn btn-sm btn-secondary" onClick={() => handleLogout({navigate})}>Log out</button>
+                            </span>
+
                         </ul>
                     </div>
                 </div>

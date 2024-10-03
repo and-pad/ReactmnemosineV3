@@ -1,6 +1,6 @@
 //import langData from '../Languages/en/Lang';
 import SETTINGS from "../Config/settings";
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { getTranslations } from '../Languages/i18n';
 const langData = getTranslations();
@@ -64,12 +64,43 @@ const CustomPhoto = ({ row, column, onDetailClick }) => {
     );
 }
 
+const editClick = ({_id, navigate}) => {
+    navigate(`/mnemosine/inventory_queries/actions/${encodeURIComponent(_id[0])}/edit`)
+}
+
+const InventoryActions = ({ row, column }) => {
+    console.log("row", row._id);
+    console.log("column", column);
+    const _id = row._id;
+    const navigate = useNavigate();
+    return (
+        <>
+            <div className="d-flex justify-content-around">
+                <button className="btn btn-sm btn-primary" onClick={() => editClick({ _id, navigate })}>
+                    <i className="fas fa-edit"></i>
+                </button>
+                <button className="btn btn-sm btn-danger">
+                    <i className="fas fa-trash-alt"></i>
+                </button>
+                <button className="btn btn-sm btn-info">
+                    <i className="fas fa-history"></i>
+                </button>
+            </div>
+        </>
+    )
+
+};
+
 
 export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
     // Aplica la lógica según el nombre de la columna
     switch (columnName) {
+
+        /************************************************/
+        /************************************************/
+        /*****Columnas para modulo Consultas-Queries*****/
         case "inventory_number":
-            
+
             return {
                 ...columnProps,
                 name: langData.dataTableUserQueryNames.inventory_number,
@@ -317,7 +348,7 @@ export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
                 name: langData.dataTableUserQueryNames.photo_thumb_info,
                 sortable: false,
                 show: true,
-               // maxWidth: '125px',
+                // maxWidth: '125px',
                 cell: row => <CustomPhoto row={row} column={columnName} onDetailClick={onDetailClick} />,
                 // Otras propiedades específicas de "measure_without" aquí
             };
@@ -329,6 +360,21 @@ export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
                 sortable: false,
                 show: false,
             };
+        /***********************************************************************************/
+        /***********************************************************************************/
+        /***********************************************************************************/
+        // En el caso de Inventario-Inventory se toma todo lo anterior, solo se agrega una columna
+
+        case "actions":
+            console.log('actions');
+            return {
+                ...columnProps,
+                name: langData.dataTableUserQueryNames.actions,
+                sortable: false,
+                show: true,
+                cell: row => <InventoryActions row={row} column={columnName} />,
+            };
+
         // Continúa agregando más casos según sea necesario para otras columnas
         default:
             return columnProps; // Mantén las propiedades predeterminadas si no hay lógica específica

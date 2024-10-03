@@ -2,6 +2,8 @@ import Cookies from 'js-cookie';//Librería para el manejo de cookies
 import React, { useState, useEffect } from 'react';//react, y sus componentes
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';//Componentes de rutas de react de single page
 
+
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
@@ -20,9 +22,12 @@ import '@fortawesome/fontawesome-free/css/all.min.css';//FontAwesome!!
 import { PiecesQueries } from './components/PiecesQueriesComponents/PiecesQueries';
 import { PieceDetail } from './components/PiecesQueriesComponents/PieceDetail'
 
-import { Inventory, Research, Restoration, Movements } from './components/PiecesQueriesComponents/details'
+import { Inventory, Research, Restoration, Movements } from './components/PiecesQueriesComponents/details';
+import { Edit } from './components/PiecesQueriesComponents/edit';
+import { InventoryEdit } from './components/PiecesQueriesComponents/inventoryActions';
+import { delCache } from './components/Datatables/dataHandler';
 
-import { PermissionRoute } from './components/Permissions/permissions'
+import { PermissionRoute } from './components/Permissions/permissions';
 
 //import "bootstrap/dist/css/bootstrap.css";
 //import "bootstrap/dist/js/bootstrap.bundle.js";
@@ -239,6 +244,40 @@ function App() {
     //return (<Navigate to='/login' />); // Navega a la ruta '/detail'
   };
 
+  //const navigate = useNavigate();
+  const handleLogout = ({ navigate }) => {
+
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+    Cookies.remove('User')
+    // Forzar una actualización de la interfaz de usuario
+    //setForceUpdate(prevState => !prevState);
+    setAccessToken(null);
+    setRefreshToken(null);
+    setPermissions(null);
+    setUser(null);
+
+    handleDeleteCache();
+    navigate('../login')
+
+
+  }
+
+  const handleDeleteCache = async () => {
+    try {
+      const result = await delCache();
+      if (result !== 'error') {
+        console.log(result);
+        console.log("Cache eliminado con éxito.");
+      } else {
+        console.log("No se encontró el objeto en la base de datos.");
+      }
+    } catch (error) {
+      console.error("Ocurrió un error al eliminar la caché:", error);
+    }
+
+  }
+
   return (
     <div className='App'>
       <BrowserRouter>
@@ -252,12 +291,11 @@ function App() {
             />} />
 
           <Route path='/mnemosine' element={
-            <TopNavBar user={user} permissions={permissions} />
+            <TopNavBar user={user} permissions={permissions} handleLogout={handleLogout} />
           }>
-            <Route path='/mnemosine/start' element={<div>Start</div>} />
+            <Route path='start' element={<div>Start</div>} />
             <Route path='piece_queries' element={<PrivateRoute element={
-
-              <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} />
+              <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} module={'Query'} />
             } checkLogin={handleCheckLoginCallback}
             />} />
 
@@ -267,12 +305,39 @@ function App() {
             />} >
               <Route index element={<Navigate to="inventory" />} />
 
-              <Route path="inventory" element={<PrivateRoute element={<Inventory />} checkLogin={handleCheckLoginCallback} /> } />
-              
+              <Route path="inventory" element={<PrivateRoute element={<Inventory />} checkLogin={handleCheckLoginCallback} />} />
+
               <Route path="research" element={<PrivateRoute element={<Research />} checkLogin={handleCheckLoginCallback} />} />
               <Route path="restoration" element={<PrivateRoute element={<Restoration />} checkLogin={handleCheckLoginCallback} />} />
               <Route path="movements" element={<PrivateRoute element={<Movements />} checkLogin={handleCheckLoginCallback} />} />
             </Route>
+
+
+
+            <Route path='inventory_queries' element={<PrivateRoute element={
+              <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} module={'Inventory'} />
+            } checkLogin={handleCheckLoginCallback}
+            />} />
+
+
+            <Route path="inventory_queries/actions/:_id/" element={<PrivateRoute element={
+              <InventoryEdit accessToken={accessToken} refreshToken={refreshToken} />
+            } checkLogin={handleCheckLoginCallback}
+            />} >
+              <Route index element={<Navigate to="edit" />} />
+
+              <Route path="edit" element={<PrivateRoute element={<Edit />} checkLogin={handleCheckLoginCallback} />} />
+
+             
+            </Route>
+
+
+
+
+
+
+
+
 
 
           </Route>

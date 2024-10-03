@@ -23,7 +23,7 @@ export var handleLogin = async ({ email, password }) => {
             return 'not authenticated';
         }
     } catch (error) {
-        console.log('elerror', error);
+        console.error('elerror', error);
         return 'not network';
         // Manejar errores de red
     }

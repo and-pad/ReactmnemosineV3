@@ -27,6 +27,7 @@ const langData = {
         catalogs: 'Catalogs',
         genders: 'Genders',
         administration: 'Administration',
+        connected_user: 'Connected user:',
         
         language: 'Language',
     },
@@ -73,6 +74,7 @@ const langData = {
         measure_with: 'Measurements with base/frame',
         measure_without: 'Measurements without base/frame',
         photo_thumb_info: 'Photo',
+        actions: 'Actions',
     },
     //Si bien estan repetidos y pude haber usado los de datatables es mejor tenerlos por separado
     //para que lleve mas orden
