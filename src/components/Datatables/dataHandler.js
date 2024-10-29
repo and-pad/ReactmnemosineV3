@@ -463,6 +463,7 @@ const getDataFromCache = async () => {
 };
 
 const fetchAndCacheData = async (accessToken, refreshToken) => {
+    
     const requestOptions = {
         method: 'GET',
         headers: {

@@ -2,12 +2,8 @@ import Cookies from 'js-cookie';//Librería para el manejo de cookies
 import React, { useState, useEffect } from 'react';//react, y sus componentes
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';//Componentes de rutas de react de single page
 
-
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-
-
 
 import './App.css';
 import { TopNavBar } from './components/Home/HomeComponents/MenuTemplates';//Plantilla principal de la pagina
@@ -31,8 +27,6 @@ import { PermissionRoute } from './components/Permissions/permissions';
 
 //import "bootstrap/dist/css/bootstrap.css";
 //import "bootstrap/dist/js/bootstrap.bundle.js";
-
-
 
 const SearchPage = () => <h6>Home Page :-0</h6>
 //var token;
@@ -143,9 +137,7 @@ function App() {
 
       if (typeof response === 'object' && response !== null && 'user' in response && response.user !== '') {
         setUser(response['user']);
-
       }
-
       const toOut = helperLoginCallBack(response);
       // console.log('toout', toOut);
       return toOut;
@@ -158,14 +150,12 @@ function App() {
       }
       //console.log('tparsed', tparsed);
       if (tparsed) {//consultamos refresh Token
-        var refresh = Cookies.get('refreshToken');
-        var Muser = Cookies.get('User');
-        var permissions = Cookies.get('permissions');
+        let refresh = Cookies.get('refreshToken');
+        let Muser = Cookies.get('User');
+        const permissions = Cookies.get('permissions');
         Muser = JSON.parse(Muser);
         refresh = JSON.parse(refresh);
-        var parsed_permissions = JSON.parse(permissions);
-
-
+        const parsed_permissions = JSON.parse(permissions);
 
         //como no existian los ponemos en el sistema
         setUser(Muser);
@@ -215,7 +205,6 @@ function App() {
       } else {
         //si viene una de estas dos etiquetas el token access esta funcionando, ya sea porque se actualizo o aun tenia vigencia el actual
         if ('access' in response || 'time_left' in response) {
-
           return response;
         }
       }
@@ -306,43 +295,24 @@ function App() {
               <Route index element={<Navigate to="inventory" />} />
 
               <Route path="inventory" element={<PrivateRoute element={<Inventory />} checkLogin={handleCheckLoginCallback} />} />
-
               <Route path="research" element={<PrivateRoute element={<Research />} checkLogin={handleCheckLoginCallback} />} />
               <Route path="restoration" element={<PrivateRoute element={<Restoration />} checkLogin={handleCheckLoginCallback} />} />
               <Route path="movements" element={<PrivateRoute element={<Movements />} checkLogin={handleCheckLoginCallback} />} />
+
             </Route>
-
-
-
             <Route path='inventory_queries' element={<PrivateRoute element={
               <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} module={'Inventory'} />
             } checkLogin={handleCheckLoginCallback}
             />} />
-
 
             <Route path="inventory_queries/actions/:_id/" element={<PrivateRoute element={
               <InventoryEdit accessToken={accessToken} refreshToken={refreshToken} />
             } checkLogin={handleCheckLoginCallback}
             />} >
               <Route index element={<Navigate to="edit" />} />
-
-              <Route path="edit" element={<PrivateRoute element={<Edit />} checkLogin={handleCheckLoginCallback} />} />
-
-             
+              <Route path="edit" element={<PrivateRoute element={<Edit accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
             </Route>
-
-
-
-
-
-
-
-
-
-
           </Route>
-
-
           <Route path='/test/' element={SearchPage()} />
         </Routes>
 
