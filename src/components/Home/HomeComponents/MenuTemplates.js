@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 //import langData from '../../Languages/en/Lang';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -8,6 +8,7 @@ import './MenuTemplates.css'; // Asegúrate de importar los estilos CSS
 import { ReactComponent as Logo } from "../../../mnemo.svg";
 
 import { getTranslations, setLanguage } from '../../Languages/i18n';
+//import 'bootstrap/dist/js/bootstrap.bundle';
 
 const langData = getTranslations();
 
@@ -21,12 +22,15 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
     const navigate = useNavigate();
 
+
+    // Manejar los dropdowns anidados
+
     return (
         <>
-            <nav className="navbar navbar-expand-lg navbar-dark " style={{ backgroundColor: 'rgba(0, 90, 145, 0.912)' }}>
+            <div className="navbar navbar-expand-lg navbar-dark " style={{ backgroundColor: 'rgba(0, 90, 145, 0.912)' }}>
 
                 <div className="container-fluid">
-                    <Logo style={{ height: "40px", width: "40px" }} />
+                     <Logo style={{ height: "40px", width: "40px" }} />
                     <span className="navbar-brand text-dark" >Mnemosine</span>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
@@ -36,7 +40,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
                             <li className="nav-item">
                                 <Link to="/mnemosine/start" className="nav-link text-white" aria-current="page">
-                                    <i className="bi bi-eyeglasses"></i> {langData.StartMenu.home}
+                                    {langData.StartMenu.home}
                                 </Link>
                             </li>
                             {permissions.includes('ver_consultas') ? (
@@ -55,7 +59,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
                             ) : null}
 
-                            {permissions.includes('ver_research') ? (
+                            {permissions.includes('ver_investigacion') ? (
                                 <li className="nav-item">
                                     <Link to='/mnemosine/research' className="nav-link text-white" >{langData.StartMenu.research}</Link>
                                 </li>
@@ -69,11 +73,6 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                                 </li>
                             ) : null
                             }
-
-
-
-
-
                             {permissions.includes('ver_movimientos') ? (
 
                                 <li className="nav-item dropdown">
@@ -108,11 +107,11 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                             ) : null
                             }
 
-                            <li className="nav-item dropdown">
-                                <div className="nav-link dropdown-toggle text-white" id="navbarDropdownLang" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <li className="nav-item dropdown" >
+                                <div className="nav-link dropdown-toggle text-white " id="navbarDropdownLang" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     {langData.StartMenu.language}
                                 </div>
-                                <ul className="dropdown-menu bg-info" aria-labelledby='navbarDropDownLang'>
+                                <ul className="dropdown-menu bg-info " aria-labelledby='navbarDropDownLang'>
                                     <li className="dropdown-item" onClick={() => changeLang('sp')}>{langData.LangDispo.spanish}</li>
                                     <li className="dropdown-item" onClick={() => changeLang('en')}>{langData.LangDispo.english}</li>
                                 </ul>
@@ -121,36 +120,63 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
                             {['ver_usuarios', 'ver_roles', 'ver_catalogos', 'ver_configuraciones'].some(perm => permissions.includes(perm)) && (
                                 <li className="nav-item dropdown">
-                                    <div className="nav-link dropdown-toggle text-white" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a href="#" className="nav-link dropdown-toggle text-white" role="button" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
                                         {langData.StartMenu.administration}
-                                    </div>
-                                    <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownAdmin">
+                                    </a>
+                                    <ul className="dropdown-menu bg-info "  >
 
                                         {/* Sección de Usuarios */}
                                         {['ver_usuarios', 'ver_roles'].some(perm => permissions.includes(perm)) && (
-                                            <li className="nav-item dropdown">
-                                                <div className="dropdown-item dropdown-toggle" id="navbarDropdownUsers" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i className="nav-icon icon-user"></i> {langData.StartMenu.users}
-                                                </div>
-                                                <ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownUsers">
-                                                    {permissions.includes('ver_usuarios') && (
-                                                        <li className="dropdown-item">
-                                                            <Link to="/mnemosine/administration/user_manage" className="dropdown-item">
-                                                                <i className="nav-icon fa fa-cogs"></i> {langData.StartMenu.manage}
-                                                            </Link>
-                                                        </li>
-                                                    )}
-                                                    {permissions.includes('ver_roles') && (
-                                                        <li className="dropdown-item">
-                                                            <Link to="/mnemosine/administration/user_roles" className="dropdown-item">
-                                                                <i className="nav-icon icon-people"></i> {langData.StartMenu.roles}
-                                                            </Link>
+                                            <li className='dropstart'>
+                                                <a
+                                                    className="dropdown-item dropdown-toggle"
+                                                    href="#"
+                                                    data-bs-toggle="dropdown"
+                                                >
+                                                    {langData.StartMenu.users}
+                                                </a>
+                                                <ul className="dropdown-menu bg-info">
+                                                    {['ver_usuarios', 'ver_roles'].some((perm) => permissions.includes(perm)) && (
+                                                        <li >
+                                                            <a
+                                                                href="#"
+                                                                className="dropdown-item "
+                                                            >
+                                                                <Link
+                                                                    to="/mnemosine/administration/user_manage/user"
+                                                                    className="dropdown-item"
+                                                                >
+                                                                    {langData.StartMenu.manage}
+                                                                </Link>
+                                                            </a>
+
                                                         </li>
                                                     )}
                                                 </ul>
                                             </li>
                                         )}
-
+                                        {/*<ul className="dropdown-menu bg-info" aria-labelledby="navbarDropdownUsers">
+                                                                {permissions.includes('ver_usuarios') && (
+                                                                    <li>
+                                                                        <Link
+                                                                            to="/mnemosine/administration/user_manage"
+                                                                            className="dropdown-item"
+                                                                        >
+                                                                             {langData.StartMenu.manage}
+                                                                        </Link>
+                                                                    </li>
+                                                                )}
+                                                                {permissions.includes('ver_roles') && (
+                                                                    <li>
+                                                                        <Link
+                                                                            to="/mnemosine/administration/user_roles"
+                                                                            className="dropdown-item"
+                                                                        >
+                                                                            <i className="nav-icon icon-people"></i> {langData.StartMenu.roles}
+                                                                        </Link>
+                                                                    </li>
+                                                                )}
+                                                            </ul>*/}
                                         {/* Sección de Catálogos */}
                                         {permissions.includes('ver_catalogos') && (
                                             <li className="nav-item dropdown">
@@ -177,19 +203,25 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                             )}
 
 
+                            <li className="nav-item dropdown" >
+                                <div className="nav-link dropdown-toggle text-white " id="navbarDropdownLang" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {langData.StartMenu.connected_user}
+                                </div>
+                                <ul className="dropdown-menu bg-info " aria-labelledby='navbarDropDownLang'>
+                                    <li className="dropdown-item">{user}</li>
+                                    <li className="dropdown-item">
+                                        <button className="btn btn-sm btn-secondary" onClick={() => handleLogout({ navigate })} >Log out</button>
+                                    </li>
+                                </ul>
+
+                            </li>
 
 
-                            <span className="navbar-text">
-                                {langData.StartMenu.connected_user} {user}
-                            </span>
-                            <span >
-                                <button className="btn btn-sm btn-secondary" onClick={() => handleLogout({navigate})}>Log out</button>
-                            </span>
 
                         </ul>
                     </div>
                 </div>
-            </nav >
+            </div >
             <Outlet />
         </>
     );

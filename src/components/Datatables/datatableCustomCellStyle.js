@@ -6,14 +6,14 @@ const customStyles = {
 
     header: {
         style: {
-            minheight: '200px',
+            minHeight: '200px',
         },
     },
 
     rows: {
         style: {
 
-            backgroundColor: '#4c4c4d', // Cambia '#ffcc80' al color que desees
+           // backgroundColor: '#4c4c4d', // Cambia '#ffcc80' al color que desees
 
         },
     },
@@ -26,9 +26,9 @@ const customStyles = {
             borderTopColor: 'gray',// defaultThemes.default.divider.default,
             borderBottomStyle: 'solid',
             borderBottomWidth: '1px',
-            borderBottomColor: 'gray', // defaultThemes.default.divider.default,
+            //borderBottomColor: 'gray', // defaultThemes.default.divider.default,
             // marginLeft: '-5px',
-            backgroundColor: '#515152',
+            //backgroundColor: '#515152',
 
 
             //minHeight: '40px',
@@ -42,13 +42,13 @@ const customStyles = {
 
             borderRightStyle: 'solid',
             borderRightWidth: '2px',
-            borderRightColor: 'gray',// defaultThemes.default.divider.default,
-            backgroundColor: '#515152',
+           // borderRightColor: 'gray',// defaultThemes.default.divider.default,
+            //backgroundColor: '#515152',
 
             fontFamily: 'Asap Condensed',
 
             fontSize: '16px',
-            color: '#00cccc',
+            //color: '#00cccc',
             // marginLeft: '5px',
             marginRight: '3px',
             //overflowWrap: 'break-word',
@@ -78,7 +78,7 @@ const customStyles = {
             borderRightColor: defaultThemes.default.divider.default,
             fontFamily: 'Asap Condensed',
             fontSize: '16px',
-            color: '#dbdbdb',//'#89eaf5',
+            //color: '#dbdbdb',//'#89eaf5',
             marginRight: '3px',
             //backgroundColor: '#455573',
 

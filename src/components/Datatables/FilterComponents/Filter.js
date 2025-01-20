@@ -121,10 +121,10 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                     <div className="d-flex justify-content-between " style={{ color: 'whitesmoke', background: '#daebff', borderRadius: '5px' }}>
                         <div className="d-flex ms-1" style={{ fontFamily: 'Asap Condensed', fontSize: '.9em', flex: '1' }}>
 
-                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2"  data-tooltip-id="selection-tooltip"
-                      data-tooltip-content={langData.dataTablesSearch.tooltip_selection}
-                      data-tooltip-place="top">
-                        <Tooltip id="selection-tooltip" />
+                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2" data-tooltip-id="selection-tooltip"
+                                data-tooltip-content={langData.dataTablesSearch.tooltip_selection}
+                                data-tooltip-place="top">
+                                <Tooltip id="selection-tooltip" />
                                 <input
                                     style={{ width: '1.8em' }}
                                     className="form-check-input mt-1 "
@@ -134,12 +134,12 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                                 />
                                 <label className="form-check-label " htmlFor="flexSwitchCheckDefault1">{langData.dataTablesSearch.search_by_selection}</label>
                             </div>
-                            
-                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2" 
-                            data-tooltip-id="accents-tooltip"
-                            data-tooltip-content={langData.dataTablesSearch.tooltip_accents}
-                            data-tooltip-place="top"                            
-                             >
+
+                            <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2"
+                                data-tooltip-id="accents-tooltip"
+                                data-tooltip-content={langData.dataTablesSearch.tooltip_accents}
+                                data-tooltip-place="top"
+                            >
                                 <Tooltip id="accents-tooltip" />
                                 <input
                                     style={{ width: '1.8em' }}
@@ -152,11 +152,11 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                             </div>
 
                             <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2"
-                            data-tooltip-id="upper-tooltip"
-                            data-tooltip-content={langData.dataTablesSearch.tooltip_upper_lower}
-                            data-tooltip-place="top"    
-                             >
-                            <Tooltip id="upper-tooltip" />
+                                data-tooltip-id="upper-tooltip"
+                                data-tooltip-content={langData.dataTablesSearch.tooltip_upper_lower}
+                                data-tooltip-place="top"
+                            >
+                                <Tooltip id="upper-tooltip" />
                                 <input
                                     style={{ width: '1.8em' }}
                                     className="form-check-input mt-1"
@@ -168,9 +168,9 @@ export const SearchBox = ({ placeholder, columns, onFilter, filterText, checkbox
                             </div>
 
                             <div style={{ background: '#5e5e5e', borderRadius: '4px' }} className="form-check form-switch ms-1 mt-1 ps-5 pe-2"
-                            data-tooltip-id="whole-tooltip"
-                            data-tooltip-content={langData.dataTablesSearch.tooltip_whole_word}
-                            data-tooltip-place="top"
+                                data-tooltip-id="whole-tooltip"
+                                data-tooltip-content={langData.dataTablesSearch.tooltip_whole_word}
+                                data-tooltip-place="top"
                             >
                                 <Tooltip id="whole-tooltip" />
                                 <input
@@ -203,48 +203,53 @@ export const SelectColumn = ({ handleChange, columns, checkboxValues, }) => {
     var countElements = 0;
     const checks = columns.map((element, index) => {
         const isChecked = checkboxValues[element.id] || false;
-        if (!element.show) {
-            countElements += 1;
-            return (
-                <div key={index} className="form-check form-check-inline mb-0 mt-0">
-                    <input
-                        className="form-check-input mt-2"
-                        type="checkbox"
-                        id={element.id}
-                        onChange={() => handleChange(element.id)}
-                        value={false}
-                        checked={isChecked}
-                        style={{ width: '.7em', height: '.8em' }}
-                    />
-                    <label
-                        className="form-check-label"
-                        htmlFor={element.id}
-                        style={{ fontFamily: 'Asap Condensed', fontSize: '1em', }}
-                    >{element.name}</label>
-                </div>
-            );
-        } else /*if (element.show)*/ {
-            countElements += 1;
-            return (
-                <div key={index} className="form-check form-check-inline mb-0 mt-0">
-                    <input
-                        className="mt-2 form-check-input "
-                        type="checkbox"
-                        id={element.id}
+        //console.log("element", element);
+        if (element.name !== "_id") {
+            if (!element.show) {
+                countElements += 1;
+                return (
+                    <div key={index} className="form-check form-check-inline mb-0 mt-0">
+                        <input
+                            className="form-check-input mt-2"
+                            type="checkbox"
+                            id={element.id}
+                            onChange={() => handleChange(element.id)}
+                            value={false}
+                            checked={isChecked}
+                            style={{ width: '.7em', height: '.8em' }}
+                        />
+                        <label
+                            className="form-check-label"
+                            htmlFor={element.id}
+                            style={{ fontFamily: 'Asap Condensed', fontSize: '1em', }}
+                        >{element.name}</label>
+                    </div>
+                );
+            } else /*if (element.show)*/ {
+                countElements += 1;
+                return (
+                    <div key={index} className="form-check form-check-inline mb-0 mt-0">
+                        <input
+                            className="mt-2 form-check-input "
+                            type="checkbox"
+                            id={element.id}
 
-                        value={true}
-                        checked={isChecked}
-                        onChange={() => handleChange(element.id)}
-                        style={{ width: '.7em', height: '.8em' }}
-                    />
-                    <label
-                        className="form-check-label "
-                        htmlFor={element.id + '_idS'}
-                        style={{ fontFamily: 'Asap Condensed', fontSize: '1em', }}
-                    >{element.name}</label>
-                </div>
-            );
+                            value={true}
+                            checked={isChecked}
+                            onChange={() => handleChange(element.id)}
+                            style={{ width: '.7em', height: '.8em' }}
+                        />
+                        <label
+                            className="form-check-label "
+                            htmlFor={element.id + '_idS'}
+                            style={{ fontFamily: 'Asap Condensed', fontSize: '1em', }}
+                        >{element.name}</label>
+                    </div>
+                );
+            }
+
         }
+        return null;
     });
 
     let numPerColumn = Math.floor(countElements / 2);

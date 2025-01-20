@@ -23,7 +23,14 @@ import { Edit } from './components/PiecesQueriesComponents/edit';
 import { InventoryEdit } from './components/PiecesQueriesComponents/inventoryActions';
 import { delCache } from './components/Datatables/dataHandler';
 
+import { UserManageDataTable, UsersNavBar } from './components/UserManage/Users';
+
+
 import { PermissionRoute } from './components/Permissions/permissions';
+import { InactiveUsersDatatable, ActiveUsersDatatable } from './components/UserManage/usersDatatables';
+import {CreateUserForm} from './components/UserManage/usersDatatables';
+import { API_ActiveUser } from './components/UserManage/ApiCalls'
+
 
 //import "bootstrap/dist/css/bootstrap.css";
 //import "bootstrap/dist/js/bootstrap.bundle.js";
@@ -53,8 +60,11 @@ function App() {
   // const [forceUpdate, setForceUpdate] = useState(false); // Estado para forzar la actualización
   //const [loginError, setLoginError] = useState(null);
 
+ 
 
   useEffect(() => {
+
+
     //Intentamos tomar a las cookies de acceso pero no sabemos si existen
     var storedToken = Cookies.get('accessToken');
     var storedReToken = Cookies.get('refreshToken');
@@ -283,6 +293,7 @@ function App() {
             <TopNavBar user={user} permissions={permissions} handleLogout={handleLogout} />
           }>
             <Route path='start' element={<div>Start</div>} />
+
             <Route path='piece_queries' element={<PrivateRoute element={
               <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} module={'Query'} />
             } checkLogin={handleCheckLoginCallback}
@@ -305,6 +316,7 @@ function App() {
             } checkLogin={handleCheckLoginCallback}
             />} />
 
+
             <Route path="inventory_queries/actions/:_id/" element={<PrivateRoute element={
               <InventoryEdit accessToken={accessToken} refreshToken={refreshToken} />
             } checkLogin={handleCheckLoginCallback}
@@ -312,7 +324,37 @@ function App() {
               <Route index element={<Navigate to="edit" />} />
               <Route path="edit" element={<PrivateRoute element={<Edit accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
             </Route>
+
+
+
+            <Route
+              path='administration/user_manage/'
+              element={<PrivateRoute element={<UsersNavBar />
+              }
+                checkLogin={handleCheckLoginCallback}
+              />
+              }
+            />
+
+            <Route path="administration/user_manage/user/" element={<PrivateRoute element={
+              <UserManageDataTable accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} >
+
+              <Route index element={<Navigate to="users_active" />} />
+
+              <Route path="users_active" element={<PrivateRoute element={<ActiveUsersDatatable />} checkLogin={handleCheckLoginCallback} />} />
+
+              <Route path="users_inactive" element={<PrivateRoute element={<InactiveUsersDatatable />} checkLogin={handleCheckLoginCallback} />} />
+
+              <Route path="new_user" element={<PrivateRoute element={<CreateUserForm accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
+
+
+            </Route>
+
           </Route>
+
+
+
+
           <Route path='/test/' element={SearchPage()} />
         </Routes>
 

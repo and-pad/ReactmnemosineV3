@@ -16,13 +16,14 @@ const langData = getTranslations();
 
 const DownloadButton = ({ key, document, module }) => {
   var fileUrl;
-  if (module === langData.pieceDetailMenu.inventory) {
+  if (module === "inventory") {
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/inventario/documentos/' + document.file_name;
   }
-  else if (module === 'investigacion') {
+  else if (module === 'research') {
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/investigacion/documentos/' + document.file_name;
   }
-  else if (module === "restauracion") {
+  else if (module === "restoration") {
+    console.log('restoration');
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/restauracion/documentos/' + document.file_name;
   }
   // const downloadLinkRef = useRef(null);
@@ -245,6 +246,8 @@ export const Inventory = () => {
                   </div>
                 </span>
               </span>
+
+              
               <span className="mb-0 mb-md-0 mx-md-2 col-4">
                 <h6 className="card-title mb-0" style={{ fontSize: '.85em' }}>{langData.pieceDetailDescriptors.inventory.location_info}:</h6>
                 <p style={{ fontSize: '.90em' }}>{item?.location_info ? item.location_info.name : 'N/D'}</p>
@@ -313,12 +316,12 @@ export const Inventory = () => {
                   item.documents_info.map((document, index) => (
 
                     /*document.module_info[0] === langData.pieceDetailMenu.inventory ?*/
-                    document.module_info[0] === "inventario" ? (
+                    document.module_info[0] === "inventory" ? (
                       <div className="flex-fill me-2 ">
                         <DownloadButton
                           key={index}
                           document={document}
-                          module={langData.pieceDetailMenu.inventory}
+                          module={"inventory"}
                         />
                       </div>
                     ) : null
@@ -651,8 +654,8 @@ export const Research = () => {
                       <a className="nav-link" id={`iso-690-tab-fn-b${index + 1}`} data-bs-toggle="tab" href={`#iso-690-fn-b${index + 1}`} role="tab" aria-controls={`iso-690-fn-b${index + 1}`} aria-selected="false">ISO 690</a>
                     </li>
 
-                    <li class="nav-item ms-5">
-                      <span class="nav-link disabled"><span class="badge bg-primary">{bibliography.reference_type_info[0] ? bibliography.reference_type_info[0] : 'Tipo de referencia no definido'}</span></span>
+                    <li className="nav-item ms-5">
+                      <span className="nav-link disabled"><span className="badge bg-primary">{bibliography.reference_type_info[0] ? bibliography.reference_type_info[0] : 'Tipo de referencia no definido'}</span></span>
                     </li>
 
                   </ul>
@@ -679,20 +682,21 @@ export const Research = () => {
             </div>
           </div>
           <div className='border border-primary mb-2 '>
+
             <div className='bg-primary text-white px-1 m-0 d-flex align-items-center justify-content-start' style={{ fontSize: '.90em', height: '20px' }}>
               {langData.pieceDetailDescriptors.inventory.associated_documents}
             </div>
 
             <div className=' d-flex  align-items-center justify-content-start p-2'>
-
+              {item?.documents_info ? console.log(item.documents_info): console.log("Sin info")}
               {item?.documents_info ? (
                 item.documents_info.map((document, index) => (
-                  document.module_info[0] === 'investigacion' ? (
+                  document.module_info[0] === 'research' ? (
                     <div className="flex-fill me-2 ">
                       <DownloadButton
                         key={index}
                         document={document}
-                        module={'investigacion'}
+                        module={'research'}
                       />
                     </div>) : null))) : ("N/D")}
             </div>
@@ -890,13 +894,16 @@ export const Restoration = () => {
                     </div>
 
                     <div className='d-flex align-items-center justify-content-start p-2'>
+                      {console.log(item.documents_info)}
                       {item?.documents_info ? (
                         item.documents_info.map((document, index) => (
                           restorations.documents_ids && restorations.documents_ids.includes(document._id) ? (
+                            
                             <div className="flex-fill me-2" key={index}>
+                              
                               <DownloadButton
                                 document={document}
-                                module={'restauracion'}
+                                module={'restoration'}
                               />
                             </div>
                           ) : null
@@ -976,10 +983,10 @@ export const Movements = () => {
           </tbody>
         </table>
       </div>
-      <pre>{JSON.stringify(item, null, 2)}</pre>
+     
 
     </>
 
   );
-  //<pre>{JSON.stringify(item, null, 2)}</pre>
+  //<pre>{JSON.stringify(item, null, 2)}</pre> // <pre>{JSON.stringify(item, null, 2)}</pre>
 };

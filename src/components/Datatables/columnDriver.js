@@ -44,7 +44,7 @@ const CustomPhoto = ({ row, column, onDetailClick }) => {
     //  const history = useHistory();    
     const fileName = row[column];
     const AddrImgName = SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.inventory_thumbnails + fileName;
-    // console.log('addrImg', AddrImgName);
+   
     const navigate = useNavigate();
 
 
@@ -69,8 +69,7 @@ const editClick = ({_id, navigate}) => {
 }
 
 const InventoryActions = ({ row, column }) => {
-    console.log("row", row._id);
-    console.log("column", column);
+   
     const _id = row._id;
     const navigate = useNavigate();
     return (
@@ -92,7 +91,7 @@ const InventoryActions = ({ row, column }) => {
 };
 
 
-export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
+export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailClick) => {
     // Aplica la lógica según el nombre de la columna
     switch (columnName) {
 
@@ -366,7 +365,7 @@ export const applyLogicToColumn = (columnName, columnProps, onDetailClick) => {
         // En el caso de Inventario-Inventory se toma todo lo anterior, solo se agrega una columna
 
         case "actions":
-            console.log('actions');
+           
             return {
                 ...columnProps,
                 name: langData.dataTableUserQueryNames.actions,

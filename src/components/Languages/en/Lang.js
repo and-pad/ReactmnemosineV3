@@ -24,6 +24,7 @@ const langData = {
         reports: 'Reports',
         appraisals: 'Appraisals',
         users: 'Users',
+        manage: 'Manage',
         catalogs: 'Catalogs',
         genders: 'Genders',
         administration: 'Administration',
@@ -83,6 +84,7 @@ const langData = {
             inventory_number: 'Inventory No.',
             catalog_number: 'Catalog No.',
             origin_number: 'Origin No.',
+            gender_id: 'Gender',
             gender: 'Gender',
             subgenders_info: 'Subgender',
             type_object_info: 'Type object',
@@ -104,6 +106,15 @@ const langData = {
             width: "Width",
             depth: "Depth",
             diameter: "Diameter",
+
+            height_with_base: "Height with base",
+            width_with_base: "Width with base",
+            depth_with_base: "Depth with base",
+            diameter_with_base: "Diameter with base",
+
+            base_or_frame: "Base or frame",
+
+            
             appraisal_history_tooltip: "View appraisal history",
             associated_documents: "Assosiated documents",
             incidence: "Incidents",
@@ -195,7 +206,31 @@ const langData = {
         restoration:{
         restoration_images: "Restoration images"
         },
-    }
+    },
+    pieceInventoryEdit: {
+        
+        field: "Field",
+        oldValue: "Current value",
+        newValue: "To change value",
+        documents: "Documents",
+        images: "Images",
+        photographer: "Photographer",
+        photographed_at: "Photographed at",
+        description: "Description",
+        name: "Name",
+        size: "Size",
+        previous: "Previous",
+        next: "Next",
+        uploader_img_sign:"Drag or select a new image",
+        uploader_doc_sign:"Drag or select a new document",
+
+    },
+    userDatatableManage: {
+        Username: "Name",
+        Email: "Email",
+        Rol: "Rol",
+        Actions: "Actions",
+    },
 
 
 }

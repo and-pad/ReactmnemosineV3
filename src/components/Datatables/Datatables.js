@@ -1,100 +1,197 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import Datatable from 'react-data-table-component';
-import GoogleFontLoader from 'react-google-font-loader';
+//import GoogleFontLoader from 'react-google-font-loader';
 import { formatData, fetchData, ConstructElementsToHide } from './dataHandler'; // Importamos fetchData
 import customStyles from './datatableCustomCellStyle';
 import '../Datatables/datatable.css';
 import { SearchBox, SelectColumn, filterSearch } from './FilterComponents/Filter';
 import { getTranslations } from '../Languages/i18n';
+import { createTheme } from 'react-data-table-component'
+import Box from '@mui/material/Box'; // Para el contenedor estilizado
+import Typography from '@mui/material/Typography'; // Para el texto
+import { Button } from '@mui/material'; // Botón de Material UI
+import CircularProgress from '@mui/material/CircularProgress';
+import InventoryTwoToneIcon from '@mui/icons-material/InventoryTwoTone';
+
 const langData = getTranslations();
 
-//columnas del datatables
-
-const columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card', 'photo_thumb_info', '_id'];
-// Define el componente personalizado para la fila expandida
-const ExpandableComponent = props => {
-    //console.log('props', props);
-    let content = [];
-    content.push(
-        <GoogleFontLoader
-            key="google-font-loader" // Agregar una key única para GoogleFontLoader
-            fonts={[
-                {
-                    font: 'Marko One',
-                    weights: [300],
-                },
-                {
-                    font: 'Asap Condensed',
-                    weights: [300],
-                },
-            ]}
-        />
+export default function CircularIndeterminate() {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%', // Abarca todo el ancho
+                height: '30vh', // Abarca toda la altura de la pantalla
+                //backgroundColor: '#f0f0f0', // Fondo gris claro
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column', // Apilamos el CircularProgress y el texto
+                    alignItems: 'center', // Centramos horizontalmente
+                    justifyContent: 'center', // Centramos verticalmente dentro del cuadro
+                    backgroundColor: '#ffffff', // Fondo blanco del cuadro
+                    padding: '2rem', // Espaciado interno generoso
+                    borderRadius: '12px', // Bordes redondeados
+                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Sombra suave
+                    minWidth: '200px', // Ancho mínimo para el cuadro
+                }}
+            >
+                <CircularProgress color="primary" size="5rem" />
+                <Box
+                    sx={{
+                        marginTop: '1rem', // Espacio entre el ícono y el texto
+                        color: '#333', // Color oscuro para contraste
+                        fontSize: '1.2rem', // Tamaño del texto
+                        fontWeight: '500', // Peso de fuente para mayor legibilidad
+                        textAlign: 'center', // Asegura que el texto esté centrado
+                    }}
+                >
+                    Cargando...
+                </Box>
+            </Box>
+        </Box>
     );
+}
+
+createTheme('custom-dark', {
+    text: {
+        primary: '#FFFFFF', // Color del texto principal
+        secondary: '#FFFFFF', // Color del texto secundario
+    },
+    background: {
+        default: '#535353', // Fondo general del modo oscuro
+    },
+    context: {
+        background: '#383838', // Fondo del contexto (como al seleccionar filas)
+        text: '#FFFFFF',
+    },
+    divider: {
+        default: '#bababa', // Color de los divisores
+    },
+    button: {
+        default: '#1f1f1f', // Color de botones
+        hover: '#FFFFFF', // Color de hover en botones
+        focus: '#757575', // Color de focus en botones
+    },
+    highlightOnHover: {
+        default: '#2a2a2a', // Color al pasar el cursor sobre una fila
+        text: '#FFFFFF',
+    },
+    striped: {
+        default: '#5e5e5e', // Fondo de filas alternas (ajusta este valor)
+        text: '#FFFFFF',
+    },
+});
+
+createTheme('custom-light', {
+    text: {
+        primary: '#4f4f4f',  // Texto principal más gris
+        secondary: '#6c6c6c',  // Texto secundario más gris
+    },
+    background: {
+        default: '#E6E6E6',  // Fondo general con un gris suave
+    },
+    context: {
+        background: '#D3D3D3',  // Fondo del contexto un poco más oscuro
+        text: '#333333',  // Texto en contexto más oscuro para contraste
+    },
+    divider: {
+        default: '#B0B0B0',  // Líneas divisorias más sutiles
+    },
+    button: {
+        default: '#626262',  // Fondo por defecto de botones
+        hover: '#929292',  // Hover con un gris más marcado
+        focus: '#B3B3B3',  // Focus en un gris medio
+    },
+    highlightOnHover: {
+        default: '#F4F4F4',  // Color al pasar el cursor sobre una fila (gris muy suave)
+        text: '#333333',  // Texto resaltado en gris oscuro
+    },
+    striped: {
+        default: '#F0F0F0',  // Fondo de filas alternas (gris muy suave)
+        text: '#333333',  // Texto en las filas alternas (gris oscuro)
+    },
+    buttonActive: {
+        default: '#D3D3D3',  // Fondo de botón activo más claro
+        text: '#333333',  // Texto en botón activo
+    }
+});
+//columnas del datatables
+//const columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card', 'photo_thumb_info', '_id'];
+// Define el componente personalizado para la fila expandida
+const ExpandableComponent = (props) => {
+    useEffect(() => {
+        const loadGoogleFonts = () => {
+            const link = document.createElement('link');
+            link.href =
+                'https://fonts.googleapis.com/css2?family=Marko+One&family=Asap+Condensed:wght@300&display=swap';
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        };
+
+        loadGoogleFonts();
+    }, []);
+
+    // Aquí continúa el resto de tu lógica para renderizar `content`...
+    let content = [];
 
     if (props.defColumnsOut !== undefined) {
-        console.log('props', props.defColumnsOut);
         props.defColumnsOut.forEach((element, index) => {
-            if (columns.includes(element.id)) {
-                if ('show' in element) {
-                    if (element.show === true) {
-                        const Stag = element.id === 'tags' ? true : false;
-                        if (Stag) {
-                            var Arrayelements;
-                            if (props.data[element.id] !== undefined) {
+            // Lógica para renderizar contenido...
+            const isTagsColumn = element.id === 'tags';
+            const arrayElements = isTagsColumn
+                ? props.data[element.id]?.split(',') || []
+                : [];
 
-                                Arrayelements = props.data[element.id].split(",");
-                            }
-                            else { Arrayelements = [] };
-                        }
-                        content.push(
-                            Stag ? (
-                                <div
-                                    style={{
-                                        fontFamily: 'Asap Condensed',
-                                        fontSize: '15px'
-                                    }}
-                                    className="text-start mt-2 ms-2 mb-0 border-bottom pb-0"
-                                    key={`${element.name}-${index}`} // Usar una combinación única de propiedades
-                                >
-                                    {element.name}:
-
-                                    <div className="d-flex flex-wrap" key={`${element.name + '1'}-${index}`} style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1.1em' }}>
-                                        {Arrayelements.map((element, index) => (
-                                            <div key={`${element}-${index}`} className="me-2 mb-2">
-                                                <a href='#temp' style={{ textDecoration: 'none', height: '1.2em', paddingTop: '1px', backgroundColor: "#1e80e1" }} className="badge rounded-pill text-dark ">{element}</a>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )
-                                :
-                                (
-                                    <div
+            content.push(
+                <div
+                    style={{ fontFamily: 'Asap Condensed', fontSize: '15px' }}
+                    className="text-start mt-2 ms-2 mb-0 border-bottom pb-0"
+                    key={`${element.name}-${index}`}
+                >
+                    {element.name}:
+                    {isTagsColumn ? (
+                        <div
+                            className="d-flex flex-wrap"
+                            style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1.1em' }}
+                        >
+                            {arrayElements.map((item, i) => (
+                                <div key={`${item}-${i}`} className="me-2 mb-2">
+                                    <a
+                                        href="#temp"
                                         style={{
-                                            fontFamily: 'Asap Condensed',
-                                            fontSize: '15px'
+                                            textDecoration: 'none',
+                                            height: '1.2em',
+                                            paddingTop: '1px',
+                                            backgroundColor: '#1e80e1',
                                         }}
-                                        className="text-start mt-2 ms-2 mb-0 border-bottom pb-0"
-                                        key={`${element.name}-${index}`} // Usar una combinación única de propiedades
+                                        className="badge rounded-pill text-dark"
                                     >
-                                        {element.name}:
-
-                                        <div className="text-info" key={`${element.name + '1'}-${index}`} style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1em' }}>
-                                            {props.data[element.id]}
-                                        </div>
-                                    </div>)
-                        );
-                    }
-                }
-            }
+                                        {item}
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div
+                            className="text-info"
+                            style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1em' }}
+                        >
+                            {props.data[element.id]}
+                        </div>
+                    )}
+                </div>
+            );
         });
     }
-    return (
-        <div>
-            {content}
-        </div>
-    );
+
+    return <div>{content}</div>;
 };
+
 //var arrayTabColOut;
 /********************************************************************************************************************/
 /********************************************************************************************************************/
@@ -102,7 +199,7 @@ const ExpandableComponent = props => {
 /********************************************************************************************************************/
 /********************************************************************************************************************/
 /********************************************************************************************************************/
-export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }) {
+export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick }) {
     const [defColumns, setDefColumns] = useState([]);
     const [tableData, setTableData] = useState([]);
 
@@ -120,6 +217,13 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
 
     const [checkboxSearchValues, setCheckboxSearchValues] = useState('');
     const [disableChecks, setdisbleChecks] = useState(true);
+    const [theme, setTheme] = useState('custom-dark'); // Estado para el tema
+    const [pending, setPending] = useState(true);
+
+
+    const toggleTheme = () => {
+        setTheme((prevTheme) => (prevTheme === 'custom-light' ? 'custom-dark' : 'custom-light'));
+    };
 
 
     //var size;
@@ -167,6 +271,8 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
 
     // var prop ;
     const [hasFetched, setHasFetched] = useState(false);
+
+
     useEffect(() => {
         const filtered = () => {
             return filterSearch(defColumns, tableData, filterText, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks);
@@ -181,11 +287,14 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
                     if (dataQuery.length === 0) {
                         fetch = await fetchData(accessToken, refreshToken);
                         // console.log(fetch);
+
                         setDataQuery(fetch);
                         first = true;
+                        setPending(false);
                     } else {
                         fetch = dataQuery;
                         first = false;
+                        setPending(false);
                     }
 
                     let arrayTabColOut;
@@ -197,9 +306,10 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
                     } else {
                         arrayTabColOut = formatData(dataQuery, size, false, onDetailClick, defColumns, tableData, module);
                     }
-
+                    console.log('arrayTabColOut Table data', arrayTabColOut[0]);
                     // Guardar en estado local y actualizar referencias
                     setTableData(arrayTabColOut[0]);
+                    console.log('arrayTabColOut Columns Names', arrayTabColOut[2]);
                     setDefColumnsOut(arrayTabColOut[2]);
                     // setArrayTabColOutState(arrayTabColOut); // Guardar en estado local
 
@@ -231,6 +341,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
             };
 
             fetchDataAndFormat();
+
             setHasFetched(true);
         }
         setFilteredTableData(filtered());
@@ -256,7 +367,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
         return () => {
             setHasFetched(false);
         };
-    }, [accessToken, refreshToken, size, setHasFetched, dataQuery, onDetailClick, checkboxSearchValues, disableChecks, filterText, rm_accents, upper_lower, wordComplete, setTableData, setDefColumns]);
+    }, [accessToken, refreshToken, size, setHasFetched, dataQuery, onDetailClick, checkboxSearchValues, disableChecks, filterText, rm_accents, upper_lower, wordComplete, setTableData, setDefColumns, /*setPending*/]);
     // Estado local para almacenar arrayTabColOut        
     // Puedes acceder a arrayTabColOutState donde lo necesites en el componente     
 
@@ -370,14 +481,25 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
     return (
         <div className="container-fluid  mt-3">
 
-            <GoogleFontLoader
-                fonts={[
-                    {
-                        font: 'Asap Condensed', // Nombre de tu fuente
-                        weights: [400, 700], // Especifica los pesos que deseas cargar
-                    },
-                ]}
-            />
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                mb={2}
+                padding={1}
+                borderBottom="1px solid #ccc"
+            >
+                <Typography variant="h5" component="h1" fontWeight="bold">
+                    Consultas
+                </Typography>
+                <Button sx={{ textTransform: 'none' }}
+                    variant="contained" color="primary" onClick={toggleTheme}>
+                    Tema
+                </Button>
+            </Box>
+
+
+
             <Datatable
                 // style={{ width: "100vw" }}
                 className=""
@@ -388,17 +510,38 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick  }
                 dense
                 responsive
                 // onColumnOrderChange={handleColumnOrderChange}
-                //striped
+                striped
                 subHeader
                 subHeaderComponent={subHeaderComponentMemo}
                 //subHeaderComponentProps={ }
+
+                progressPending={pending}
+                progressComponent={<CircularIndeterminate />}
+
+                noDataComponent={
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100px',
+                            color: 'gray',
+                        }}
+                    >
+                        <InventoryTwoToneIcon sx={{ fontSize: 48, marginBottom: 1 }} />
+                        <Typography variant="body1">
+                            No hay registros para mostrar
+                        </Typography>
+                    </Box>
+                }
 
                 highlightOnHover
                 expandableRows
                 expandableRowsComponent={ExpandableComponent}
                 expandableRowsComponentProps={propsColumns}
                 customStyles={customStyles}
-                theme={'dark'}
+                theme={theme}
             />
         </div>
     );
@@ -428,8 +571,11 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
 
     const [checkboxSearchValues, setCheckboxSearchValues] = useState('');
     const [disableChecks, setdisbleChecks] = useState(true);
+    const [theme, setTheme] = useState('custom-dark'); // Estado para el tema
 
-
+    const toggleTheme = () => {
+        setTheme((prevTheme) => (prevTheme === 'custom-light' ? 'custom-dark' : 'custom-light'));
+    };
 
     //var size;
     /***************************************************************************** */
@@ -500,11 +646,11 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
                     let arrayTabColOut;
                     const module = "Inventory"
                     if (first) {
-                        arrayTabColOut = formatData(fetch, size, true, onDetailClick,null,null, module);
+                        arrayTabColOut = formatData(fetch, size, true, onDetailClick, null, null, module);
                         setFilteredTableData(arrayTabColOut[0]);
 
                     } else {
-                        arrayTabColOut = formatData(dataQuery, size, false, onDetailClick, defColumns, tableData,module);
+                        arrayTabColOut = formatData(dataQuery, size, false, onDetailClick, defColumns, tableData, module);
                     }
 
                     // Guardar en estado local y actualizar referencias
@@ -677,15 +823,23 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
 
     return (
         <div className="container-fluid  mt-3">
+            <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                mb={2}
+                padding={1}
+                borderBottom="1px solid #ccc"
+            >
+                <Typography variant="h5" component="h1" fontWeight="bold">
+                    Consultas
+                </Typography>
+                <Button sx={{ textTransform: 'none' }}
+                    variant="contained" color="primary" onClick={toggleTheme}>
+                    Tema
+                </Button>
+            </Box>
 
-            <GoogleFontLoader
-                fonts={[
-                    {
-                        font: 'Asap Condensed', // Nombre de tu fuente
-                        weights: [400, 700], // Especifica los pesos que deseas cargar
-                    },
-                ]}
-            />
             <Datatable
                 // style={{ width: "100vw" }}
                 className=""

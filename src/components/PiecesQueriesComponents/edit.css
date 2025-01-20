@@ -1,0 +1,32 @@
+.tags-input {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+}
+
+.tag {
+
+    font-size: 86%;
+    background-color: #01ffdd;
+    padding: 0px 2px;
+    border-radius: 8px;
+    margin-right: 3px;
+    height: 20px;
+}
+.delete-tag {
+    margin-left: 5px;
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+}
+
+.dashed-box {
+    border: 2px dashed #e0e0e0; /* Línea punteada con color gris claro */
+    padding: 20px; /* Espaciado interno */
+    margin: 10px; /* Espaciado externo */
+    text-align: center; /* Centrado del texto dentro del div */
+    background: #fff7f7;
+  }
+  

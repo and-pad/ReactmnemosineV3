@@ -28,8 +28,6 @@ const langData = {
         genders: 'Géneros',
         administration: 'Administración',
         connected_user: "Usuario conectado:",
-        
-        
         language: 'Idioma',
 
     },
@@ -44,7 +42,7 @@ const langData = {
         tooltip_whole_word: "Hacer coincidir solo palabras completas"
 
     },
-    
+
     dataTableUserQueryNames: {
         inventory_number: 'No. inventario',
         catalog_number: 'No. catálogo',
@@ -87,6 +85,7 @@ const langData = {
             inventory_number: 'No. inventario',
             catalog_number: 'No. catálogo',
             origin_number: 'No. procedencia',
+            gender_id: 'Género',
             gender: 'Género',
             subgenders_info: 'Subgénero',
             type_object_info: 'Tipo de objeto',
@@ -108,6 +107,15 @@ const langData = {
             width: "Ancho",
             depth: "Profundo",
             diameter: "Diámetro",
+
+
+            height_with_base: "Alto con base",
+            width_with_base: "Ancho con base",
+            depth_with_base: "Profundo con base",
+            diameter_with_base: "Diametro con base",
+
+            base_or_frame: "Base o marco",
+
             appraisal_history_tooltip: "Ver historial de avalúo",
             associated_documents: "Documentos asociados",
             incidence: "Incidencias",
@@ -194,17 +202,48 @@ const langData = {
             venue: "Sede",
         }
     },
-    pieceDetailImages:{
-        inventory:{
-            inventory_images:"Imagenes de inventario",
+    pieceDetailImages: {
+        inventory: {
+            inventory_images: "Imagenes de inventario",
         },
-        research:{
+        research: {
             research_images: "Imagenes de investigación"
         },
-        restoration:{
-        restoration_images: "Imagenes de restauración"
+        restoration: {
+            restoration_images: "Imagenes de restauración"
         },
-    }
+    },
+
+    pieceInventoryEdit: {
+
+        field: "Campo",
+        oldValue: "Valor actual",
+        newValue: "Valor a cambiar",
+
+        documents: "Documentos",
+        images: "Imágenes",
+
+        photographer: "Fotografo",
+        photographed_at: "Fecha de la fotografía",
+        description: "Descripción",
+        size: "Tamaño",
+        name: "Nombre",
+        previous: "Anterior",
+        next: "Siguiente",
+        uploader_img_sign: "Arrastra o selecciona una nueva imagen",
+        uploader_doc_sign: "Arrastra o selecciona un nuevo documento",
+
+
+    },
+    userDatatableManage: {
+        Username: 'Nombre',
+        Email: 'Correo',
+        Rol: 'Rol',
+        Actions: 'Acciones',
+    },
+   
+
+    
 
 }
 

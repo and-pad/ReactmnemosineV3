@@ -1,4 +1,4 @@
-import { applyLogicToColumn } from "./columnDriver";
+import { applyLogicToInventoryColumn } from "./columnDriver";
 import SETTINGS from "../Config/settings";
 const research_keys = ['title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card'];
 
@@ -59,6 +59,7 @@ function push_array_data(orderedData, column) {
     }
     data_c.push(orderedData[column_c]);
     data_c.push(column);
+   
     return data_c;
 }
 
@@ -143,17 +144,17 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
     var tableData = [];
     if (isNeededApplyDefault) {
          const orderedDataArray = Dataquery.map(item => {
-            var data_column = {};
+            let data_column = {};
             order_columns.forEach((column, index) => {
                 if (column === 'measure_with') {
-                    var measure_w = item['height_with_base'] + ' X ' + item['width_with_base'] + ' X ' + item['depth_with_base'] + ' ø' + item['diameter_with_base'];
+                    let measure_w = item['height_with_base'] + ' X ' + item['width_with_base'] + ' X ' + item['depth_with_base'] + ' ø' + item['diameter_with_base'];
                     orderedData[column] = measure_w;
                     data_column[column] = structData(orderedData[column], column);
                     // console.log(measure_w);
                     StructuredColumns.push(column);
                 }
                 else if (column === 'measure_without') {
-                    var measure_wo = item['height'] + ' X ' + item['width'] + ' X ' + item['depth'] + ' ø ' + item['diameter'];
+                    let measure_wo = item['height'] + ' X ' + item['width'] + ' X ' + item['depth'] + ' ø ' + item['diameter'];
                     orderedData[column] = measure_wo;
                     data_column[column] = structData(orderedData[column], column);
                     StructuredColumns.push(column);
@@ -165,7 +166,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                     orderedData[column] = item[column];
                     data_column[column] = structData(orderedData[column], column);
                     
-                    var htmldat = [];
+                    let htmldat = [];
                     const columnsToCheck = [
                         'description_origin',
                         'description_inventory',
@@ -229,7 +230,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
 
         // Definir las columnas de la tabla
 
-        var hideConstructor = [];
+        let hideConstructor = [];
         var out;
 
         
@@ -249,7 +250,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                 //compact: true,
             }
             //aplica los valores por default
-            columnProps = applyLogicToColumn(column, columnProps, onDetailClick);
+            columnProps = applyLogicToInventoryColumn(column, columnProps, onDetailClick);
             //declara los valores que son para el expander component del datatables
             if (columnProps.show) {
                 hideConstructor.push(columnProps);
@@ -271,7 +272,8 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
         }
     }
 
-    var TabColOut = [];
+    let TabColOut = [];
+    console.log('tableData', tableData);
     TabColOut.push(tableData);
     TabColOut.push(defColumns);
     TabColOut.push(out);

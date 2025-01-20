@@ -40,13 +40,14 @@ const ModalPictures = ({ IDmodal, Pics }) => {
     };
 
     const handleDownload = async (fileName) => {
-
+        console.log(fileName);
         var fileUrl;
         if (IDmodal === IdInventory) {
             fileUrl = pathInventoryImagesFull + fileName;
         } else if (IDmodal === IdResearch) {
             fileUrl = pathResearchImagesFull + fileName;
         }
+        console.log(fileUrl);
         const response = await fetch(fileUrl);
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -83,6 +84,7 @@ const ModalPictures = ({ IDmodal, Pics }) => {
                                                 {/* Botón de descarga alineado a la derecha */}
                                                 <button
                                                     className="btn btn-primary"
+
                                                     onClick={() => handleDownload(photo.file_name)}
                                                 >
                                                     Descargar

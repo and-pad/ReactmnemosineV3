@@ -88,11 +88,22 @@ export const ClipboardButton = ({ btLabel, btId, btText }) => {
 
 
   // Función para formatear el tamaño del archivo
-export const formatSize = (size) => {
+/*export const formatSize = (size) => {
     const fileSizeInBytes = parseInt(size);
     const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
     return fileSizeInMB.toFixed(2) + ' MB';
-  };
+  };*/
+
+export  function formatSize(bytes) {
+    const units = ["Bytes", "KB", "MB", "GB", "TB"];
+    let i = 0;
+    let size = bytes;
+    while (size >= 1024 && i < units.length - 1) {
+        size /= 1024;
+        i++;
+    }
+    return `${size.toFixed(2)} ${units[i]}`;
+}
   
  export const formatCurrency = (value) => {
     const formattedValue = parseFloat(value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -113,7 +124,7 @@ export const formatSize = (size) => {
   };
   
   export const fileTypes = {
-    "text/plain": "Texto",
+    "text/plain": "Text",
     "application/pdf": "PDF",
     "application/xml": "XML",
     "text/html": "HTML",
