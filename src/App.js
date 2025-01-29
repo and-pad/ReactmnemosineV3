@@ -26,10 +26,10 @@ import { delCache } from './components/Datatables/dataHandler';
 import { UserManageDataTable, UsersNavBar } from './components/UserManage/Users';
 
 
-import { PermissionRoute } from './components/Permissions/permissions';
-import { InactiveUsersDatatable, ActiveUsersDatatable } from './components/UserManage/usersDatatables';
-import {CreateUserForm} from './components/UserManage/usersDatatables';
-import { API_ActiveUser } from './components/UserManage/ApiCalls'
+//import { PermissionRoute } from './components/Permissions/permissions';
+import { InactiveUsersDatatable, ActiveUsersDatatable, CreateUserForm, UserEditForm} from './components/UserManage/usersContext';
+
+//import { API_ActiveUser } from './components/UserManage/ApiCalls'
 
 
 //import "bootstrap/dist/css/bootstrap.css";
@@ -244,7 +244,7 @@ function App() {
   };
 
   //const navigate = useNavigate();
-  const handleLogout = ({ navigate }) => {
+  const handleLogout = async ({ navigate }) => {
 
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
@@ -256,9 +256,8 @@ function App() {
     setPermissions(null);
     setUser(null);
 
-    handleDeleteCache();
-    navigate('../login')
-
+    await handleDeleteCache();
+    navigate('/login')
 
   }
 
@@ -274,7 +273,6 @@ function App() {
     } catch (error) {
       console.error("Ocurrió un error al eliminar la caché:", error);
     }
-
   }
 
   return (
@@ -316,7 +314,6 @@ function App() {
             } checkLogin={handleCheckLoginCallback}
             />} />
 
-
             <Route path="inventory_queries/actions/:_id/" element={<PrivateRoute element={
               <InventoryEdit accessToken={accessToken} refreshToken={refreshToken} />
             } checkLogin={handleCheckLoginCallback}
@@ -347,13 +344,12 @@ function App() {
 
               <Route path="new_user" element={<PrivateRoute element={<CreateUserForm accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
 
+              <Route path=":id/user_edit" element={<PrivateRoute element={<UserEditForm accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
+
 
             </Route>
 
           </Route>
-
-
-
 
           <Route path='/test/' element={SearchPage()} />
         </Routes>

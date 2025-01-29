@@ -352,32 +352,35 @@ export const saveToCache = (dataQuery) => {
 };
 
 export const delCache = () => {
-    //Funcion para borrar los datos de consultas, generalmente para hacer logout
     return new Promise((resolve, reject) => {
-        let db;
-        let store;
-        const request = indexedDB.open(dataBaseName, 1)
-        request.onsuccess = function (event) {
-            db = event.target.result;
-            if (db.objectStoreNames.contains(storageName)) {
-                //store = event.target.transaction.objectStore(storageName);
-                const transaction = db.transaction([storageName], 'readwrite');
-                //obtenemos la tabla
-                store = transaction.objectStore(storageName);
-
-                store.delete(dataName);
-                store.delete(queryDateName);
-                db.close();
-                resolve(true);
-            }
-            else {
-                db.close();
-                resolve(false);
-            }
-            reject('error');
+      const request = indexedDB.open(dataBaseName, 1);
+  
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+        if (db.objectStoreNames.contains(storageName)) {
+          const transaction = db.transaction([storageName], 'readwrite');
+          const store = transaction.objectStore(storageName);
+  
+          try {
+            store.delete(dataName);
+            store.delete(queryDateName);
+            db.close();
+            resolve(true);
+          } catch (err) {
+            db.close();
+            reject(err);
+          }
+        } else {
+          db.close();
+          resolve(false); // No se encontró la tabla
         }
-    })
-}
+      };
+  
+      request.onerror = function (event) {
+        reject(new Error("Error opening IndexedDB: " + event.target.errorCode));
+      };
+    });
+  };
 
 
 export const getFromCache = () => {

@@ -29,4 +29,14 @@
     text-align: center; /* Centrado del texto dentro del div */
     background: #fff7f7;
   }
-  
+
+  .text-pink{
+    /*color para power point porfavor dame el color*/
+    color: #bb3c0a;
+    
+  }
+
+  .text-indigo{
+    /*color para xml porfavor dame el color*/
+    color: #3f51b5;
+  }

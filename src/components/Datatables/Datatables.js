@@ -149,7 +149,7 @@ const ExpandableComponent = (props) => {
 
             content.push(
                 <div
-                    style={{ fontFamily: 'Asap Condensed', fontSize: '15px' }}
+                    style={{ fontFamily: 'Asap Condensed', fontSize: '15px', color: '#000000' }}
                     className="text-start mt-2 ms-2 mb-0 border-bottom pb-0"
                     key={`${element.name}-${index}`}
                 >
@@ -161,7 +161,7 @@ const ExpandableComponent = (props) => {
                         >
                             {arrayElements.map((item, i) => (
                                 <div key={`${item}-${i}`} className="me-2 mb-2">
-                                    <a
+                                    <div
                                         href="#temp"
                                         style={{
                                             textDecoration: 'none',
@@ -172,14 +172,14 @@ const ExpandableComponent = (props) => {
                                         className="badge rounded-pill text-dark"
                                     >
                                         {item}
-                                    </a>
+                                    </div>
                                 </div>
                             ))}
                         </div>
                     ) : (
                         <div
-                            className="text-info"
-                            style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1em' }}
+                            
+                            style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1em', color: '#19191a', fontWeight: "bolder" }}
                         >
                             {props.data[element.id]}
                         </div>
@@ -860,7 +860,7 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
                 expandableRowsComponent={ExpandableComponent}
                 expandableRowsComponentProps={propsColumns}
                 customStyles={customStyles}
-                theme={'dark'}
+                theme={theme}
             />
         </div>
     );

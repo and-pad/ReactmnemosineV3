@@ -85,6 +85,11 @@ export const ClipboardButton = ({ btLabel, btId, btText }) => {
     
   };
 
+  export const toastShow = ({ message, type, id }) => {
+    toast[type](message, { toastId: id });
+};
+
+
 
 
   // Función para formatear el tamaño del archivo
@@ -113,7 +118,7 @@ export  function formatSize(bytes) {
   export const mimeIcons = {
     "text/plain": faFileAlt,
     "application/pdf": faFilePdf,
-    "application/xml": faFileCode,
+    "text/xml": faFileCode,
     "text/html": faFileCode,
     "application/msword": faFileWord,
     "application/vnd.ms-excel": faFileExcel,
@@ -126,7 +131,7 @@ export  function formatSize(bytes) {
   export const fileTypes = {
     "text/plain": "Text",
     "application/pdf": "PDF",
-    "application/xml": "XML",
+    "text/xml": "XML",
     "text/html": "HTML",
     "application/msword": "Word",
     "application/vnd.ms-excel": "Excel",

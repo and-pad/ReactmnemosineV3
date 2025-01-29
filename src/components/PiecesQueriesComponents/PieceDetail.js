@@ -13,6 +13,7 @@ import { formatTimeAgo } from '../LocalTools/tools';
 import 'moment/locale/es-mx'; // Importa el paquete de locales dentro de moment
 import 'moment-precise-range-plugin';
 import DownloadDocument from './getWordDetail';
+import { Button } from '@mui/material';
 
 
 const langData = getTranslations();
@@ -240,9 +241,9 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
 
                     <div className="container-fluid">
                         <span className="navbar-brand text-dark" style={{ fontSize: '16px' }}>{langData.pieceDetailMenu.nameMenu}</span>
-                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" >
+                        <Button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown2" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation" >
                             <span className="navbar-toggler-icon"></span>
-                        </button>
+                        </Button>
                         <div className="collapse navbar-collapse" id="navbarNavDropdown2">
                             <ul className="navbar-nav" style={{ fontSize: '15px' }}>
                                 <li className="nav-item">
@@ -263,13 +264,14 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
                 </nav>
             </div>
 
-            <div className="row ">
-                <div className="col-10 d-flex justify-content-center mt-3 me-0" style={{ gap: '.7rem' }}>
+            <div className="row d-flex mt-3">
+                <div className="col-10 d-flex  "
+                    style={{ marginBottom: "500px" }}>
                     <Outlet />
                 </div>
 
 
-                <div className="col-2 mt-3 me-0">
+                <div className="col-2">
 
 
                     <div className="card me-2 ms-0">
@@ -437,7 +439,7 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
                                 </Carousel>
                             </div>
                         </div>
-                        
+
                     </div>
 
                     <DownloadDocument id={Data?.detail[0]?._id ? Data.detail[0]._id : null} inv_num={Data?.detail[0]?.inventory_number ? Data.detail[0]?.inventory_number : null} accessToken={accessToken} />

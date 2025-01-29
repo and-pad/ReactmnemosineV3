@@ -71,7 +71,7 @@ export const InventoryEdit = ({ accessToken, refreshToken }) => {
 
         fetchInventoryEdit(accessToken,refreshToken, _id)
     .then(data =>{
-        console.log(data,"datarecien")
+        //console.log(data,"datarecien")
         setData(data); 
         setDocuments(data["documents"]);
     })
@@ -83,12 +83,12 @@ export const InventoryEdit = ({ accessToken, refreshToken }) => {
     
     return (
         <DataContext.Provider value={Data}>
-            EL ID: {_id}
+            
             <br/>
             {Documents?.map((document)=>{
                 return document.file_name;
             })}
-            <div>***********************-------------------*********************</div>
+           
             <Outlet />
         </DataContext.Provider>
     )

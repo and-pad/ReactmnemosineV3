@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+//import { useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 //import langData from '../../Languages/en/Lang';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -6,6 +6,7 @@ import './MenuTemplates.css'; // Asegúrate de importar los estilos CSS
 //import "bootstrap/dist/css/bootstrap.min.css";
 //import "bootstrap/dist/js/bootstrap.bundle.min";
 import { ReactComponent as Logo } from "../../../mnemo.svg";
+import {Button } from '@mui/material';
 
 import { getTranslations, setLanguage } from '../../Languages/i18n';
 //import 'bootstrap/dist/js/bootstrap.bundle';
@@ -14,11 +15,12 @@ const langData = getTranslations();
 
 
 export function TopNavBar({ user, permissions, handleLogout }) {
+    
     const changeLang = (lang) => {
         const reload = setLanguage(lang);
         reload && window.location.reload();
     }
-    console.log(permissions, 'desde aca');
+    //console.log(permissions, 'permissions');
 
     const navigate = useNavigate();
 
@@ -30,11 +32,11 @@ export function TopNavBar({ user, permissions, handleLogout }) {
             <div className="navbar navbar-expand-lg navbar-dark " style={{ backgroundColor: 'rgba(0, 90, 145, 0.912)' }}>
 
                 <div className="container-fluid">
-                     <Logo style={{ height: "40px", width: "40px" }} />
+                    <Logo style={{ height: "40px", width: "40px" }} />
                     <span className="navbar-brand text-dark" >Mnemosine</span>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <Button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
-                    </button>
+                    </Button>
                     <div className="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul className="navbar-nav">
 
@@ -43,7 +45,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                                     {langData.StartMenu.home}
                                 </Link>
                             </li>
-                            {permissions.includes('ver_consultas') ? (
+                            {permissions && permissions.includes('ver_consultas') ? (
 
                                 <li className="nav-item">
                                     <Link to="/mnemosine/piece_queries" className="nav-link text-white" >{langData.StartMenu.queries}</Link>
@@ -51,7 +53,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                             ) : null
                             }
 
-                            {permissions.includes('ver_inventario') ? (
+                            {permissions && permissions.includes('ver_inventario') ? (
 
                                 <li className="nav-item">
                                     <Link to='/mnemosine/inventory_queries' className="nav-link text-white" >{langData.StartMenu.inventory}</Link>
@@ -59,7 +61,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
                             ) : null}
 
-                            {permissions.includes('ver_investigacion') ? (
+                            {permissions && permissions.includes('ver_investigacion') ? (
                                 <li className="nav-item">
                                     <Link to='/mnemosine/research' className="nav-link text-white" >{langData.StartMenu.research}</Link>
                                 </li>
@@ -67,13 +69,13 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                             }
 
 
-                            {permissions.includes('ver_restauracion') ? (
+                            {permissions && permissions.includes('ver_restauracion') ? (
                                 <li className="nav-item">
                                     <Link to='/mnemosine/restoration' className="nav-link text-white" >{langData.StartMenu.restoration}</Link>
                                 </li>
                             ) : null
                             }
-                            {permissions.includes('ver_movimientos') ? (
+                            {permissions && permissions.includes('ver_movimientos') ? (
 
                                 <li className="nav-item dropdown">
                                     <div className="nav-link dropdown-toggle text-white" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -93,14 +95,14 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                             ) : null
                             }
 
-                            {permissions.includes('ver_reportes') ? (
+                            {permissions && permissions.includes('ver_reportes') ? (
                                 <li className="nav-item">
                                     <Link to='/mnemosine/reports' className="nav-link text-white" >{langData.StartMenu.reports}</Link>
                                 </li>
                             ) : null
                             }
 
-                            {permissions.includes('ver_avaluos') ? (
+                            {permissions && permissions.includes('ver_avaluos') ? (
                                 <li className="nav-item">
                                     <Link to='/mnemosine/appraisals' className="nav-link text-white" >{langData.StartMenu.appraisals}</Link>
                                 </li>
@@ -118,7 +120,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
                             </li>
 
-                            {['ver_usuarios', 'ver_roles', 'ver_catalogos', 'ver_configuraciones'].some(perm => permissions.includes(perm)) && (
+                            {permissions && ['ver_usuarios', 'ver_roles', 'ver_catalogos', 'ver_configuraciones'].some(perm => permissions.includes(perm)) && (
                                 <li className="nav-item dropdown">
                                     <a href="#" className="nav-link dropdown-toggle text-white" role="button" data-bs-auto-close="outside" data-bs-toggle="dropdown" aria-expanded="false">
                                         {langData.StartMenu.administration}
@@ -126,19 +128,19 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                                     <ul className="dropdown-menu bg-info "  >
 
                                         {/* Sección de Usuarios */}
-                                        {['ver_usuarios', 'ver_roles'].some(perm => permissions.includes(perm)) && (
+                                        {permissions && ['ver_usuarios', 'ver_roles'].some(perm => permissions.includes(perm)) && (
                                             <li className='dropstart'>
-                                                <a
+                                                <div
                                                     className="dropdown-item dropdown-toggle"
-                                                    href="#"
+                                                    
                                                     data-bs-toggle="dropdown"
                                                 >
                                                     {langData.StartMenu.users}
-                                                </a>
+                                                </div>
                                                 <ul className="dropdown-menu bg-info">
-                                                    {['ver_usuarios', 'ver_roles'].some((perm) => permissions.includes(perm)) && (
+                                                    {permissions && ['ver_usuarios', 'ver_roles'].some((perm) => permissions.includes(perm)) && (
                                                         <li >
-                                                            <a
+                                                            <div
                                                                 href="#"
                                                                 className="dropdown-item "
                                                             >
@@ -148,7 +150,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                                                                 >
                                                                     {langData.StartMenu.manage}
                                                                 </Link>
-                                                            </a>
+                                                            </div>
 
                                                         </li>
                                                     )}

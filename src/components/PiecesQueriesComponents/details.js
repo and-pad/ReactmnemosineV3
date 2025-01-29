@@ -754,8 +754,8 @@ export const Restoration = () => {
         <div className="row justify-content-start mb-2 pb-2 mb-md-0 mx-md-2">
 
           {item?.restorations_info?.map((restorations, index) => (
-            <>
-              <div className="card bg-gradient pb-2 mb-1" style={{ backgroundColor: 'rgb(170,190,170)' }}>
+            
+              <div key={index} className="card bg-gradient pb-2 mb-1" style={{ backgroundColor: 'rgb(170,190,170)' }}>
                 <a className="btn btn-primary btn-sm col-12 bg-gradient mt-2" data-bs-toggle="collapse" href={`#collapseResearch${index}`} role="button" aria-expanded="false" aria-controls={`collapseResearch${index}`}>
                   {moment(restorations.treatment_date).format('LL')}
                 </a>
@@ -896,10 +896,10 @@ export const Restoration = () => {
                     <div className='d-flex align-items-center justify-content-start p-2'>
                       {console.log(item.documents_info)}
                       {item?.documents_info ? (
-                        item.documents_info.map((document, index) => (
+                        item.documents_info.map((document, indexD) => (
                           restorations.documents_ids && restorations.documents_ids.includes(document._id) ? (
                             
-                            <div className="flex-fill me-2" key={index}>
+                            <div className="flex-fill me-2" key={indexD}>
                               
                               <DownloadButton
                                 document={document}
@@ -915,7 +915,7 @@ export const Restoration = () => {
                   </div>
                 </div>
               </div>
-            </>
+            
           )) ?? ""}
         </div>
       </div>
@@ -973,7 +973,7 @@ export const Movements = () => {
                   <td>{movement.departure_date ? moment(movement.departure_date).format('LL') : 'N/D'}</td>
                   <td>{arrivalDate}</td>
                   <td>{movement?.institutions_info.map((name, index) => (
-                    <>{name} </>
+                    <span key={index}>{name} </span>
                   ))}</td>
                   <td>{movement.location_info ? movement.location_info : 'N/D'}</td>
                   <td>{movement.venues_info ? movement.venues_info : 'N/D'}</td>
