@@ -100,8 +100,7 @@ function omitingElements(size, hideConstructor, defColumns) {
     var out;
     if (hideConstructor.length >= size) {
         let quitElements = hideConstructor.length - size;
-        quitElements = (quitElements + 1) * -1;
-        // const dentro = hideConstructor.slice(0, size); // Elementos dentro del tamaño
+        quitElements = (quitElements + 1) * -1;       
         out = hideConstructor.slice(quitElements, -1); // Elementos que están fuera del tamaño
 
         out.forEach(element => {
@@ -137,7 +136,7 @@ export function ConstructElementsToHide(defColumns, size, hideConstructor = []) 
 export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick, defColumnsUp = null, tableDataUp = null, module) {
     var StructuredData = [];
     var StructuredColumns = [];
-    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info', "_id", "actions"];
+    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info', "_id", "actions_inventory", "actions_research" ];
 
     const orderedData = {};
     var defColumns = [];
@@ -159,9 +158,17 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                     data_column[column] = structData(orderedData[column], column);
                     StructuredColumns.push(column);
                 }
-                else if (column === 'actions' && module === 'Inventory'){                                           
+                
+                else if (column === 'actions_inventory' && module === 'Inventory'){                                           
                         StructuredColumns.push(column);
                 }
+                else if (column === 'actions_research' && module === 'Research'){                                           
+                    StructuredColumns.push(column);
+                }
+
+
+
+
                 else if (column in item) {
                     orderedData[column] = item[column];
                     data_column[column] = structData(orderedData[column], column);

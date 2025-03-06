@@ -1,5 +1,5 @@
 //import { Navigate } from 'react-router-dom';
-import { DatatableUserInventory, DatatableUserQuery } from '../Datatables/Datatables';//Componente Datatable de Consultas
+import { DatatableUserInventory, DatatableUserQuery } from '../Datatables/DatatablesInventory';//Componente Datatable de Consultas
 
 
 export function PiecesQueries({ accessToken, refreshToken, handleDetailClick, module }) {

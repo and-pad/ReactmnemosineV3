@@ -6,16 +6,17 @@ import customStyles from './datatableCustomCellStyle';
 import '../Datatables/datatable.css';
 import { SearchBox, SelectColumn, filterSearch } from './FilterComponents/Filter';
 import { getTranslations } from '../Languages/i18n';
-import { createTheme } from 'react-data-table-component'
+//import { createTheme } from 'react-data-table-component'
 import Box from '@mui/material/Box'; // Para el contenedor estilizado
 import Typography from '@mui/material/Typography'; // Para el texto
 import { Button } from '@mui/material'; // Botón de Material UI
 import CircularProgress from '@mui/material/CircularProgress';
 import InventoryTwoToneIcon from '@mui/icons-material/InventoryTwoTone';
+import {ExpandableComponent} from './DatatableComponents/datatableComponents';
 
 const langData = getTranslations();
 
-export default function CircularIndeterminate() {
+export  function CircularIndeterminate() {
     return (
         <Box
             sx={{
@@ -57,140 +58,11 @@ export default function CircularIndeterminate() {
     );
 }
 
-createTheme('custom-dark', {
-    text: {
-        primary: '#FFFFFF', // Color del texto principal
-        secondary: '#FFFFFF', // Color del texto secundario
-    },
-    background: {
-        default: '#535353', // Fondo general del modo oscuro
-    },
-    context: {
-        background: '#383838', // Fondo del contexto (como al seleccionar filas)
-        text: '#FFFFFF',
-    },
-    divider: {
-        default: '#bababa', // Color de los divisores
-    },
-    button: {
-        default: '#1f1f1f', // Color de botones
-        hover: '#FFFFFF', // Color de hover en botones
-        focus: '#757575', // Color de focus en botones
-    },
-    highlightOnHover: {
-        default: '#2a2a2a', // Color al pasar el cursor sobre una fila
-        text: '#FFFFFF',
-    },
-    striped: {
-        default: '#5e5e5e', // Fondo de filas alternas (ajusta este valor)
-        text: '#FFFFFF',
-    },
-});
 
-createTheme('custom-light', {
-    text: {
-        primary: '#4f4f4f',  // Texto principal más gris
-        secondary: '#6c6c6c',  // Texto secundario más gris
-    },
-    background: {
-        default: '#E6E6E6',  // Fondo general con un gris suave
-    },
-    context: {
-        background: '#D3D3D3',  // Fondo del contexto un poco más oscuro
-        text: '#333333',  // Texto en contexto más oscuro para contraste
-    },
-    divider: {
-        default: '#B0B0B0',  // Líneas divisorias más sutiles
-    },
-    button: {
-        default: '#626262',  // Fondo por defecto de botones
-        hover: '#929292',  // Hover con un gris más marcado
-        focus: '#B3B3B3',  // Focus en un gris medio
-    },
-    highlightOnHover: {
-        default: '#F4F4F4',  // Color al pasar el cursor sobre una fila (gris muy suave)
-        text: '#333333',  // Texto resaltado en gris oscuro
-    },
-    striped: {
-        default: '#F0F0F0',  // Fondo de filas alternas (gris muy suave)
-        text: '#333333',  // Texto en las filas alternas (gris oscuro)
-    },
-    buttonActive: {
-        default: '#D3D3D3',  // Fondo de botón activo más claro
-        text: '#333333',  // Texto en botón activo
-    }
-});
+
 //columnas del datatables
 //const columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card', 'photo_thumb_info', '_id'];
 // Define el componente personalizado para la fila expandida
-const ExpandableComponent = (props) => {
-    useEffect(() => {
-        const loadGoogleFonts = () => {
-            const link = document.createElement('link');
-            link.href =
-                'https://fonts.googleapis.com/css2?family=Marko+One&family=Asap+Condensed:wght@300&display=swap';
-            link.rel = 'stylesheet';
-            document.head.appendChild(link);
-        };
-
-        loadGoogleFonts();
-    }, []);
-
-    // Aquí continúa el resto de tu lógica para renderizar `content`...
-    let content = [];
-
-    if (props.defColumnsOut !== undefined) {
-        props.defColumnsOut.forEach((element, index) => {
-            // Lógica para renderizar contenido...
-            const isTagsColumn = element.id === 'tags';
-            const arrayElements = isTagsColumn
-                ? props.data[element.id]?.split(',') || []
-                : [];
-
-            content.push(
-                <div
-                    style={{ fontFamily: 'Asap Condensed', fontSize: '15px', color: '#000000' }}
-                    className="text-start mt-2 ms-2 mb-0 border-bottom pb-0"
-                    key={`${element.name}-${index}`}
-                >
-                    {element.name}:
-                    {isTagsColumn ? (
-                        <div
-                            className="d-flex flex-wrap"
-                            style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1.1em' }}
-                        >
-                            {arrayElements.map((item, i) => (
-                                <div key={`${item}-${i}`} className="me-2 mb-2">
-                                    <div
-                                        href="#temp"
-                                        style={{
-                                            textDecoration: 'none',
-                                            height: '1.2em',
-                                            paddingTop: '1px',
-                                            backgroundColor: '#1e80e1',
-                                        }}
-                                        className="badge rounded-pill text-dark"
-                                    >
-                                        {item}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div
-                            
-                            style={{ fontFamily: 'Asap Condensed, sans-serif', fontSize: '1em', color: '#19191a', fontWeight: "bolder" }}
-                        >
-                            {props.data[element.id]}
-                        </div>
-                    )}
-                </div>
-            );
-        });
-    }
-
-    return <div>{content}</div>;
-};
 
 //var arrayTabColOut;
 /********************************************************************************************************************/
@@ -572,6 +444,8 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
     const [checkboxSearchValues, setCheckboxSearchValues] = useState('');
     const [disableChecks, setdisbleChecks] = useState(true);
     const [theme, setTheme] = useState('custom-dark'); // Estado para el tema
+    const [pending, setPending] = useState(true);
+
 
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'custom-light' ? 'custom-dark' : 'custom-light'));
@@ -638,9 +512,11 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
                         // console.log(fetch);
                         setDataQuery(fetch);
                         first = true;
+                        setPending(false);
                     } else {
                         fetch = dataQuery;
                         first = false;
+                        setPending(false);
                     }
 
                     let arrayTabColOut;
@@ -832,7 +708,7 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
                 borderBottom="1px solid #ccc"
             >
                 <Typography variant="h5" component="h1" fontWeight="bold">
-                    Consultas
+                    Inventario
                 </Typography>
                 <Button sx={{ textTransform: 'none' }}
                     variant="contained" color="primary" onClick={toggleTheme}>
@@ -854,6 +730,8 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
                 subHeader
                 subHeaderComponent={subHeaderComponentMemo}
                 //subHeaderComponentProps={ }
+                progressPending={pending}
+                progressComponent={<CircularIndeterminate />}
 
                 highlightOnHover
                 expandableRows

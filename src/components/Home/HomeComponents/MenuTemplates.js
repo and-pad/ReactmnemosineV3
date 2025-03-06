@@ -63,7 +63,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
                             {permissions && permissions.includes('ver_investigacion') ? (
                                 <li className="nav-item">
-                                    <Link to='/mnemosine/research' className="nav-link text-white" >{langData.StartMenu.research}</Link>
+                                    <Link to='/mnemosine/piece_researchs' className="nav-link text-white" >{langData.StartMenu.research}</Link>
                                 </li>
                             ) : null
                             }

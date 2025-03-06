@@ -40,3 +40,7 @@
     /*color para xml porfavor dame el color*/
     color: #3f51b5;
   }
+
+  .bg-custom-gray {
+    background-color: #6d6d6d;
+  }

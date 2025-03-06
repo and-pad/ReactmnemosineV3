@@ -39,7 +39,7 @@ export const API_InactiveUser = async ({ accessToken, refreshToken, user_id }) =
         if (response.ok) {
             return await response.json(); // Retorna la data si está bien
         } else {
-            console.error('Error al inactivar el usuario:', response.statusText);
+            console.log("response",await response.json());
             return null; // O maneja el error de otra manera
         }
     } catch (error) {
@@ -64,7 +64,7 @@ export const API_NewUser = async ({ accessToken, refreshToken, formData }) => {
             return await response.json(); // Retorna la data si está bien
         } else {
             console.error('Error al crear el usuario:', response.statusText);
-            return {message:"create_user_error"}; // O maneja el error de otra manera
+            return {message: await response.json()}; // O maneja el error de otra manera
         }
 
     }

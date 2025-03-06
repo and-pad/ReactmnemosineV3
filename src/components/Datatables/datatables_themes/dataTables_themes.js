@@ -1,8 +1,9 @@
 //import { createTheme } from 'react-data-table-component';
 
 
-function initializeThemes(createTheme)  {
+function  initializeThemes(createTheme)  {
 // Crear un tema personalizado
+/*
 createTheme('custom-dark', {
     text: {
         primary: '#FFFFFF', // Color del texto principal
@@ -66,7 +67,7 @@ createTheme('custom-light', {
         default: '#D3D3D3',  // Fondo de botón activo más claro
         text: '#333333',  // Texto en botón activo
     }
-});
+});*/
 
 }
 

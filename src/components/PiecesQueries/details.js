@@ -17,7 +17,7 @@ const langData = getTranslations();
 const DownloadButton = ({ key, document, module }) => {
   var fileUrl;
   if (module === "inventory") {
-    fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/inventario/documentos/' + document.file_name;
+    fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/app/public/inventario/documentos/' + document.file_name;
   }
   else if (module === 'research') {
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/investigacion/documentos/' + document.file_name;

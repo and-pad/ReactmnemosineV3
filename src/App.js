@@ -1,45 +1,63 @@
-import Cookies from 'js-cookie';//Librería para el manejo de cookies 
-import React, { useState, useEffect } from 'react';//react, y sus componentes
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';//Componentes de rutas de react de single page
+import Cookies from "js-cookie"; //Librería para el manejo de cookies
+import React, { useState, useEffect } from "react"; //react, y sus componentes
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; //Componentes de rutas de react de single page
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
-import './App.css';
-import { TopNavBar } from './components/Home/HomeComponents/MenuTemplates';//Plantilla principal de la pagina
+import "./App.css";
+import { TopNavBar } from "./components/Home/HomeComponents/MenuTemplates"; //Plantilla principal de la pagina
 
-import Login from './components/LoginComponents/Login';//Componente del Login
-import PrivateRoute from './components/PrivateRouteComponent'; // Importa el componente PrivateRoute para el acceso con contraseña
-import { handleLogin, handleLoggedTime } from './components/LoginComponents/handleLogin'; // Importa la función handleLogin, todo lo referente al tokenizado
+import Login from "./components/LoginComponents/Login"; //Componente del Login
+import PrivateRoute from "./components/PrivateRouteComponent"; // Importa el componente PrivateRoute para el acceso con contraseña
+import {
+  handleLogin,
+  handleLoggedTime,
+} from "./components/LoginComponents/handleLogin"; // Importa la función handleLogin, todo lo referente al tokenizado
 
-import '@fortawesome/fontawesome-free/css/all.min.css';//FontAwesome!!
+import "@fortawesome/fontawesome-free/css/all.min.css"; //FontAwesome!!
 
 //Componente de consultas
-import { PiecesQueries } from './components/PiecesQueriesComponents/PiecesQueries';
-import { PieceDetail } from './components/PiecesQueriesComponents/PieceDetail'
+import { PiecesQueries } from "./components/PiecesQueries/PiecesQueries";
+import { PieceDetail } from "./components/PiecesQueries/PieceDetail";
 
-import { Inventory, Research, Restoration, Movements } from './components/PiecesQueriesComponents/details';
-import { Edit } from './components/PiecesQueriesComponents/edit';
-import { InventoryEdit } from './components/PiecesQueriesComponents/inventoryActions';
-import { delCache } from './components/Datatables/dataHandler';
+import {
+  Inventory,
+  Research,
+  Restoration,
+  Movements,
+} from "./components/PiecesQueries/details";
+import { Edit_inventory } from "./components/PiecesQueries/edit";
+import { InventoryEdit } from "./components/PiecesQueries/inventoryActions";
+import { delCache } from "./components/Datatables/dataHandler";
 
-import { UserManageDataTable, UsersNavBar } from './components/UserManage/Users';
+import { ResearchEdit } from "./components/PiecesResearchs/researchsActions";
+import { EditResearch } from "./components/PiecesResearchs/edit";
 
+import {
+  UserManageDataTable,
+  UsersNavBar,
+} from "./components/UserManage/Users";
 
 //import { PermissionRoute } from './components/Permissions/permissions';
-import { InactiveUsersDatatable, ActiveUsersDatatable, CreateUserForm, UserEditForm} from './components/UserManage/usersContext';
+import {
+  InactiveUsersDatatable,
+  ActiveUsersDatatable,
+  CreateUserForm,
+  UserEditForm,
+} from "./components/UserManage/usersContext";
+
+import { ResearchsQueries } from "./components/PiecesResearchs/ResearchsQueries";
 
 //import { API_ActiveUser } from './components/UserManage/ApiCalls'
-
 
 //import "bootstrap/dist/css/bootstrap.css";
 //import "bootstrap/dist/js/bootstrap.bundle.js";
 
-const SearchPage = () => <h6>Home Page :-0</h6>
+const SearchPage = () => <h6>Home Page :-0</h6>;
 //var token;
 
 function App() {
-
   //Variables para manejar el inicio de sesion tokenizado
   //Este consta de dos variables que nos brinda la librería JWTtoken
   //El funcionamiento esta definido para que con el refresh token
@@ -55,22 +73,19 @@ function App() {
   //
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState("");
   const [permissions, setPermissions] = useState([]);
   // const [forceUpdate, setForceUpdate] = useState(false); // Estado para forzar la actualización
   //const [loginError, setLoginError] = useState(null);
 
- 
-
   useEffect(() => {
-
-
     //Intentamos tomar a las cookies de acceso pero no sabemos si existen
-    var storedToken = Cookies.get('accessToken');
-    var storedReToken = Cookies.get('refreshToken');
-    var storedUser = Cookies.get('User');
-    var vpermissions = Cookies.get('permissions');
-    try {//Revisamos si existe token de ingreso
+    var storedToken = Cookies.get("accessToken");
+    var storedReToken = Cookies.get("refreshToken");
+    var storedUser = Cookies.get("User");
+    var vpermissions = Cookies.get("permissions");
+    try {
+      //Revisamos si existe token de ingreso
       //Al intentar parsear a json es cuando ocurre el error ya que no se puede hacer parse sobre undefined
       const parsedToken = JSON.parse(storedToken);
       const parsedReToken = JSON.parse(storedReToken);
@@ -82,49 +97,47 @@ function App() {
       setPermissions(vpermissions);
       //console.log("stored ", parsedToken);
       //console.log("stored Refresh ", parsedReToken);
-    }
-    catch (error) {
-      //Da un error de que no se puede parsear sobre undefined pero 
+    } catch (error) {
+      //Da un error de que no se puede parsear sobre undefined pero
       //en este caso es normal ya que si no existe creamos uno nuevo
-      //no hay necesidad de mandar ningun tipo de mensaje 
+      //no hay necesidad de mandar ningun tipo de mensaje
       //console.log("Error", error);
     }
-
   }, [accessToken]);
   //setForceUpdate(prevState => !prevState);
 
   const helperLoginCallBack = (response) => {
     //console.log('respbef', response);
     //filtramos la respuesta, si viene access o time_left esta authenticado
-    if (response === 'not network2') {
+    if (response === "not network2") {
       //si no hay internet o no responde el servidor igual quitamos las cookies de ingreso por seguridad
       //console.log('not network2');
-      Cookies.remove('accessToken');
-      Cookies.remove('refreshToken');
-      Cookies.remove('User');
-      Cookies.remove('permissions');
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      Cookies.remove("User");
+      Cookies.remove("permissions");
       setAccessToken(null);
       setRefreshToken(null);
       setPermissions(null);
       return false;
-    } else if (response === 'login_redirect' || response === 'not network1') {
+    } else if (response === "login_redirect" || response === "not network1") {
       // Si llega login_redirect es porque ya no esta activo el usuario
       //borramos cookies
       //console.log('response', response);
       setAccessToken(null);
       setRefreshToken(null);
       setPermissions(null);
-      Cookies.remove('accessToken');
-      Cookies.remove('refreshToken');
-      Cookies.remove('User');
+      Cookies.remove("accessToken");
+      Cookies.remove("refreshToken");
+      Cookies.remove("User");
       return false;
-    } else if ('access' in response) {
+    } else if ("access" in response) {
       //Solo cambiamos la cookie access, que fue la que se renovo, las otras cookies siguen igual
       console.log("se esta cambiando ", response.access);
-      Cookies.set('accessToken', JSON.stringify(response.access));
+      Cookies.set("accessToken", JSON.stringify(response.access));
       setAccessToken(response.access);
       return true;
-    } else if ('time_left' in response) {
+    } else if ("time_left" in response) {
       //Aqui no hay nada que hacer mas que regreasar true, si hay time_left es porque a la cookie le queda tiempo
       //console.log('time_left respo');
       return true;
@@ -139,30 +152,37 @@ function App() {
   ***********************************************************************************/
   const handleCheckLoginCallback = async () => {
     var response;
-    if (accessToken) {//si ya existe un token en el sistema solaamente lo enviamos para validarlo
+    if (accessToken) {
+      //si ya existe un token en el sistema solaamente lo enviamos para validarlo
       //console.log('accessYavenido', accessToken);
       //checa la respuesta y devuelve un booleando.
       response = await handleLoggedTime(accessToken, refreshToken);
       //console.log('aquires', response);
 
-      if (typeof response === 'object' && response !== null && 'user' in response && response.user !== '') {
-        setUser(response['user']);
+      if (
+        typeof response === "object" &&
+        response !== null &&
+        "user" in response &&
+        response.user !== ""
+      ) {
+        setUser(response["user"]);
       }
       const toOut = helperLoginCallBack(response);
       // console.log('toout', toOut);
       return toOut;
     } else {
-      //Consultamos la Cookie si esta accessToken    
-      const rAccess = Cookies.get('accessToken');
+      //Consultamos la Cookie si esta accessToken
+      const rAccess = Cookies.get("accessToken");
       var tparsed = false;
       if (rAccess !== undefined) {
         tparsed = JSON.parse(rAccess);
       }
       //console.log('tparsed', tparsed);
-      if (tparsed) {//consultamos refresh Token
-        let refresh = Cookies.get('refreshToken');
-        let Muser = Cookies.get('User');
-        const permissions = Cookies.get('permissions');
+      if (tparsed) {
+        //consultamos refresh Token
+        let refresh = Cookies.get("refreshToken");
+        let Muser = Cookies.get("User");
+        const permissions = Cookies.get("permissions");
         Muser = JSON.parse(Muser);
         refresh = JSON.parse(refresh);
         const parsed_permissions = JSON.parse(permissions);
@@ -170,9 +190,10 @@ function App() {
         //como no existian los ponemos en el sistema
         setUser(Muser);
         setPermissions(parsed_permissions);
-        setAccessToken(tparsed)
+        setAccessToken(tparsed);
         setRefreshToken(refresh);
-        if (refresh !== undefined) {//comprobamos si no viene vacío refresh
+        if (refresh !== undefined) {
+          //comprobamos si no viene vacío refresh
           const acesstoSend = tparsed;
           //console.log('acesstoSend', acesstoSend);
           //mandamos a la comprobacion de servidor los tokens existentes en la cookie.
@@ -181,28 +202,31 @@ function App() {
           //regresamos un booleano que viene de la comprobacion de response
           return helperLoginCallBack(response);
           //si refresh es undefined quiere decir q  ue no existe la cookie regresamos false para la comprobacion de registro
-        } else { return false; }
-      } else { return false; }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     }
-
   };
 
   //Esta funcion se ejecuta al precionar el boton para ingresar al sistema
   //esta intenta comunicarse con el servidor para obtener los tokens de login
 
   const handleLoginCallback = async ({ email, password }) => {
-    // Si ya hay un token almacenado en la cookie, no es necesario obtener uno nuevo  
+    // Si ya hay un token almacenado en la cookie, no es necesario obtener uno nuevo
     if (accessToken) {
       var response = await handleLoggedTime(accessToken, refreshToken);
-      //si viene time_left, regresamos el tiempo de sobra del token      
+      //si viene time_left, regresamos el tiempo de sobra del token
       //si viene esta respuesta quiere decir que no se pudo conectar con el refreshToken entonces hay que redirigir a la url de login para
       //renovar tokens
-      if (response === 'login_redirect' || response === 'not network') {
+      if (response === "login_redirect" || response === "not network") {
         //console.log('navigate');
-        console.log('cookiesRem');
-        Cookies.remove('accessToken');
-        Cookies.remove('refreshToken');
-        Cookies.remove('User')
+        console.log("cookiesRem");
+        Cookies.remove("accessToken");
+        Cookies.remove("refreshToken");
+        Cookies.remove("User");
         // Forzar una actualización de la interfaz de usuario
         //setForceUpdate(prevState => !prevState);
         setAccessToken(null);
@@ -211,44 +235,39 @@ function App() {
         setUser(null);
 
         return;
-
       } else {
         //si viene una de estas dos etiquetas el token access esta funcionando, ya sea porque se actualizo o aun tenia vigencia el actual
-        if ('access' in response || 'time_left' in response) {
+        if ("access" in response || "time_left" in response) {
           return response;
         }
       }
-    }
-    else {
-
-      // Si no hay un token almacenado, obtener uno nuevo      
+    } else {
+      // Si no hay un token almacenado, obtener uno nuevo
       const response = await handleLogin({ email, password });
-      if (response !== 'not authenticated' && response !== 'not network') {
+      if (response !== "not authenticated" && response !== "not network") {
         setAccessToken(response.access);
         setRefreshToken(response.refresh);
         setUser(response.user);
         setPermissions(response.permissions);
       } else {
-        if (response === 'not network') {
-          console.error('No hay internet, o el servidor no responde');
+        if (response === "not network") {
+          console.error("No hay internet, o el servidor no responde");
         }
       }
       return response;
     }
   };
 
-
   const handleDetailClick = ({ row }) => {
-    console.log('row', row._id[0]);
+    console.log("row", row._id[0]);
     //return (<Navigate to='/login' />); // Navega a la ruta '/detail'
   };
 
   //const navigate = useNavigate();
   const handleLogout = async ({ navigate }) => {
-
-    Cookies.remove('accessToken');
-    Cookies.remove('refreshToken');
-    Cookies.remove('User')
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    Cookies.remove("User");
     // Forzar una actualización de la interfaz de usuario
     //setForceUpdate(prevState => !prevState);
     setAccessToken(null);
@@ -257,14 +276,13 @@ function App() {
     setUser(null);
 
     await handleDeleteCache();
-    navigate('/login')
-
-  }
+    navigate("/login");
+  };
 
   const handleDeleteCache = async () => {
     try {
       const result = await delCache();
-      if (result !== 'error') {
+      if (result !== "error") {
         console.log(result);
         console.log("Cache eliminado con éxito.");
       } else {
@@ -273,87 +291,279 @@ function App() {
     } catch (error) {
       console.error("Ocurrió un error al eliminar la caché:", error);
     }
-  }
+  };
 
   return (
-    <div className='App'>
+    <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Navigate to='/login' />} />
-          <Route path='/login' element={
-            <Login
-              onLogin={handleLoginCallback}
-              setAccessToken={setAccessToken}
-              accessToken={accessToken}
-            />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                onLogin={handleLoginCallback}
+                setAccessToken={setAccessToken}
+                accessToken={accessToken}
+              />
+            }
+          />
 
-          <Route path='/mnemosine' element={
-            <TopNavBar user={user} permissions={permissions} handleLogout={handleLogout} />
-          }>
-            <Route path='start' element={<div>Start</div>} />
-
-            <Route path='piece_queries' element={<PrivateRoute element={
-              <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} module={'Query'} />
-            } checkLogin={handleCheckLoginCallback}
-            />} />
-
-            <Route path="piece_queries/detail/:_id/" element={<PrivateRoute element={
-              <PieceDetail accessToken={accessToken} refreshToken={refreshToken} />
-            } checkLogin={handleCheckLoginCallback}
-            />} >
-              <Route index element={<Navigate to="inventory" />} />
-
-              <Route path="inventory" element={<PrivateRoute element={<Inventory />} checkLogin={handleCheckLoginCallback} />} />
-              <Route path="research" element={<PrivateRoute element={<Research />} checkLogin={handleCheckLoginCallback} />} />
-              <Route path="restoration" element={<PrivateRoute element={<Restoration />} checkLogin={handleCheckLoginCallback} />} />
-              <Route path="movements" element={<PrivateRoute element={<Movements />} checkLogin={handleCheckLoginCallback} />} />
-
-            </Route>
-            <Route path='inventory_queries' element={<PrivateRoute element={
-              <PiecesQueries accessToken={accessToken} refreshToken={refreshToken} onDetailClick={handleDetailClick} module={'Inventory'} />
-            } checkLogin={handleCheckLoginCallback}
-            />} />
-
-            <Route path="inventory_queries/actions/:_id/" element={<PrivateRoute element={
-              <InventoryEdit accessToken={accessToken} refreshToken={refreshToken} />
-            } checkLogin={handleCheckLoginCallback}
-            />} >
-              <Route index element={<Navigate to="edit" />} />
-              <Route path="edit" element={<PrivateRoute element={<Edit accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
-            </Route>
-
-
+          <Route
+            path="/mnemosine"
+            element={
+              <TopNavBar
+                user={user}
+                permissions={permissions}
+                handleLogout={handleLogout}
+              />
+            }
+          >
+            <Route path="start" element={<div>Start</div>} />
 
             <Route
-              path='administration/user_manage/'
-              element={<PrivateRoute element={<UsersNavBar />
-              }
-                checkLogin={handleCheckLoginCallback}
-              />
+              path="piece_queries"
+              element={
+                <PrivateRoute
+                  element={
+                    <PiecesQueries
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                      onDetailClick={handleDetailClick}
+                      module={"Query"}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
               }
             />
 
-            <Route path="administration/user_manage/user/" element={<PrivateRoute element={
-              <UserManageDataTable accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} >
+            <Route
+              path="piece_queries/detail/:_id/"
+              element={
+                <PrivateRoute
+                  element={
+                    <PieceDetail
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
+              }
+            >
+              <Route index element={<Navigate to="inventory" />} />
 
-              <Route index element={<Navigate to="users_active" />} />
+              <Route
+                path="inventory"
+                element={
+                  <PrivateRoute
+                    element={<Inventory />}
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+              <Route
+                path="research"
+                element={
+                  <PrivateRoute
+                    element={<Research />}
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+              <Route
+                path="restoration"
+                element={
+                  <PrivateRoute
+                    element={<Restoration />}
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+              <Route
+                path="movements"
+                element={
+                  <PrivateRoute
+                    element={<Movements />}
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+            </Route>
+            
+            <Route
+              path="inventory_queries"
+              element={
+                <PrivateRoute
+                  element={
+                    <PiecesQueries
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                      onDetailClick={handleDetailClick}
+                      module={"Inventory"}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
+              }
+            />
 
-              <Route path="users_active" element={<PrivateRoute element={<ActiveUsersDatatable />} checkLogin={handleCheckLoginCallback} />} />
-
-              <Route path="users_inactive" element={<PrivateRoute element={<InactiveUsersDatatable />} checkLogin={handleCheckLoginCallback} />} />
-
-              <Route path="new_user" element={<PrivateRoute element={<CreateUserForm accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
-
-              <Route path=":id/user_edit" element={<PrivateRoute element={<UserEditForm accessToken={accessToken} refreshToken={refreshToken} />} checkLogin={handleCheckLoginCallback} />} />
-
-
+            <Route
+              path="inventory_queries/actions/:_id/"
+              element={
+                <PrivateRoute
+                  element={
+                    <InventoryEdit
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
+              }
+            >
+              <Route index element={<Navigate to="edit" />} />
+              <Route
+                path="edit"
+                element={
+                  <PrivateRoute
+                    element={
+                      <Edit_inventory
+                        accessToken={accessToken}
+                        refreshToken={refreshToken}
+                      />
+                    }
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
             </Route>
 
+            <Route
+              path="piece_researchs"
+              element={
+                <PrivateRoute
+                  checkLogin={handleCheckLoginCallback}
+                  element={
+                    <ResearchsQueries
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                    />
+                  }
+                />
+              }
+            />
+
+            <Route
+              path="piece_researchs/actions/:_id/"
+              element={
+                <PrivateRoute
+                  element={
+                    <ResearchEdit
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
+              }
+            >
+              <Route index element={<Navigate to="edit" />} />
+              <Route
+                path="edit"
+                element={
+                  <PrivateRoute
+                    element={
+                      <EditResearch
+                        accessToken={accessToken}
+                        refreshToken={refreshToken}
+                      />
+                    }
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+            </Route>
+
+            <Route
+              path="administration/user_manage/"
+              checkLogin={handleCheckLoginCallback}
+              element={<PrivateRoute element={<UsersNavBar />} />}
+            />
+
+            <Route
+              path="administration/user_manage/user/"
+              element={
+                <PrivateRoute
+                  element={
+                    <UserManageDataTable
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
+              }
+            >
+              <Route index element={<Navigate to="users_active" />} />
+
+              <Route
+                path="users_active"
+                element={
+                  <PrivateRoute
+                    element={<ActiveUsersDatatable />}
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+
+              <Route
+                path="users_inactive"
+                element={
+                  <PrivateRoute
+                    element={<InactiveUsersDatatable />}
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+
+              <Route
+                path="new_user"
+                element={
+                  <PrivateRoute
+                    element={
+                      <CreateUserForm
+                        accessToken={accessToken}
+                        refreshToken={refreshToken}
+                      />
+                    }
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+
+              <Route
+                path=":id/user_edit"
+                element={
+                  <PrivateRoute
+                    element={
+                      <UserEditForm
+                        accessToken={accessToken}
+                        refreshToken={refreshToken}
+                      />
+                    }
+                    checkLogin={handleCheckLoginCallback}
+                  />
+                }
+              />
+            </Route>
+
+           
           </Route>
 
-          <Route path='/test/' element={SearchPage()} />
+          <Route path="/test/" element={SearchPage()} />
         </Routes>
-
       </BrowserRouter>
     </div>
   );
@@ -361,4 +571,3 @@ function App() {
 /*
 { redirectDetail && <Navigate to={`/piece_queries/detail/${encodeURIComponent(Row)}`} /> }*/
 export default App;
-

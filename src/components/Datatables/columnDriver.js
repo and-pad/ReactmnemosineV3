@@ -64,9 +64,10 @@ const CustomPhoto = ({ row, column, onDetailClick }) => {
     );
 }
 
-const editClick = ({_id, navigate}) => {
+const editInventoryClick = ({_id, navigate}) => {
     navigate(`/mnemosine/inventory_queries/actions/${encodeURIComponent(_id[0])}/edit`)
 }
+
 
 const InventoryActions = ({ row, column }) => {
    
@@ -75,7 +76,7 @@ const InventoryActions = ({ row, column }) => {
     return (
         <>
             <div className="d-flex justify-content-around">
-                <button className="btn btn-sm btn-primary" onClick={() => editClick({ _id, navigate })}>
+                <button className="btn btn-sm btn-primary" onClick={() => editInventoryClick({ _id, navigate })}>
                     <i className="fas fa-edit"></i>
                 </button>
                 <button className="btn btn-sm btn-danger">
@@ -90,6 +91,28 @@ const InventoryActions = ({ row, column }) => {
 
 };
 
+const editResearchClick = ({_id, navigate}) => {
+    navigate(`/mnemosine/piece_researchs/actions/${encodeURIComponent(_id[0])}/edit`)
+}
+const ResearchActions = ({ row, column }) => {
+    const _id = row._id;
+    const navigate = useNavigate();
+    return (
+        <>
+            <div className="d-flex ">
+                <button className="btn btn-sm btn-primary me-1" onClick={() => { editResearchClick({ _id, navigate })}}>
+                    <i className="fas fa-edit"></i>
+                </button>
+                <button className="btn btn-sm btn-danger me-1">
+                    <i className="fas fa-trash-alt"></i>
+                </button>
+                <button className="btn btn-sm btn-info me-2">
+                    <i className="fas fa-history"></i>
+                </button>
+            </div>
+        </>
+    )
+};
 
 export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailClick) => {
     // Aplica la lógica según el nombre de la columna
@@ -105,7 +128,7 @@ export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailCli
                 name: langData.dataTableUserQueryNames.inventory_number,
                 reorder: true,
                 show: true,
-                width: '110',
+                //width: '110px',
                 //minWidth: '90px',
                 // Otras propiedades específicas de "inventory_number" aquí
             };
@@ -364,7 +387,7 @@ export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailCli
         /***********************************************************************************/
         // En el caso de Inventario-Inventory se toma todo lo anterior, solo se agrega una columna
 
-        case "actions":
+        case "actions_inventory":
            
             return {
                 ...columnProps,
@@ -372,6 +395,17 @@ export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailCli
                 sortable: false,
                 show: true,
                 cell: row => <InventoryActions row={row} column={columnName} />,
+            };
+
+        case "actions_research":
+            return {
+                ...columnProps,
+                name: langData.dataTableUserQueryNames.actions,
+                sortable: false,
+                show: true,
+                cell: row => <ResearchActions row={row} column={columnName} />,
+                width: '125px',
+                
             };
 
         // Continúa agregando más casos según sea necesario para otras columnas

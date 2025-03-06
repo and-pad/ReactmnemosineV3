@@ -1,4 +1,5 @@
 
+//import { Padding } from '@mui/icons-material';
 import { defaultThemes } from 'react-data-table-component';
 
 
@@ -6,7 +7,7 @@ const customStyles = {
 
     header: {
         style: {
-            minHeight: '200px',
+            minHeight: '300px',
         },
     },
 
@@ -25,7 +26,7 @@ const customStyles = {
             borderTopWidth: '1px',
             borderTopColor: 'gray',// defaultThemes.default.divider.default,
             borderBottomStyle: 'solid',
-            borderBottomWidth: '1px',
+            borderBottomWidth: '3px',
             //borderBottomColor: 'gray', // defaultThemes.default.divider.default,
             // marginLeft: '-5px',
             //backgroundColor: '#515152',
@@ -81,6 +82,7 @@ const customStyles = {
             //color: '#dbdbdb',//'#89eaf5',
             marginRight: '3px',
             //backgroundColor: '#455573',
+            PaddingRight: '1px',
 
         },
     },
