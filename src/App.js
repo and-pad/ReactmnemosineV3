@@ -268,6 +268,7 @@ function App() {
     Cookies.remove("accessToken");
     Cookies.remove("refreshToken");
     Cookies.remove("User");
+    Cookies.remove("SYNCCODEDB");
     // Forzar una actualización de la interfaz de usuario
     //setForceUpdate(prevState => !prevState);
     setAccessToken(null);

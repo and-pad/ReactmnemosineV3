@@ -131,16 +131,17 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
 
         const fetchDetail = async () => {
             var data;
-            //console.log('accesTokn', accessToken);
+            console.log('accesTokn', accessToken);
             try {
-                const url = SETTINGS.URL_ADDRESS.server_api_commands + 'authenticated/user_query/detail/';
+                const url = SETTINGS.URL_ADDRESS.server_api_commands + `authenticated/user_query/detail/${_id}`;
                 const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`,
+                    method: 'GET',
+                    headers: {                        
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json' // ← Esto es necesario
+
                     },
-                    body: JSON.stringify({ '_id': _id }),
+                    
                 });
 
                 data = await response.json();
@@ -148,6 +149,7 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
                     setData(data);
                 } else {
                     // Manejar errores de autenticación
+
 
                     return 'not authenticated';
                 }
@@ -203,15 +205,18 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
         // Procesar los módulos y fotos
         Data?.modules.forEach((module) => {
             photos?.forEach((photo) => {
-                if (module._id === photo.module_id) {
-                    if (module.name === 'inventory') {
+                
+                    if (module.name === 'inventory' && module._id === photo.module_id) {
                         locInven.push(photo);
-                    } else if (module.name === 'research') {
+                    }                     
+                    if ( (module.name === 'research') && (module._id === photo.module_id)) {
+                        console.log('research photo', photo);
                         locResearch.push(photo);
-                    } else if (module.name === 'restoration') {
+                    } 
+                    if (module.name === 'restoration' && module._id === photo.module_id) {
                         locRest.push(photo);
                     }
-                }
+                
             });
         });
 

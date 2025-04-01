@@ -178,10 +178,10 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
                     } else {
                         arrayTabColOut = formatData(dataQuery, size, false, onDetailClick, defColumns, tableData, module);
                     }
-                    console.log('arrayTabColOut Table data', arrayTabColOut[0]);
+                    //console.log('arrayTabColOut Table data', arrayTabColOut[0][0]);
                     // Guardar en estado local y actualizar referencias
                     setTableData(arrayTabColOut[0]);
-                    console.log('arrayTabColOut Columns Names', arrayTabColOut[2]);
+                    //console.log('arrayTabColOut Columns Names', arrayTabColOut[2]);
                     setDefColumnsOut(arrayTabColOut[2]);
                     // setArrayTabColOutState(arrayTabColOut); // Guardar en estado local
 
@@ -546,7 +546,7 @@ export function DatatableUserInventory({ accessToken, refreshToken, onDetailClic
                         const savedColumns = JSON.parse(getdefColumn);
                         const tdefColumn = arrayTabColOut[1];
                         tdefColumn.forEach((column, index) => {
-                            console.log(savedColumns[index]);
+                            //console.log(savedColumns[index]);
                             column.show = savedColumns[index].show;
                             if (!savedColumns[index].show) {
                                 column.omit = true;

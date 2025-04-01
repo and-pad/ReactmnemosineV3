@@ -325,28 +325,36 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
   ]);
 
   const compareFormModifications = (original, modified) => {
-    var changes = {};
+    let changes = {};
+  
     for (const key in original) {
-      // Aplicar trim a los valores antes de compararlos
-      const originalValue =
-        typeof original[key] === "string"
-          ? original[key].trim()
-          : original[key];
-      const modifiedValue =
-        typeof modified[key] === "string"
-          ? modified[key].trim()
-          : modified[key];
-
-      if (originalValue !== modifiedValue) {
+      let originalValue = original[key];
+      let modifiedValue = modified[key];
+  
+      // Aplicar trim a los strings
+      if (typeof originalValue === "string") originalValue = originalValue.trim();
+      if (typeof modifiedValue === "string") modifiedValue = modifiedValue.trim();
+  
+      // Si el valor es un objeto con _id, solo compararemos _id
+      if (typeof originalValue === "object" && typeof modifiedValue === "object") {
+        if (originalValue._id !== modifiedValue._id) {
+          changes[key] = {
+            oldValue: original[key],
+            newValue: modified[key],
+          };
+        }
+      }
+      // Comparación normal para strings y valores primitivos
+      else if (originalValue !== modifiedValue) {
         changes[key] = {
           oldValue: original[key],
           newValue: modified[key],
         };
       }
     }
+  
     return changes;
   };
-
   const comparePicsModifications = (original, modified) => {
     let changes = {};
     const keys = ["photographer", "photographed_at", "description"];
@@ -363,6 +371,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
             typeof originalItem[key] === "string"
               ? originalItem[key].trim()
               : originalItem[key];
+
           const modifiedValue =
             typeof modifiedItem[key] === "string"
               ? modifiedItem[key].trim()

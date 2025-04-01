@@ -1,5 +1,7 @@
 import { applyLogicToInventoryColumn } from "./columnDriver";
 import SETTINGS from "../Config/settings";
+import Cookies from 'js-cookie';
+
 const research_keys = ['title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card'];
 
 function push_data(orderedData, column) {
@@ -280,7 +282,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
     }
 
     let TabColOut = [];
-    console.log('tableData', tableData);
+    console.log('tableData', tableData[0]);
     TabColOut.push(tableData);
     TabColOut.push(defColumns);
     TabColOut.push(out);
@@ -434,6 +436,7 @@ export const getFromCache = () => {
                                 //Si la fecha ya expiro borramos datos de la cache
                                 store.delete(dataName);
                                 store.delete(queryDateName);
+                                Cookies.remove('SYNCCODEDB');
                                 console.log('Los datos han expirado y han sido eliminados.');
                                 db.close(); // Cerrar la base de datos después de completar la operación
                                 reject('data expired');//regresamos mensaje que expiró la base de datos
@@ -483,15 +486,37 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
             'Authorization': `Bearer ${accessToken}`
         },
     };
-    const url = SETTINGS.URL_ADDRESS.server_api_commands + 'authenticated/user_query/';
+    const _code = Cookies.get('SYNCCODEDB');
+    //temporal solo para quitar un error en el navegador para no borrar todo el historial
+    //Cookies.remove('SYNCCODEDB');
+    let url;
+    if (_code) {
+        
+        url = SETTINGS.URL_ADDRESS.server_api_commands + `authenticated/user_query/${_code}`;
+    } else {
+        url = SETTINGS.URL_ADDRESS.server_api_commands + 'authenticated/user_query/0';
+    } 
+    
     const response = await fetch(url, requestOptions);
     var data;
     var queryData;
-    if (response.ok) {
+    if (response.status === 202) {
         data = await response.json();
-        // console.log("data ptm",data);
+        //console.log("data raw",data);
         queryData = data.query;
-    } else {
+        const dataCode = data.code;
+        Cookies.set('SYNCCODEDB', dataCode);
+        console.log('dataCode', dataCode);
+        console.log('query_duration', data.query_duration);
+    } else if (response.status === 304) {
+        data = await getDataFromCache();
+        queryData = data;
+        console.log('data from cache Prra', data);   
+        //console.log(await response.text());
+
+    }
+    else
+    {
         const errorData = await response.json();
         if (errorData.code === "token_not_valid") {
             try {
@@ -532,13 +557,29 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
 }
 export const fetchData = async (accessToken, refreshToken) => {
     try {
-        const cachedData = await getDataFromCache();
+        let cachedData;
+        let fetch;
+        const _code = Cookies.get('SYNCCODEDB');
+        if (!_code) {
+             fetch = await fetchAndCacheData(accessToken, refreshToken);            
+             return fetch;
+        }
+        else
+        {
+            fetch = await fetchAndCacheData(accessToken, refreshToken);
+            //cachedData = await getDataFromCache();
+            cachedData = fetch;
+
+        }
+            console.log('No data cached. Obtaining data from server...');
+                
         console.log('Data get from cache...');
+        
         return cachedData;
     } catch (error) {
         console.log('No data cached. Obtaining data from server...');
         const freshData = await fetchAndCacheData(accessToken, refreshToken);
-        console.log('Data obtained from server and saved to cache:', freshData);
+        console.log('Data obtained from server and saved to cache:', freshData[0]);
         return freshData;
     }
 };

@@ -153,6 +153,7 @@ const langData = {
       associated_documents: "Documentos asociados",
       provenance: "Proveniencia",
       //firm description
+      firm: "Firma",
       firm_yes: "Si",
       firm_no: "No",
     },

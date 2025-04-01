@@ -17,6 +17,7 @@ import { Button } from '@mui/material'; // Botón de Material UI
 
 import { ExpandableComponent } from './DatatableComponents/datatableComponents';
 import { CircularIndeterminate } from './DatatablesInventory';
+import { delCache } from "./dataHandler";
 
 
 const langData = getTranslations();
@@ -47,6 +48,7 @@ export function DatatableUserResearch({ accessToken, refreshToken, onDetailClick
         setTheme((prevTheme) => (prevTheme === 'custom-light' ? 'custom-dark' : 'custom-light'));
     };
 
+    
     //var size;
     /***************************************************************************** */
     const timerIdRef = useRef();
@@ -92,6 +94,30 @@ export function DatatableUserResearch({ accessToken, refreshToken, onDetailClick
 
     // var prop ;
     const [hasFetched, setHasFetched] = useState(false);
+    
+    const handleDeleteChache = async () => {
+        try {
+            const result = await delCache();
+            if (result !== "error") {
+              console.log(result);
+              console.log("Cache eliminado con éxito.");
+            } else {
+              console.log("No se encontró el objeto en la base de datos.");
+            }
+          } catch (error) {
+            console.error("Ocurrió un error al eliminar la caché:", error);
+          }
+    };
+    const ReloadData = async () => {
+
+          //await handleDeleteChache();
+          setHasFetched(false);
+          setPending(true);
+
+
+          //setDataQuery([]);
+  
+    };
     useEffect(() => {
         const filtered = () => {
             return filterSearch(defColumns, tableData, filterText, rm_accents, upper_lower, wordComplete, checkboxSearchValues, disableChecks);
@@ -103,7 +129,8 @@ export function DatatableUserResearch({ accessToken, refreshToken, onDetailClick
                 try {
                     let fetch;
                     let first;
-                    if (dataQuery.length === 0) {
+                    if (dataQuery.length === 0 || pending) {                        
+
                         fetch = await fetchData(accessToken, refreshToken);
                         // console.log(fetch);
                         setDataQuery(fetch);
@@ -142,7 +169,7 @@ export function DatatableUserResearch({ accessToken, refreshToken, onDetailClick
                         const savedColumns = JSON.parse(getdefColumn);
                         const tdefColumn = arrayTabColOut[1];
                         tdefColumn.forEach((column, index) => {
-                            console.log(savedColumns[index]);
+                            //console.log(savedColumns[index]);
                             column.show = savedColumns[index].show;
                             if (!savedColumns[index].show) {
                                 column.omit = true;
@@ -184,7 +211,7 @@ export function DatatableUserResearch({ accessToken, refreshToken, onDetailClick
         return () => {
             setHasFetched(false);
         };
-    }, [accessToken, refreshToken, size, setHasFetched, dataQuery, onDetailClick, checkboxSearchValues, disableChecks, filterText, rm_accents, upper_lower, wordComplete, setTableData, setDefColumns]);
+    }, [accessToken, refreshToken, size, setHasFetched, dataQuery, onDetailClick, checkboxSearchValues, disableChecks, filterText, rm_accents, upper_lower, wordComplete, setTableData, setDefColumns,pending]);
 
     /*****************************************************************************
      *****************************************************************************/
@@ -306,6 +333,10 @@ export function DatatableUserResearch({ accessToken, refreshToken, onDetailClick
                 <Typography variant="h5" component="h1" fontWeight="bold">
                     Investigación
                 </Typography>
+                <Button sx={{ textTransform: 'none' }}
+                    variant="contained" color="primary" onClick={ReloadData}>
+                    Recargar tabla
+                </Button>
                 <Button sx={{ textTransform: 'none' }}
                     variant="contained" color="primary" onClick={toggleTheme}>
                     Tema

@@ -155,6 +155,7 @@ const langData = {
       associated_documents: "Associated documents",
       provenance: "Prevenance",
       //firm description
+      firm:"Firm",
       firm_yes: "Yes",
       firm_no: "No",
     },
