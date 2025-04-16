@@ -27,7 +27,6 @@ import ModifiedOutlet from "./isModifiedOutlet";
 
 const langData = getTranslations();
 
-
 export const Edit_inventory = ({ accessToken, refreshToken }) => {
   const navigate = useNavigate();
 
@@ -76,9 +75,9 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.inventory_thumbnails;
 
   const handlePrev = () => {
-    console.log("Pics", Pics);
-    console.log("Pics current index", Pics[currentImgIndex]);
-    console.log("current index", currentImgIndex);
+    //console.log("Pics", Pics);
+    //console.log("Pics current index", Pics[currentImgIndex]);
+    //console.log("current index", currentImgIndex);
     setCurrentImgIndex((prevIndex) => {
       const newIndex = prevIndex === 0 ? Pics.length - 1 : prevIndex - 1;
       setCurrentPic(Pics && Pics.length > 0 ? Pics[newIndex] : null);
@@ -87,13 +86,13 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
   };
 
   const handleNext = () => {
-    console.log("Pics", Pics);
-    console.log("Pics current index", Pics[currentImgIndex]);
-    console.log("current index", currentImgIndex);
+    //console.log("Pics", Pics);
+    //console.log("Pics current index", Pics[currentImgIndex]);
+    //console.log("current index", currentImgIndex);
 
     setCurrentImgIndex((prevIndex) => {
       const newIndex = prevIndex === Pics.length - 1 ? 0 : prevIndex + 1;
-      console.log(newIndex);
+      //console.log(newIndex);
       setCurrentPic(Pics && Pics.length > 0 ? Pics[newIndex] : null);
       return newIndex;
     });
@@ -120,16 +119,12 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
   const handlePrevDoc = () => {
     setCurrentDocIndex((prevIndex) =>
       prevIndex === 0 ? Documents.length - 1 : prevIndex - 1
-    );
-    /*setCurrentDoc(
-      Documents && Documents.length > 0 ? Documents[currentDocIndex] : null
-    );*/
+    );    
   };
   const handleNextDoc = () => {
     setCurrentDocIndex((prevIndex) =>
       prevIndex === Documents.length - 1 ? 0 : prevIndex + 1
     );
-    
   };
 
   const handlePrevNewDoc = () => {
@@ -138,8 +133,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         return prevIndex === 0 ? DocumentsNew.length - 1 : prevIndex - 1;
       }
       return prevIndex; // No cambia si no hay imágenes
-    });
-    //setCurrentPicNew(PicsNew && PicsNew.length > 0 ? PicsNew[currentImgNewIndex] : null);
+    });    
   };
   const handleNextNewDoc = () => {
     setCurrentDocNewIndex((prevIndex) => {
@@ -147,12 +141,11 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         return prevIndex === DocumentsNew.length - 1 ? 0 : prevIndex + 1;
       }
       return prevIndex; // No cambia si no hay imágenes
-    });
-    // setCurrentPicNew(PicsNew && PicsNew.length > 0 ? PicsNew[currentImgNewIndex] : null);
+    });    
   };
 
   const handleImageDrop = (acceptedFiles) => {
-    console.log("pics new", PicsNew);
+    //console.log("pics new", PicsNew);
     const updatedPics = [...PicsNew];
     updatedPics[currentImgNewIndex] = {
       ...updatedPics[currentImgNewIndex],
@@ -222,7 +215,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         setFilteredSubGenders(Subgenders);
         // Si no hacemos esta revision si hay un cambio en los datos se reinician los cabios
         // eso no es deseado asi que solo llenamos los datos una vez
-        console.log("gender_info", data?.piece ? data.piece : "N/D");
+        //console.log("gender_info", data?.piece ? data.piece : "N/D");
         if (!isDataLoaded) {
           const temp = {
             origin_number: data.piece?.origin_number || "",
@@ -232,36 +225,38 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
             description_inventory: data.piece?.description_inventory || "",
             gender_id: {
               _id: data.piece?.gender_id ? data.piece.gender_id : "N/D",
-              title:
-              data?.piece?.genders_info ? data.piece.genders_info.title : "N/D",
-              description: data?.piece?.genders_info ? data.piece.genders_info.description : "N/D",              
-              
+              title: data?.piece?.genders_info
+                ? data.piece.genders_info.title
+                : "N/D",
+              description: data?.piece?.genders_info
+                ? data.piece.genders_info.description
+                : "N/D",
             },
-            subgender_id:{
-             _id: data.piece?.subgender_id ? data.piece.subgender_id : "N/D",
-             title : data?.piece?.subgenders_info
+            subgender_id: {
+              _id: data.piece?.subgender_id ? data.piece.subgender_id : "N/D",
+              title: data?.piece?.subgenders_info
                 ? data.piece.subgenders_info.title
                 : "N/D",
-                description : data?.piece?.subgenders_info
+              description: data?.piece?.subgenders_info
                 ? data.piece.subgenders_info.description
                 : "N/D",
-            
-              
-              },
-            
-            
-            type_object_id:{              
-              _id: data.piece?.type_object_id ? data.piece.type_object_id : "N/D",
-              title: data?.piece?.type_object_info 
+            },
+
+            type_object_id: {
+              _id: data.piece?.type_object_id
+                ? data.piece.type_object_id
+                : "N/D",
+              title: data?.piece?.type_object_info
                 ? data.piece.type_object_info.title
                 : "N/D",
               description: data?.piece?.type_object_info
                 ? data.piece.type_object_info.description
                 : "N/D",
-              
             },
-            dominant_material_id:{
-              _id: data.piece?.dominant_material_id ? data.piece.dominant_material_id : "N/D",
+            dominant_material_id: {
+              _id: data.piece?.dominant_material_id
+                ? data.piece.dominant_material_id
+                : "N/D",
               title: data?.piece?.dominant_material_info
                 ? data.piece.dominant_material_info.title
                 : "N/D",
@@ -269,8 +264,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                 ? data.piece.dominant_material_info.description
                 : "N/D",
             },
-             
-              
+
             tags: data.piece?.tags || "",
             appraisal: data.piece?.appraisal || "",
             base_or_frame: data.piece?.base_or_frame || "",
@@ -297,9 +291,9 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         }
         if (Pics && Pics.length > 0) {
           setCurrentPic(Pics[currentImgIndex]);
-          console.log("Pics current", Pics[currentImgIndex]);
-          console.log("current index", currentImgIndex);
-          console.log("Pics", Pics);
+          //console.log("Pics current", Pics[currentImgIndex]);
+          //console.log("current index", currentImgIndex);
+          //console.log("Pics", Pics);
         }
       } else {
         if (data.changes) {
@@ -326,17 +320,22 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
 
   const compareFormModifications = (original, modified) => {
     let changes = {};
-  
+
     for (const key in original) {
       let originalValue = original[key];
       let modifiedValue = modified[key];
-  
+
       // Aplicar trim a los strings
-      if (typeof originalValue === "string") originalValue = originalValue.trim();
-      if (typeof modifiedValue === "string") modifiedValue = modifiedValue.trim();
-  
+      if (typeof originalValue === "string")
+        originalValue = originalValue.trim();
+      if (typeof modifiedValue === "string")
+        modifiedValue = modifiedValue.trim();
+
       // Si el valor es un objeto con _id, solo compararemos _id
-      if (typeof originalValue === "object" && typeof modifiedValue === "object") {
+      if (
+        typeof originalValue === "object" &&
+        typeof modifiedValue === "object"
+      ) {
         if (originalValue._id !== modifiedValue._id) {
           changes[key] = {
             oldValue: original[key],
@@ -352,7 +351,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         };
       }
     }
-  
+
     return changes;
   };
   const comparePicsModifications = (original, modified) => {
@@ -450,7 +449,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     const changes = compareFormModifications(actualFormData, formData);
     const changes_pics_inputs = comparePicsModifications(actualPics, Pics);
     const changes_docs_inputs = compareDocsModifications(actualDocs, Documents);
-    
+
     if (
       (changes && Object.keys(changes).length > 0) ||
       (changes_pics_inputs && Object.keys(changes_pics_inputs).length > 0) ||
@@ -460,12 +459,12 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
       (changes_docs_inputs && Object.keys(changes_docs_inputs).length > 0) ||
       (DocumentsNew && DocumentsNew.length > 0)
     ) {
-        const modalElement = document.getElementById("ChangesModal");
-        if (modalElement) {
-          const modal = new Modal(modalElement);
-          modal.show();
-      }  
-    } else {    
+      const modalElement = document.getElementById("ChangesModal");
+      if (modalElement) {
+        const modal = new Modal(modalElement);
+        modal.show();
+      }
+    } else {
       const modalElement = document.getElementById("noChangesModal");
       if (modalElement) {
         const modal = new Modal(modalElement);
@@ -474,34 +473,29 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     }
   };
 
- const sendSave = () => { 
-    
+  const sendSave = () => {
     const changes = compareFormModifications(actualFormData, formData);
     const changes_pics_inputs = comparePicsModifications(actualPics, Pics);
     const changes_docs_inputs = compareDocsModifications(actualDocs, Documents);
     const _id = Data._id;
 
-      API_RequestInventoryEdit({
-        accessToken,
-        refreshToken,
-        _id,
-        changes,
-        changes_pics_inputs,
-        changedPics,
-        PicsNew,
-        changedDocs,
-        DocumentsNew,
-        changes_docs_inputs,
-      }).then((data) => {
-        if (data) {          
-          
-         navigate(`/mnemosine/inventory_queries`);
-        }      
-      });
-
-    
+    API_RequestInventoryEdit({
+      accessToken,
+      refreshToken,
+      _id,
+      changes,
+      changes_pics_inputs,
+      changedPics,
+      PicsNew,
+      changedDocs,
+      DocumentsNew,
+      changes_docs_inputs,
+    }).then((data) => {
+      if (data) {
+        navigate(`/mnemosine/inventory_queries`);
+      }
+    });
   };
-  
 
   const handleTagClick = (index) => {
     // Colocar el tag en el input para permitir su edición
@@ -535,8 +529,8 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         setCurrentTag("");
         setFormData((prevData) => ({
           ...prevData,
-          tags: [...tags, e.target.value.trim()].join(","), // Actualiza los tags en el formData          
-        }))
+          tags: [...tags, e.target.value.trim()].join(","), // Actualiza los tags en el formData
+        }));
       }
     }
   };
@@ -560,9 +554,6 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     }
   };
 
-
-
-
   const handleGenderChange = (selectedGender) => {
     setFormData({
       ...formData,
@@ -571,7 +562,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         title: selectedGender.title,
       },
     });
-    console.log("selected Gender", selectedGender);
+    //console.log("selected Gender", selectedGender);
   };
 
   const handleSubGenderChange = (selectedSubGender) => {
@@ -582,7 +573,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         title: selectedSubGender.title,
       },
     });
-    console.log("selected SubGender", selectedSubGender);
+    //console.log("selected SubGender", selectedSubGender);
   };
 
   const handleTypeObjectChange = (selectedTypeObject) => {
@@ -593,7 +584,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         title: selectedTypeObject.title,
       },
     });
-    console.log("selected TypeObject", selectedTypeObject);
+    //console.log("selected TypeObject", selectedTypeObject);
   };
 
   const handleDominantMaterialChange = (selectedDominantMaterial) => {
@@ -604,16 +595,15 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
         title: selectedDominantMaterial.title,
       },
     });
-    console.log("selected DominantMaterial", selectedDominantMaterial);
+    //console.log("selected DominantMaterial", selectedDominantMaterial);
   };
 
-
-   // Filtra las opciones de gender en función de lo que escribe el usuario
-   const handleGenderFilter = (e) => {
+  // Filtra las opciones de gender en función de lo que escribe el usuario
+  const handleGenderFilter = (e) => {
     const { value } = e.target;
     const filtered = Genders.filter((gender) =>
       gender.title.toLowerCase().includes(value.toLowerCase())
-    );    
+    );
     setFilteredGenders(filtered);
   };
   const handleSubGenderFilter = (e) => {
@@ -622,7 +612,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     // Filtra la lista de genders
     const filtered = Subgenders.filter((subgender) =>
       subgender.title.toLowerCase().includes(value.toLowerCase())
-    );   
+    );
 
     setFilteredSubGenders(filtered);
   };
@@ -631,7 +621,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     const { value } = e.target;
     const filtered = TypeObject.filter((type_object) =>
       type_object.title.toLowerCase().includes(value.toLowerCase())
-    ); 
+    );
     setfilteredTypeObject(filtered);
   };
 
@@ -639,16 +629,9 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     const { value } = e.target;
     const filtered = DominantMaterial.filter((dominant_material) =>
       dominant_material.title.toLowerCase().includes(value.toLowerCase())
-    );   
+    );
     setFilteredDominantMaterial(filtered);
   };
-
-
-
-
-
-
-
 
   // Actualiza los campos de la imagen seleccionada
   const handleInputPic = (e) => {
@@ -820,9 +803,12 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     className="form-control"
                     id="gender"
                     onChange={handleGenderFilter}
-                    placeholder={langData.pieceDetailDescriptors.inventory.type_to_filter_genders}
+                    placeholder={
+                      langData.pieceDetailDescriptors.inventory
+                        .type_to_filter_genders
+                    }
                   />
-                 
+
                   <select
                     className="form-select mt-2"
                     id="gender"
@@ -833,7 +819,9 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                       const selectedIndex = e.target.options.selectedIndex;
                       const selectedTitle = e.target.value;
                       const selectedId =
-                        e.target.options[selectedIndex].getAttribute("data-id-gender");
+                        e.target.options[selectedIndex].getAttribute(
+                          "data-id-gender"
+                        );
                       handleGenderChange({
                         _id: selectedId,
                         title: selectedTitle,
@@ -861,19 +849,26 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     className="form-control"
                     id="subgender"
                     onChange={handleSubGenderFilter}
-                    placeholder={langData.pieceDetailDescriptors.inventory.type_to_filter_subgenders}
+                    placeholder={
+                      langData.pieceDetailDescriptors.inventory
+                        .type_to_filter_subgenders
+                    }
                   />
 
                   <select
                     type="text"
                     className="form-select mt-2"
                     id="subgender"
-                    value={formData?.subgender_id ? formData.subgender_id.title : ""}
+                    value={
+                      formData?.subgender_id ? formData.subgender_id.title : ""
+                    }
                     onChange={(e) => {
                       const selectedIndex = e.target.options.selectedIndex;
                       const selectedTitle = e.target.value;
                       const selectedId =
-                        e.target.options[selectedIndex].getAttribute("data-id-subgender");
+                        e.target.options[selectedIndex].getAttribute(
+                          "data-id-subgender"
+                        );
                       handleSubGenderChange({
                         _id: selectedId,
                         title: selectedTitle,
@@ -905,20 +900,26 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     className="form-control"
                     id="type_object"
                     onChange={handleTypeObjectFilter}
-                    placeholder={langData.pieceDetailDescriptors.inventory.type_to_filter_types}
+                    placeholder={
+                      langData.pieceDetailDescriptors.inventory
+                        .type_to_filter_types
+                    }
                   />
                   <select
                     type="text"
                     className="form-select mt-2"
                     id="type_object"
                     value={
-                      formData?.type_object_id ? formData.type_object_id.title : ""
+                      formData?.type_object_id
+                        ? formData.type_object_id.title
+                        : ""
                     }
                     onChange={(e) => {
                       const selectedIndex = e.target.options.selectedIndex;
                       const selectedTitle = e.target.value;
-                      const selectedId =
-                        e.target.options[selectedIndex].getAttribute("data-id-type_object");
+                      const selectedId = e.target.options[
+                        selectedIndex
+                      ].getAttribute("data-id-type_object");
                       handleTypeObjectChange({
                         _id: selectedId,
                         title: selectedTitle,
@@ -951,7 +952,10 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     className="form-control"
                     id="dominant_material"
                     onChange={handleDominantMaterialFilter}
-                    placeholder={langData.pieceDetailDescriptors.inventory.type_to_filter_materials}
+                    placeholder={
+                      langData.pieceDetailDescriptors.inventory
+                        .type_to_filter_materials
+                    }
                   />
                   <select
                     type="text"
@@ -965,8 +969,9 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     onChange={(e) => {
                       const selectedIndex = e.target.options.selectedIndex;
                       const selectedTitle = e.target.value;
-                      const selectedId =
-                        e.target.options[selectedIndex].getAttribute("data-id-dominant_material");
+                      const selectedId = e.target.options[
+                        selectedIndex
+                      ].getAttribute("data-id-dominant_material");
                       handleDominantMaterialChange({
                         _id: selectedId,
                         title: selectedTitle,
@@ -1340,7 +1345,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                         color="secondary"
                         type="button"
                         onClick={handleNext}
-                        className="btn btn-secondary"
+                       className="btn btn-secondary"
                       >
                         {langData.pieceInventoryEdit.next} →
                       </Button>
@@ -1365,7 +1370,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     onClick={toggleExpandNewImage}
                   >
                     {/* Header Content */}
-                    <span>Imágenes nuevas</span>
+                    <span>{langData.pieceInventoryEdit.new_images} </span>
                     {isExpandedImg && (
                       <>
                         <IconButton
@@ -1690,9 +1695,9 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                         changedDocs[currentDocIndex] &&
                         changedDocs[currentDocIndex]["file"] ? (
                           <div>
-                            {console.log(
-                              changedDocs[currentDocIndex]["file"].type
-                            )}
+                            {/*console.log(
+                              /changedDocs[currentDocIndex]["file"].type
+                            */}
                             <FontAwesomeIcon
                               icon={
                                 changedDocs &&
@@ -1782,7 +1787,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     onClick={toggleExpandNewDoc}
                   >
                     {/* Header Content */}
-                    <span>Documentos nuevos</span>
+                    <span>{langData.pieceInventoryEdit.new_documents}</span>
                     {isExpandedDoc && (
                       <>
                         <IconButton
@@ -2004,12 +2009,11 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
               </div>
             </div>
 
-
             <div
               className="modal fade"
               id="ChangesModal"
               tabIndex="-1"
-              aria-labelledby="ChangesModalLabel"              
+              aria-labelledby="ChangesModalLabel"
             >
               <div className="modal-dialog">
                 <div className="modal-content">
@@ -2026,7 +2030,9 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                   </div>
 
                   <div className="modal-body">
-                    <p>Se han detectado cambios en la información de la pieza.</p>
+                    <p>
+                      Se han detectado cambios en la información de la pieza.
+                    </p>
                     <p>¿Deseas guardar los cambios?</p>
                   </div>
 
@@ -2039,7 +2045,6 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                     >
                       Guardar cambios
                     </button>
-                    
 
                     <button
                       type="button"
@@ -2052,10 +2057,6 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
                 </div>
               </div>
             </div>
-
-
-
-
             <Button
               variant="contained"
               color="primary"

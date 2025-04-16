@@ -396,7 +396,7 @@ export const Research = () => {
               </div>
               <div className="col-12 col-md-6">
                 <div className="d-flex flex-column mb-2 mb-md-0 mt-1">
-                  <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.autor_s_}:</h6>
+                  <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.author_s_}:</h6>
                   <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>
                     {item?.research_info[0]?.authors_info?.map((author, index) => 
                       (<p key={index}>{author.title}</p>))}
@@ -717,7 +717,7 @@ export const Research = () => {
             <div className="p-2">
               <div className="text-center">
                 {langData.pieceDetailDescriptors.inventory.created_by} <strong>{item?.research_info[0] ? item.research_info[0].created_by_info[0] : "N/D"}</strong>,                     <span data-tooltip-id="created-tooltip"
-                  data-tooltip-content={item?.created_at ? moment(item.created_at).format('LL') : "N/D"}
+                  data-tooltip-content={item?.research_info[0]?.created_at ? moment(item.research_info[0].created_at).format('LL') : "N/D"}
                   data-tooltip-place="top"
                 >{item?.research_info[0]?.created_at ? formatTimeAgo(moment(item.research_info[0].created_at), getActualLang()) : "N/D"}</span>
                 <Tooltip id='created-tooltip' />

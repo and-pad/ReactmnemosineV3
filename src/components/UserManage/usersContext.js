@@ -225,7 +225,7 @@ export const CreateUserForm = ({ accessToken, refreshToken }) => {
       ...formData,
       role: roles[0]?.name || ''
     })*/
-  }, [roles, formData]);
+  }, [ ]);
   const handleChange = (e) => {
     const { name, value } = e.target;
 

@@ -129,7 +129,7 @@ const langData = {
     },
     research: {
       title: "Título",
-      autor_s_: "Autor(es)",
+      author_s_: "Autor(es)",
       set: "Conjunto",
       involved_creation_info: "Involucrados en su creación",
       technique: "Técnica",
@@ -156,6 +156,12 @@ const langData = {
       firm: "Firma",
       firm_yes: "Si",
       firm_no: "No",
+      type_to_filter_authors: "Escribe para filtrar autores",
+      type_to_filter_involved_creation: "Escribe para filtrar involucrados",
+      type_to_filter_place_of_creation: "Escribe para filtrar procedencia",
+      type_to_filter_period: "Escribe para filtrar época",
+      inventory_fields: "Campos de inventario",
+
     },
     restoration: {
       preliminary_examination: "Exámen preliminar",
@@ -222,7 +228,9 @@ const langData = {
     newValue: "Valor a cambiar",
 
     documents: "Documentos",
+    new_documents: "Documentos nuevos",
     images: "Imágenes",
+    new_images: "Imágenes nuevas",
 
     photographer: "Fotografo",
     photographed_at: "Fecha de la fotografía",

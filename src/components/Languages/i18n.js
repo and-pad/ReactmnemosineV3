@@ -1,9 +1,12 @@
 import Spanish from './sp/Lang';//Archivo con la traduccion en español
 import English from './en/Lang';//Archivo con la traduccion en ingles
+import French from './fr/Lang';//Archivo con la traduccion en frances
 //Objeto que contiene las traducciones existentes
 const languages = {
     en: English,
     sp: Spanish,
+    fr: French, 
+    
 }
 //Tomamos de los archivos temporales del navegador, la preferencia de lenguaje establecida
 // O tomamos por default español

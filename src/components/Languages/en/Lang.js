@@ -131,7 +131,7 @@ const langData = {
     },
     research: {
       title: "Title",
-      autor_s_: "Autor(s)",
+      author_s_: "Autor(s)",
       set: "Set",
       involved_creation_info: "Involveds in its creation",
       technique: "Technique",
@@ -158,6 +158,15 @@ const langData = {
       firm:"Firm",
       firm_yes: "Yes",
       firm_no: "No",
+
+      type_to_filter_authors: "Type to filter authors",
+      type_to_filter_involved_creation: "Type to filter involveds",
+      type_to_filter_place_of_creation: "Type to filter place of creation",
+      type_to_filter_period: "Type to filter period",
+
+      inventory_fields: "Inventory fields",
+
+
     },
     restoration: {
       preliminary_examination: "Preliminary examination",
@@ -220,7 +229,9 @@ const langData = {
     oldValue: "Current value",
     newValue: "To change value",
     documents: "Documents",
+    new_documents: "New documents",
     images: "Images",
+    new_images: "New images",
     photographer: "Photographer",
     photographed_at: "Photographed at",
     description: "Description",

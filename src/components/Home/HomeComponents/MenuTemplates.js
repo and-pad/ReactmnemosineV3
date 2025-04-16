@@ -116,6 +116,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
                                 <ul className="dropdown-menu bg-info " aria-labelledby='navbarDropDownLang'>
                                     <li className="dropdown-item" onClick={() => changeLang('sp')}>{langData.LangDispo.spanish}</li>
                                     <li className="dropdown-item" onClick={() => changeLang('en')}>{langData.LangDispo.english}</li>
+                                    <li className="dropdown-item" onClick={() => changeLang('fr')}>{langData.LangDispo.french}</li>
                                 </ul>
 
                             </li>
