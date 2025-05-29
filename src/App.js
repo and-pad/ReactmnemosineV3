@@ -27,7 +27,7 @@ import {
   Restoration,
   Movements,
 } from "./components/PiecesQueries/details";
-import { Edit_inventory } from "./components/PiecesQueries/edit";
+import { EditInventory } from "./components/PiecesQueries/edit";
 import { InventoryEdit } from "./components/PiecesQueries/inventoryActions";
 import { delCache } from "./components/Datatables/dataHandler";
 
@@ -418,6 +418,7 @@ function App() {
                     <InventoryEdit
                       accessToken={accessToken}
                       refreshToken={refreshToken}
+                      permissions={permissions}
                     />
                   }
                   checkLogin={handleCheckLoginCallback}
@@ -430,9 +431,10 @@ function App() {
                 element={
                   <PrivateRoute
                     element={
-                      <Edit_inventory
+                      <EditInventory
                         accessToken={accessToken}
                         refreshToken={refreshToken}
+                        permissions={permissions}
                       />
                     }
                     checkLogin={handleCheckLoginCallback}
@@ -479,6 +481,7 @@ function App() {
                       <EditResearch
                         accessToken={accessToken}
                         refreshToken={refreshToken}
+                        permissions={permissions}
                       />
                     }
                     checkLogin={handleCheckLoginCallback}

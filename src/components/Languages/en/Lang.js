@@ -128,6 +128,7 @@ const langData = {
       type_to_filter_subgenders: "Type to filter subgenders",
       type_to_filter_types: "Type to filter object types",
       type_to_filter_materials: "Type to filter dominant materials",
+      
     },
     research: {
       title: "Title",
@@ -163,8 +164,64 @@ const langData = {
       type_to_filter_involved_creation: "Type to filter involveds",
       type_to_filter_place_of_creation: "Type to filter place of creation",
       type_to_filter_period: "Type to filter period",
-
       inventory_fields: "Inventory fields",
+      bibliographies_reference: "Kind of reference", // "Tipo de referencia",
+      type_to_filter_reference: "Type to filter kind of reference", //"Escribe para filtrar tipo de referencia",
+
+
+    },
+    
+   foot_notes: {
+      title: "Title",
+      author: "Author",
+      article: "Article",
+      chapter: "Chapter",
+      editorial: "Editorial",
+      vol_no: "Volume / Number",
+      city_country: "City and country",
+      pages: "Pages",
+      publication_date: "Publication date",
+      description: "Description",
+    },
+    /* Hay que hacer la version en ingles
+     bibliography: {
+      title: "Título",
+      author: "Autor",
+      article: "Artículo",
+      chapter: "Capítulo",
+      editorial: "Editorial",
+      vol_no: "Volumen / Número",      
+      city_country: "Ciudad y país",
+      pages: "Páginas",
+      editor: "Editor",
+      web_page: "Página web",
+      identifier: "Identificador",
+    },
+     */
+  bibliography: {
+    title: "Title",
+    author: "Author",
+    article: "Article",
+    chapter: "Chapter",
+    editorial: "Editorial",
+    vol_no: "Volume / Number",
+    city_country: "City and country",
+    pages: "Pages",
+    editor: "Editor",
+    web_page: "Web page",
+    identifier: "Identifier",
+  },
+   inventory_in_research: {
+      gender_id: "Gender",
+      subgender_id: "Subgender",
+      type_object_id: "Type object",
+      dominant_material_id: "Dominant Material",
+      description_origin: "Description origin",
+      description_inventory: "Description inventory",
+
+      actual_value: "Current value",
+      tochange_value: "To change value",
+      field: "Field",
 
 
     },

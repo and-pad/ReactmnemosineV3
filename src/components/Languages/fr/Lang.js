@@ -19,7 +19,7 @@ const langData = {
     expositions: "Expositions",
     venues: "Sites",
     reports: "Rapports",
-    appraisals: "Évaluations",
+    appraisals: "Estimations",
     users: "Utilisateurs",
     catalogs: "Catalogues",
     genders: "Genres",
@@ -87,7 +87,7 @@ const langData = {
       tags: "Meuble",
       description_origin: "Description de provenance",
       description_inventory: "Description d'inventaire",
-      appraisal: "Évaluation",
+      appraisal: "Estimation",
       date_start_string: "Date de ",
       departure_date: "sortie",
       arrival_date: "entrée",
@@ -110,7 +110,7 @@ const langData = {
 
       base_or_frame: "Base ou cadre",
 
-      appraisal_history_tooltip: "Voir l’historique d’évaluation",
+      appraisal_history_tooltip: "Voir l’historique d’estimation",
       associated_documents: "Documents associés",
       incidence: "Incidents",
       created_by: "Créé par",
@@ -120,6 +120,7 @@ const langData = {
       type_to_filter_subgenders: "Tape pour filtrer les sous-genres",
       type_to_filter_types: "Tape pour filtrer les types d'objet",
       type_to_filter_materials: "Tape pour filtrer les matériaux dominants",
+      
     },
     research: {
       title: "Titre",
@@ -154,6 +155,77 @@ const langData = {
       type_to_filter_place_of_creation: "Tape pour filtrer la provenance",
       type_to_filter_period: "Tape pour filtrer l'époque",
       inventory_fields: "Champs d'inventaire",
+      bibliographies_reference:"Reference type", // "Kind of reference", // "Tipo de referencia",
+      type_to_filter_reference:"Tape pour filtrer les types de reference", // "Type to filter kind of reference", //"Escribe para filtrar tipo de referencia",
+    },
+
+    inventory_in_research: {
+      gender_id: "Genre",
+      subgender_id: "Sous-genre",
+      type_object_id: "Type d'objet",
+      dominant_material_id: "Matériau dominant",
+      description_origin: "Description de provenance",
+      description_inventory: "Description d'inventaire",
+      actual_value: "Valeur actuelle",
+      tochange_value: "Nouvelle valeur",
+      field: "Champ",
+    },
+     //Esta es la version en español, hay que hacer la en frances
+  
+    /*
+   foot_notes:{
+      title: "Título",
+      author: "Autor",
+      article: "Artículo",
+      chapter: "Capítulo",
+      editorial: "Editorial",
+      vol_no: "Volumen / Número",      
+      city_country: "Ciudad y país",
+      pages: "Páginas",
+      publication_date: "Fecha de publicación",
+      description: "Descripción",
+      },*/
+    
+    foot_notes: {
+      title: "Titre",
+      author: "Auteur",
+      article: "Article",
+      chapter: "Chapitre",
+      editorial: "Editeur",
+      vol_no: "Volumen / Número",
+      city_country: "Ville et pays",
+      pages: "Pages",
+      publication_date: "Date de publication",
+      description: "Description",
+    },
+
+    /* Hay que hacer la version en ingles
+     bibliography: {
+      title: "Título",
+      author: "Autor",
+      article: "Artículo",
+      chapter: "Capítulo",
+      editorial: "Editorial",
+      vol_no: "Volumen / Número",      
+      city_country: "Ciudad y país",
+      pages: "Páginas",
+      editor: "Editor",
+      web_page: "Página web",
+      identifier: "Identificador",
+    },
+     */
+    bibliography: {
+      title: "Titre",
+      author: "Auteur",
+      article: "Article",
+      chapter: "Chapitre",
+      editorial: "Editeur",
+      vol_no: "Volumen / Número",
+      city_country: "Ville et pays",
+      pages: "Pages",
+      editor: "Editeur",
+      web_page: "Page web",
+      identifier: "Identifiant",
     },
 
     restoration: {
@@ -188,8 +260,8 @@ const langData = {
     movements: "Mouvements",
   },
   pieceDetailAppraisalModal: {
-    modalHeader: "Historique d'expertise",
-    appraisal: "Expertise",
+    modalHeader: "Historique d'estimations",
+    appraisal: "Estimation",
     modified_by: "Modifié par",
     date: "Date",
     close: "Fermer",

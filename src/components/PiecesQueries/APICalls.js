@@ -145,7 +145,19 @@ export const fetchInventoryEdit = async ( accessToken, refreshToken, _id ) => {
       data = await response.json();
       //console.log(data[appraisal],"Datatattatat");
       return data;
-  } else {
+  } 
+  else if (response.status === 401 )
+    {
+      console.log("401 error");
+      return {no_permission: response};
+
+
+    }    
+  
+  
+  
+  
+  else {
       const errorData = await response.json();
       if (errorData.code === "token_not_valid") {
           try {
@@ -178,7 +190,7 @@ export const fetchInventoryEdit = async ( accessToken, refreshToken, _id ) => {
   }
 }
 
-
+/*
 const API_research_fetch_edit = async (accessToken, _id) => {
   const requestOptions = {
       method: 'GET',
@@ -192,8 +204,8 @@ const API_research_fetch_edit = async (accessToken, _id) => {
   return response;
 
 };
-
-
+*/
+/*
 export const fetchResearchEdit = async ( accessToken, refreshToken, _id ) => {
   
   const response = await API_research_fetch_edit(accessToken, _id);
@@ -215,7 +227,7 @@ export const fetchResearchEdit = async ( accessToken, refreshToken, _id ) => {
                   headers: {
                       'Content-Type': 'application/json',
                       /* 'Authorization': `Bearer ${accessToken}`,*/
-
+/*
                   },
                   body: JSON.stringify({ 'refresh': refreshToken }),//ponemos el RefreshToken en el body para que intente hacer la renovacion                        
               });
@@ -234,3 +246,4 @@ export const fetchResearchEdit = async ( accessToken, refreshToken, _id ) => {
       }
   }
 } 
+*/

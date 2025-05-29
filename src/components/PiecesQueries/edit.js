@@ -27,7 +27,7 @@ import ModifiedOutlet from "./isModifiedOutlet";
 
 const langData = getTranslations();
 
-export const Edit_inventory = ({ accessToken, refreshToken }) => {
+export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
   const navigate = useNavigate();
 
   //definiciones para manejar los cambios
@@ -313,7 +313,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
     isModified,
     DominantMaterial,
     TypeObject,
-    Pics,
+    
     currentImgIndex,
     isDataLoaded,
   ]);
@@ -354,6 +354,7 @@ export const Edit_inventory = ({ accessToken, refreshToken }) => {
 
     return changes;
   };
+
   const comparePicsModifications = (original, modified) => {
     let changes = {};
     const keys = ["photographer", "photographed_at", "description"];
