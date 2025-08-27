@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import SETTINGS from "../Config/settings";
@@ -29,6 +29,8 @@ import {
   Typography,
 } from "@mui/material";
 
+//import  {useScrollPosition}  from "./useScrollPosition";
+
 const langData = getTranslations();
 
 const image_path =
@@ -44,7 +46,8 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
   const [AllInvolvedCreation, setAllInvolvedCreation] = useState();
   const [AllPlaceOfCreation, setAllPlaceOfCreation] = useState();
   const [AllPeriod, setAllPeriod] = useState();
-  const textareaRef = useRef(null); // Crear referencia para el textarea
+
+  //const textareaRef = useRef(null); // Crear referencia para el textarea
 
   const [actualFormData, setCpFormData] = useState();
 
@@ -52,46 +55,76 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
   const [filteredInvolvedCreation, setFilteredInvolvedCreation] = useState([]);
   const [filteredPlaceOfCreation, setFilteredPlaceOfCreation] = useState(); //setFilteredPlaceOfCreation
   const [filteredPeriod, setFilteredPeriod] = useState();
+
   const [Genders, setGenders] = useState();
   const [Subgenders, setSubgenders] = useState();
   const [ObjectTypes, setObjectTypes] = useState();
   const [DominantMaterials, setDominantMaterials] = useState();
+
   const [filteredGenders, setFilteredGenders] = useState([]);
   const [filteredSubGenders, setFilteredSubGenders] = useState([]);
+
   const [selectedGender, setSelectedGender] = useState();
   const [selectedSubGender, setSelectedSubGender] = useState();
   const [selectedTypeObject, setSelectedTypeObject] = useState();
+
   const [filteredTypeObject, setfilteredTypeObject] = useState();
   const [selectedPeriod, setSelectedPeriod] = useState();
   const [selectedPlaceOfCreation, setSelectedPlaceOfCreation] = useState();
   const [selectedDominantMaterial, setSelectedDominantMaterial] = useState();
   const [filteredDominantMaterial, setFilteredDominantMaterial] = useState();
+
   const [Documents, setDocuments] = useState([]);
+  const [actualDocs, setactualDocs] = useState([]);
+
   const [Pics, setPics] = useState([]);
   const [currentPic, setCurrentPic] = useState(); //la imagen que se muestra actualmente
   const [currentImgIndex, setCurrentImgIndex] = useState(0); //el indice para navegar entre imagenes
+
   const [changedPics, setchangedPics] = useState({});
+
   const [isExpandedImg, setIsExpandedImg] = useState(false); // [setIsExpandedImg]
   const [PicsNew, setPicsNew] = useState([]); //Estas imagenes van cambiando conforme se escribe sobre ellas
   const [currentImgNewIndex, setCurrentImgNewIndex] = useState(0); //el indice para navegar entre imagenes
+
   const [currentDocIndex, setCurrentDocIndex] = useState(0);
-  const [changedDocs, setchangedDocs] = useState();
+
   const [currentDocNewIndex, setCurrentDocNewIndex] = useState(0); //el indice para navegar entre imagenes
   const [DocumentsNew, setDocumentsNew] = useState([]); //Estas imagenes van cambiando conforme se escribe sobre ellas
+
   const [actualPics, setCpPics] = useState(); //Estas se mantienen como estaban para hacer la comparación
+
   const [isExpandedDoc, setIsExpandedDoc] = useState(false);
 
   const [footnotes, setFootnotes] = useState();
+  const [newFootnotes, setNewFootnotes] = useState([]); //Estas footnotes van cambiando conforme se escribe sobre ellas
   const [actualFootnotes, setCpFootnotes] = useState(); //Estas se mantienen como estaban para hacer la comparación
 
   const [bibliographies, setBibliographies] = useState();
   const [actualBibliographies, setCpBibliographies] = useState(); //Estas se mantienen como estaban para hacer la comparación
 
+  const [newBibliographies, setNewBibliographies] = useState([]);
+  const [currentNewBibliographyIndex, setCurrentNewBibliographyIndex] =
+    useState(0);
+  const [isExpandedNewBibliography, setIsExpandedNewBibliography] =
+    useState(false);
+
   const [currentFootnoteIndex, setCurrentFootnoteIndex] = useState(0);
+  const [isExpandedFootnote, setIsExpandedFootnote] = useState(false);
+  const [currentNewFootnoteIndex, setCurrentNewFootnoteIndex] = useState(0);
+
   const [currentBibliographyIndex, setCurrentBibliographyIndex] = useState(0);
+
   const [allreferences, setReferences] = useState();
+
+  //bibliography references
   const [filteredReferences, setfilteredReferences] = useState();
   const [selectedReference, setSelectedReference] = useState();
+  const [selectedNewReference, setSelectedNewReference] = useState();
+
+  const containerSideBarRef = useRef(null);  
+
+
   const data = big_data && big_data["research_data"];
   const InventoryData =
     data && data["inventory_data"] && data["inventory_data"][0];
@@ -106,7 +139,26 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     "description_origin",
     "description_inventory",
   ];
+const [scrollY, setScrollY] = useState(0);
 
+ const restoreScroll = () => {
+    window.scrollTo({
+      top: scrollY, // la posición que quieras
+      behavior: "smooth", // opcional, hace animación suave
+    });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY); // posición vertical del scroll de la ventana
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   const compareFormModifications = (original, modified) => {
     let changes = {};
 
@@ -114,7 +166,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
       let originalValue = original[key];
       let modifiedValue = modified[key];
       if (key === "authors") {
-       /* console.log("originalValue", originalValue);
+        /* console.log("originalValue", originalValue);
         console.log("modifiedValue", modifiedValue);*/
       }
       // Aplicar trim a los strings
@@ -184,7 +236,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
         }
       }
     }
-
+    //console.log("changes desde compare modifications", changes);
     return changes;
   };
   const addDocument = () => {
@@ -235,12 +287,74 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     }));
   };
 
+  const addFootnote = () => {
+    const new_footnote = {
+      /*reference_type_info:
+        allreferences && allreferences.length > 0 ? [allreferences[0]] : [],*/
+      _id: null,
+      title: null,
+      author: null,
+      article: null,
+      chapter: null,
+      editorial: null,
+      vol_no: null,
+      city_country: null,
+      pages: null,
+      publication_date: null,
+      description: null,
+    };
+    setNewFootnotes((prev) => [...prev, new_footnote]);
+  };
+  const addBibliography = () => {
+    const new_bibliography = {
+      reference_type_info:
+        allreferences && allreferences.length > 0 ? [allreferences[0]] : [],
+      _id: null,
+      title: null,
+      author: null,
+      article: null,
+      chapter: null,
+      editorial: null,
+      vol_no: null,
+      city_country: null,
+      pages: null,
+      editor: null,
+      webpage: null,
+      identifier: null,
+    };
+    setNewBibliographies((prev) => [...prev, new_bibliography]);
+  };
+  const deleteBibliography = (index) => {
+    setNewBibliographies(newBibliographies.filter((_, i) => i !== index));
+    setCurrentNewBibliographyIndex(0); // Actualiza el índice al primer elemento
+  };
+
+  const deleteFootnote = (index) => {
+    setNewFootnotes(newFootnotes.filter((_, i) => i !== index));
+    setCurrentNewFootnoteIndex(0); // Actualiza el índice al primer elemento
+  };
+
   const handleInputFootnoteChange = (e) => {
     const { id, value } = e.target;
 
     setFootnotes((prevData) =>
       prevData.map((footnote, index) => {
         if (index === currentFootnoteIndex) {
+          const updatedFootnote = { ...footnote, [id]: value };
+          /*console.log("Updated footnote:", updatedFootnote[id]);
+          console.log("actualFootnotes:", actualFootnotes[index][id]);*/
+          return updatedFootnote;
+        }
+        return footnote;
+      })
+    );
+  };
+
+  const handleInputNewFootnoteChange = (e) => {
+    const { id, value } = e.target;
+    setNewFootnotes((prevData) =>
+      prevData.map((footnote, index) => {
+        if (index === currentNewFootnoteIndex) {
           const updatedFootnote = { ...footnote, [id]: value };
           /*console.log("Updated footnote:", updatedFootnote[id]);
           console.log("actualFootnotes:", actualFootnotes[index][id]);*/
@@ -266,29 +380,56 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
       })
     );
   };
+
+  const handleInputNewBibliographyChange = (e) => {
+    const { id, value } = e.target;
+    setNewBibliographies((prevData) =>
+      prevData.map((bibliography, index) => {
+        if (index === currentNewBibliographyIndex) {
+          const updatedBibliography = { ...bibliography, [id]: value };
+          /*console.log("Updated bibliography:", updatedBibliography[id]);
+          console.log("actualBibliographies:", actualBibliographies[index][id]);*/
+          return updatedBibliography;
+        }
+        return bibliography;
+      })
+    );
+  };
   const handleInputDoc = (e) => {
     const { id, value } = e.target;
-    setDocuments((prevData) =>
-      prevData.map(
-        (doc, index) =>
-          index === currentDocIndex
-            ? { ...doc, [id]: value } // Crea una copia del objeto actual con el campo actualizado
-            : doc // Retorna el objeto sin cambios si el índice no coincide
-      )
-    );
+    //console.log("e.target",value, " id", id);
+    setDocuments((prevData) => {
+      //console.log("prevData", prevData);
+      return prevData.map((doc, index) => {
+        /*console.log("return", index === currentDocIndex
+            ? { ...doc, [id]: value } 
+            : doc );*/
+        return index === currentDocIndex
+          ? { ...doc, [id]: value } // Crea una copia del objeto actual con el campo actualizado
+          : doc; // Retorna el objeto sin cambios si el índice no coincide
+      });
+    });
   };
   const handleChangeDocumentStatus = ({ file }) => {
     const copyFile = new File([file], file.name, {
       type: file.type,
       lastModified: file.lastModified,
     });
-    setchangedDocs((prevChangedDocs) => ({
-      ...prevChangedDocs,
-      [currentDocIndex]: {
-        _id: Documents[currentDocIndex]["_id"],
-        file: copyFile,
-      },
-    }));
+
+    setDocuments((prevDocs) =>
+      prevDocs.map((doc, index) =>
+        index === currentDocIndex
+          ? {
+              ...doc,
+              _id: doc._id, // o Documents[currentDocIndex]._id si lo necesitas fijo
+              file: copyFile,
+              name: file.name.split(".").slice(0, -1).join("."),
+              size: file.size,
+              mime_type: file.type,              
+            }
+          : doc
+      )
+    );
   };
 
   const handlePrevDoc = () => {
@@ -366,13 +507,26 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     //console.log("Autores seleccionados", selectedInvolved);
   };
 
+  const handleNewReferenceChange = (selectedReferences) => {
+    setNewBibliographies((prev) => {
+      const updated = [...prev]; // copia superficial del arreglo
+      updated[currentNewBibliographyIndex] = {
+        ...updated[currentNewBibliographyIndex],
+        reference_type_info: [selectedReferences], // esto debe ser un array
+      };
+      return updated;
+    });
+    setSelectedNewReference(selectedReferences); // Actualiza el estado del reference_type_info
+  };
+
   const handleReferenceChange = (selectedReferences) => {
     setBibliographies((prev) => {
       const updated = [...prev]; // copia superficial del arreglo
+      //console.log("updated", updated);
       updated[currentBibliographyIndex] = {
         ...updated[currentBibliographyIndex],
         reference_type_info: [selectedReferences], // esto debe ser un array
-      };     
+      };
       return updated;
     });
     setSelectedReference(selectedReferences); // Actualiza el estado del reference_type_info
@@ -393,8 +547,29 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
       setSelectedReference(bibliographies[newindex].reference_type_info[0]);
       return newindex;
     });
+  };
 
-   // console.log("bibliographies", bibliographies[currentBibliographyIndex]);
+  const handleNextNewBibliography = () => {
+    setCurrentNewBibliographyIndex((prevIndex) => {
+      const newIndex =
+        prevIndex === newBibliographies.length - 1 ? 0 : prevIndex + 1;
+      setSelectedNewReference(
+        newBibliographies[newIndex].reference_type_info[0]
+      );
+      return newIndex;
+    });
+  };
+  const handlePrevNewBibliography = () => {
+    setCurrentNewBibliographyIndex((prevIndex) => {
+      const newIndex =
+        prevIndex === 0 ? newBibliographies.length - 1 : prevIndex - 1;
+      setSelectedNewReference(
+        newBibliographies[newIndex].reference_type_info[0]
+      );
+      return newIndex;
+    });
+
+    // console.log("bibliographies", bibliographies[currentBibliographyIndex]);
   };
   const handlePlaceOfCreationChange = (selectedPlaceOfCreation) => {
     setFormDataResearch((prev) => ({
@@ -495,7 +670,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
         title: SelectedGender.title,
       },
     });
-   // console.log("selected Gender", SelectedGender);
+    // console.log("selected Gender", SelectedGender);
     setFilteredSubGenders(
       Subgenders.filter(
         (subgender) => subgender.gender_id === SelectedGender._id
@@ -512,7 +687,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
   };
   const handleInputPic = (e) => {
     const { id, value } = e.target;
-   /* console.log("value", value);
+    /* console.log("value", value);
     console.log("id", id);*/
     setPics((prevData) =>
       prevData.map(
@@ -533,6 +708,21 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     setCurrentFootnoteIndex((prevIndex) =>
       prevIndex === footnotes.length - 1 ? 0 : prevIndex + 1
     );
+  };
+
+  const handlePrevNewFootnote = () => {
+    setCurrentNewFootnoteIndex((prevIndex) =>
+      prevIndex === 0 ? newFootnotes.length - 1 : prevIndex - 1
+    );
+  };
+  const handleNextNewFootnote = () => {
+    setCurrentNewFootnoteIndex((prevIndex) =>
+      prevIndex === newFootnotes.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const toggleExpandFootnote = () => {
+    setIsExpandedFootnote(!isExpandedFootnote);
   };
 
   const handlePrev = () => {
@@ -570,9 +760,14 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
   const toggleExpandNewImage = () => {
     setIsExpandedImg(!isExpandedImg);
   };
+
+  const toggleExpandNewBibliography = () => {
+    setIsExpandedNewBibliography(!isExpandedNewBibliography);
+  };
+
   useEffect(() => {
     //setDocuments(data["documents"]);
-   /* console.log(
+    /* console.log(
       "big_data",
       big_data && big_data["research_data"]["bibliographies_info"]
     );*/
@@ -617,9 +812,8 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
       big_data && big_data["research_data"]["period_info"]
     );*/
     setDocuments(big_data && big_data["research_data"]["documents"]);
-    setPics(big_data && big_data["research_data"]["photos"]);
+    setactualDocs(big_data && big_data["research_data"]["documents"]);
 
-    setCpPics(big_data && big_data["research_data"]["photos"]);
     setFootnotes(big_data && big_data.research_data.footnotes_info);
     setCpFootnotes(big_data && big_data.research_data.footnotes_info);
     setBibliographies(big_data && big_data.research_data.bibliographies_info);
@@ -701,6 +895,9 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     setFilteredDominantMaterial(DominantMaterials);
     setfilteredReferences(allreferences);
 
+    setPics(big_data && big_data["research_data"]["photos"]);
+    setCpPics(big_data && big_data["research_data"]["photos"]);
+
     SetInventoryModifications(
       (big_data && big_data["research_data"]["inventory_modifications"]) || []
     );
@@ -725,12 +922,9 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
       })
     );
 
-    if (Pics && Pics.length > 0) {
-      setCurrentPic(Pics[currentImgIndex]);
-      //console.log("Pics current", Pics[currentImgIndex]);
-      //console.log("current index", currentImgIndex);
-      //console.log("Pics", Pics);
-    }
+    //console.log("Pics current", Pics[currentImgIndex]);
+    //console.log("current index", currentImgIndex);
+    //console.log("Pics", Pics);
   }, [
     data,
     setFormDataResearch,
@@ -738,7 +932,6 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     AllPlaceOfCreation,
     DominantMaterials,
     ObjectTypes,
-    currentImgIndex,
     AllAuthors,
     AllInvolvedCreation,
     InventoryData,
@@ -746,9 +939,14 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     Genders,
     Subgenders,
     big_data,
-    Pics,
   ]);
 
+  useEffect(() => {
+    if (Pics && Pics.length > 0) {
+      setCurrentPic(Pics[currentImgIndex]);
+    }
+  }, [Pics, currentImgIndex]);
+  /*
   useEffect(() => {
     // Ajustar la altura al iniciar o al cambiar el contenido
     if (textareaRef.current) {
@@ -756,19 +954,37 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Ajustar a contenido
     }
   }, [formDataResearch?.title]); // Se ejecuta cuando formDataResearch.title cambia
-
+*/
   const handleSave = async (e) => {
     e.preventDefault();
 
     const changes = compareFormModifications(actualFormData, formDataResearch);
-    
-    const changes_pics_inputs = comparePicsModifications(actualPics, Pics);
+    const changes_pics_inputs = comparePicsModifications(actualPics, Pics);   
+    const changes_bibliographies = compareBibliographies(
+      actualBibliographies,
+      bibliographies
+    );
+    const changes_footnotes = compareFootNotes(actualFootnotes, footnotes);
+    //esta funcion no esta hecha hasta aqui me quedo hoy
+    const changes_documents = compareDocuments(actualDocs, Documents);
+
+    console.log("changes documents", changes_documents);
+
     if (
       (changes && Object.keys(changes).length) > 0 ||
       (PicsNew && PicsNew.length > 0) ||
       (changes_pics_inputs && Object.keys(changes_pics_inputs).length > 0) ||
-      (changedPics && Object.keys(changedPics).length > 0)
+      (changedPics && Object.keys(changedPics).length > 0) ||
+      (changes_bibliographies &&
+        Object.keys(changes_bibliographies).length > 0) ||
+      (changes_footnotes && Object.keys(changes_footnotes).length > 0) ||
+      (DocumentsNew && DocumentsNew.length > 0) ||
+      (changes_documents && Object.keys(changes_documents).length > 0) ||
+      (newBibliographies && newBibliographies.length > 0) ||
+      (newFootnotes && newFootnotes.length > 0)
     ) {
+      //console.log("changes_bibliographies", changes_bibliographies);
+      //console.log("changes_footnotes", changes_footnotes);
       
       const response = await API_UpdateResearch({
         accessToken,
@@ -777,11 +993,198 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
         changedPics,
         changes_pics_inputs,
         PicsNew,
+        DocumentsNew,
+        changes_documents,
+        newBibliographies,
+        newFootnotes,
+        changes_bibliographies,
+        changes_footnotes,
+
         _id,
       });
       
+      console.log("llamada api");
     }
   };
+
+  const compareFootNotes = (original, modified) => {
+    let changes = {};
+    const footnotesk = [
+      "title",
+      "author",
+      "article",
+      "chapter",
+      "editorial",
+      "vol_no",
+      "city_country",
+      "pages",
+      "publication_date",
+      "description",
+    ];
+
+    for (let i = 0; i < original.length; i++) {
+      const originalItem = original[i];
+      const modifiedItem = modified[i];
+      let isFirstTime = true;
+
+      for (const key of footnotesk) {
+        // Iteramos directamente sobre `keys`
+        if (key in originalItem) {
+          const originalValue =
+            typeof originalItem[key] === "string"
+              ? originalItem[key].trim()
+              : originalItem[key];
+
+          const modifiedValue =
+            typeof modifiedItem[key] === "string"
+              ? modifiedItem[key].trim()
+              : modifiedItem[key];
+
+          if (originalValue !== modifiedValue) {
+            if (!changes[i]) {
+              changes[i] = {};
+            } // Asegura que `changes[i]` exista
+
+            if (isFirstTime) {
+              changes[i]["_id"] = originalItem["_id"]; // Solo asigna `_id` la primera vez
+              isFirstTime = false; // Marca que ya se procesó el primer cambio
+            }
+            changes[i][key] = {
+              oldValue: originalItem[key],
+              newValue: modifiedItem[key],
+            };
+          }
+        }
+      }
+    }
+
+    return changes;
+  };
+
+  const compareDocuments = (original, modified) => {
+    let changes = {};
+    const doc_keys = ["name", "size", "mime_type", "file"];
+    //console.log("original", original);
+    //console.log("modified", modified);
+    for (let i = 0; i < original.length; i++) {
+      const originalItem = original[i];
+      const modifiedItem = modified[i];
+      let localChanges = {}; // Para guardar cambios de esta bibliografía
+      console.log("originalItem", originalItem);
+      console.log("modifiedItem", modifiedItem);
+      for (const key of doc_keys) {
+        console.log("key", key);
+        
+      
+        console.log("originalItem[key]", originalItem[key]);
+        console.log("modifiedItem[key]", modifiedItem[key]);
+        // Cargamos el file si es que ha cambiado
+        if (key === "file") {
+            console.log("modifiedItem[key]", modifiedItem[key]);
+            localChanges[key] = modifiedItem[key];
+            console.log("file cambiado", localChanges[key]);
+          continue;
+        }
+        const originalValue =
+          typeof originalItem[key] === "string"
+            ? originalItem[key].trim()
+            : originalItem[key];
+
+        const modifiedValue =
+          typeof modifiedItem[key] === "string"
+            ? modifiedItem[key].trim()
+            : modifiedItem[key];
+
+        if ((originalValue !== modifiedValue) || (key === "name")) {
+          localChanges[key] = {
+            oldValue: originalItem[key],
+            newValue: modifiedItem[key],
+          };
+        }
+
+
+
+        
+
+        if (Object.keys(localChanges).length > 0) {
+          localChanges["_id"] = originalItem["_id"];
+          changes[i] = localChanges;
+          console.log("changes", changes);
+        }
+      }
+
+      if (Object.keys(changes).length > 0) {
+        return changes;
+      } else return null;
+    }
+  };
+
+  const compareBibliographies = (original, modified) => {
+    let changes = {};
+    const bibliok = [
+      "reference_type_info",
+      "title",
+      "author",
+      "article",
+      "chapter",
+      "editorial",
+      "vol_no",
+      "city_country",
+      "pages",
+      "editor",
+      "webpage",
+      "identifier",
+    ];
+
+    for (let i = 0; i < original.length; i++) {
+      const originalItem = original[i];
+      const modifiedItem = modified[i];
+      let localChanges = {}; // Para guardar cambios de esta bibliografía
+
+      for (const key of bibliok) {
+        if (!(key in originalItem)) continue;
+
+        const originalValue =
+          typeof originalItem[key] === "string"
+            ? originalItem[key].trim()
+            : originalItem[key];
+
+        const modifiedValue =
+          typeof modifiedItem[key] === "string"
+            ? modifiedItem[key].trim()
+            : modifiedItem[key];
+
+        if (key === "reference_type_info") {
+          if (
+            originalItem[key] &&
+            modifiedItem[key] &&
+            originalItem[key][0]["_id"] !== modifiedItem[key][0]["_id"]
+          ) {
+            localChanges[key] = {
+              oldValue: originalItem[key],
+              newValue: modifiedItem[key],
+            };
+          }
+          continue;
+        }
+
+        if (originalValue !== modifiedValue) {
+          localChanges[key] = {
+            oldValue: originalItem[key],
+            newValue: modifiedItem[key],
+          };
+        }
+      }
+
+      if (Object.keys(localChanges).length > 0) {
+        localChanges["_id"] = originalItem["_id"];
+        changes[i] = localChanges;
+      }
+    }
+
+    return changes;
+  };
+
   const comparePicsModifications = (original, modified) => {
     let changes = {};
     const keys = ["photographer", "photographed_at", "description"];
@@ -844,6 +1247,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
 *********************************************************************************************************************
                                 Campos de Inventario
  */}
+           
             <div className="row mb-3">
               {inventoryModifications.length > 0 ? (
                 <>
@@ -2465,6 +2869,282 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
                 </div>
               </div>
             </div>
+            {/*************************************************************************************************************
+ **************************************************************************************************************
+ **************************************************************************************************************  
+ **************************************************************************************************************
+ **************************************************************************************************************
+ Notas al pie Nuevas
+ /}
+
+
+ /* Notas al pie Nuevas*/}
+            <div className="row mb-2">
+              <div className="col ">
+                <div className="card " style={{ background: "#abcc" }}>
+                  <div
+                    className="card-header text-center"
+                    style={{
+                      background: "#99dd",
+                      position: "relative",
+                      padding: "10px",
+                    }}
+                    onClick={toggleExpandFootnote}
+                  >
+                    {/* Texto centrado */}
+                    <span>Notas al pie Nuevas</span>
+
+                    {isExpandedFootnote && (
+                      <>
+                        <IconButton
+                          sx={{ color: pink[400] }}
+                          aria-label="del image"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Evita que el clic oculte el contenido
+                            deleteFootnote(currentNewFootnoteIndex);
+                          }}
+                          style={{
+                            position: "absolute",
+                            right: "75px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+
+                        <IconButton
+                          color="secondary"
+                          aria-label="add image"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Evita que el clic oculte el contenido
+                            addFootnote();
+                          }}
+                          style={{
+                            position: "absolute",
+                            right: "50px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </>
+                    )}
+                    <IconButton
+                      color="primary"
+                      aria-label="toggle expand"
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      {isExpandedFootnote ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
+                    </IconButton>
+                  </div>
+
+                  {isExpandedFootnote && (
+                    <div
+                      className="card-body border-primary "
+                      style={{ background: "#f0f0f0" }}
+                    >
+                      <Box
+                        sx={{
+                          paddingBottom: 1,
+                          paddingLeft: 1,
+                          paddingRight: 1,
+                          borderRadius: 2,
+                          background: "white",
+                          display: "grid",
+                          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                          gap: 2,
+                        }}
+                      >
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes.title
+                          }
+                          id="title"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]?.title) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes.author
+                          }
+                          id="author"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]?.author) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes
+                              .city_country
+                          }
+                          id="city_country"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]
+                                ?.city_country) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes.vol_no
+                          }
+                          id="vol_no"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]?.vol_no) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes
+                              .description
+                          }
+                          id="description"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]
+                                ?.description) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes.article
+                          }
+                          id="article"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]?.article) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes.chapter
+                          }
+                          id="chapter"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]?.chapter) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes.editorial
+                          }
+                          id="editorial"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]
+                                ?.editorial) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes.pages
+                          }
+                          id="pages"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]?.pages) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label={
+                            langData.pieceDetailDescriptors.foot_notes
+                              .publication_date
+                          }
+                          id="publication_date"
+                          value={
+                            (newFootnotes &&
+                              newFootnotes[currentNewFootnoteIndex]
+                                ?.publication_date) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewFootnoteChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                      </Box>
+
+                      <div className="d-flex justify-content-between mt-3">
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          type="button"
+                          onClick={handlePrevNewFootnote}
+                          className="btn btn-secondary"
+                        >
+                          ← {langData.pieceInventoryEdit.previous}
+                        </Button>
+                        <span>
+                          {currentNewFootnoteIndex + 1} /{" "}
+                          {newFootnotes?.length ? newFootnotes.length : null}
+                        </span>{" "}
+                        {/* Paginación */}
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          type="button"
+                          onClick={handleNextNewFootnote}
+                          className="btn btn-secondary"
+                        >
+                          {langData.pieceInventoryEdit.next} →
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
             {/*
 ************************************************************************************************************
 ************************************************************************************************************
@@ -2507,8 +3187,8 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
                         gap: 2,
                       }}
                     >
-                      
                       <Autocomplete
+                        className="mt-2"
                         freeSolo
                         options={filteredReferences || []}
                         getOptionLabel={(option) =>
@@ -2754,6 +3434,370 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
                       </Button>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/************************************************************************************************************
+             ************************************************************************************************************
+             ************************************************************************************************************
+             ************************************************************************************************************
+             ************************************************************************************************************
+             ************************************************************************************************************
+             ************************************************************************************************************
+             ************************************************************************************************************/
+            /*Bibliografias Nuevas*/}
+
+            <div className="row mt-2 ">
+              <div className="col ">
+                <div className="card " style={{ background: "#abcc" }}>
+                  <div
+                    className="card-header text-center"
+                    style={{
+                      background: "#99dd",
+                      position: "relative",
+                      padding: "10px",
+                    }}
+                    onClick={toggleExpandNewBibliography}
+                  >
+                    {/* Texto centrado */}
+                    <span>Bibliografias Nuevas</span>
+                    {isExpandedNewBibliography && (
+                      <>
+                        <IconButton
+                          sx={{ color: pink[400] }}
+                          aria-label="del image"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Evita que el clic oculte el contenido
+                            deleteBibliography(currentImgNewIndex);
+                          }}
+                          style={{
+                            position: "absolute",
+                            right: "75px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        >
+                          <RemoveIcon />
+                        </IconButton>
+
+                        <IconButton
+                          color="secondary"
+                          aria-label="add image"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Evita que el clic oculte el contenido
+                            addBibliography();
+                          }}
+                          style={{
+                            position: "absolute",
+                            right: "50px",
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </>
+                    )}
+                    <IconButton
+                      color="primary"
+                      aria-label="toggle expand"
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                      }}
+                    >
+                      {isExpandedNewBibliography ? (
+                        <ExpandLessIcon />
+                      ) : (
+                        <ExpandMoreIcon />
+                      )}
+                    </IconButton>
+                  </div>
+
+                  {isExpandedNewBibliography && (
+                    <div
+                      className="card-body border-primary "
+                      style={{ background: "#f0f0f0" }}
+                    >
+                      <Box
+                        sx={{
+                          paddingBottom: 1,
+                          paddingLeft: 1,
+                          paddingRight: 1,
+                          borderRadius: 2,
+                          background: "white",
+                          display: "grid",
+                          gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+                          gap: 2,
+                        }}
+                      >
+                        <Autocomplete
+                          className="mt-2"
+                          freeSolo
+                          options={filteredReferences || []}
+                          getOptionLabel={(option) =>
+                            typeof option === "string"
+                              ? option
+                              : option.title || ""
+                          }
+                          value={
+                            selectedNewReference ||
+                            filteredReferences[0] ||
+                            null
+                          }
+                          onInputChange={(event, newValue) => {
+                            if (event && event.type === "change") {
+                              handleReferenceFilter({
+                                target: { value: newValue },
+                              });
+                            }
+                          }}
+                          onChange={(event, newValue) => {
+                            if (newValue && typeof newValue !== "string") {
+                              handleNewReferenceChange(newValue);
+                            } else if (typeof newValue === "string") {
+                              handleNewReferenceChange({
+                                _id: null,
+                                title: newValue,
+                              });
+                            } else {
+                              handleNewReferenceChange({
+                                _id: null,
+                                title: "",
+                              });
+                            }
+                          }}
+                          isOptionEqualToValue={(option, value) =>
+                            option._id === value._id
+                          }
+                          renderOption={(props, option) => (
+                            <li {...props} key={option._id || option.title}>
+                              {option.title}
+                            </li>
+                          )}
+                          renderTags={(value, getTagProps) =>
+                            value.map((option, index) => {
+                              const { key, ...tagProps } = getTagProps({
+                                index,
+                              });
+                              return (
+                                <Chip
+                                  key={option._id}
+                                  {...tagProps}
+                                  label={option.title}
+                                />
+                              );
+                            })
+                          }
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label={
+                                langData.pieceDetailDescriptors.research
+                                  .bibliographies_reference
+                              }
+                              placeholder={
+                                langData.pieceDetailDescriptors.research
+                                  .type_to_filter_reference
+                              }
+                              variant="outlined"
+                              fullWidth
+                              sx={{
+                                "& .MuiInputLabel-root": {
+                                  color: "#6c757d", // Label en gris
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  backgroundColor: "#ffffff",
+                                },
+                              }}
+                            />
+                          )}
+                        />
+
+                        <TextField
+                          label="Title"
+                          id="title"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.title) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label="Author"
+                          id="author"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.author) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+
+                        <TextField
+                          label="Article"
+                          id="article"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.article) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+
+                        <TextField
+                          label="Chapter"
+                          id="chapter"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.chapter) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+
+                        <TextField
+                          label="Editorial"
+                          id="editorial"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.editorial) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+
+                        <TextField
+                          label="Vol No"
+                          id="vol_no"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.vol_no) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+
+                        <TextField
+                          label="City Country"
+                          id="city_country"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.city_country) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+
+                        <TextField
+                          label="Pages"
+                          id="pages"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.pages) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+
+                        <TextField
+                          label="Editor"
+                          id="editor"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.editor) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label="Web page"
+                          id="webpage"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.webpage) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                        <TextField
+                          label="Identifier"
+                          id="identifier"
+                          value={
+                            (newBibliographies &&
+                              newBibliographies[currentNewBibliographyIndex]
+                                ?.identifier) ||
+                            ""
+                          }
+                          onChange={(e) => handleInputNewBibliographyChange(e)}
+                          fullWidth
+                          margin="dense"
+                        />
+                      </Box>
+
+                      <div className="d-flex justify-content-between mt-3">
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          type="button"
+                          onClick={handlePrevNewBibliography}
+                          className="btn btn-secondary"
+                        >
+                          ← {langData.pieceInventoryEdit.previous}
+                        </Button>
+                        <span>
+                          {currentNewBibliographyIndex + 1} /{" "}
+                          {newBibliographies?.length
+                            ? newBibliographies.length
+                            : null}
+                        </span>{" "}
+                        {/* Paginación */}
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          type="button"
+                          onClick={handleNextNewBibliography}
+                          className="btn btn-secondary"
+                        >
+                          {langData.pieceInventoryEdit.next} →
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -3209,7 +4253,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
 ************************************************************************************************************
 ************************************************************************************************************
 ************************************************************************************************************
-/* Domumentos */}
+/* Documentos */}
             <div className="row">
               <div className="col">
                 <div className="card mt-4" style={{ background: "#abcc" }}>
@@ -3302,25 +4346,22 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
                         className={`col-4 text-${
                           colorFile[
                             fileTypes[
-                              changedDocs &&
-                              changedDocs[currentDocIndex]["file"]?.type
-                                ? changedDocs[currentDocIndex]["file"].type
-                                : "primary"
+                              actualDocs?.[currentDocIndex]?.file?.type ||
+                                "primary"
                             ]
                           ]
                         } mt-3`}
                       >
-                        {changedDocs &&
-                        changedDocs[currentDocIndex] &&
-                        changedDocs[currentDocIndex]["file"] ? (
+                        {Documents &&
+                        Documents[currentDocIndex] &&
+                        Documents[currentDocIndex]["file"] ? (
                           <div>
-                            
                             <FontAwesomeIcon
                               icon={
-                                changedDocs &&
-                                changedDocs[currentDocIndex]["file"]?.type
+                                Documents &&
+                                Documents[currentDocIndex]["file"]?.type
                                   ? mimeIcons[
-                                      changedDocs[currentDocIndex]["file"].type
+                                      Documents[currentDocIndex]["file"].type
                                     ]
                                   : faBan
                               }
@@ -3344,7 +4385,9 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
                               ? Documents[currentDocIndex].name
                               : ""
                           }
-                          onChange={handleInputDoc}
+                          onChange={(e) => {
+                            handleInputDoc(e);
+                          }}
                           className="form-control mt-2"
                         />
                       </label>
@@ -3373,6 +4416,10 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
                       <span>
                         {currentDocIndex + 1} /{" "}
                         {Documents?.length ? Documents.length : null}
+                        {console.log(
+                          "Documents",
+                          Documents?.length ? Documents.length : null
+                        )}
                       </span>{" "}
                       {/* Paginación */}
                       <Button
@@ -3398,7 +4445,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
 ************************************************************************************************************
 ************************************************************************************************************
 ************************************************************************************************************
-/* Domumentos nuevos */}
+/* Documentos nuevos */}
 
             <div className="row">
               <div className="col">
@@ -3610,7 +4657,14 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
           >
             {"Salvar"}
           </Button>
+          
         </form>
+        {console.log("scrollY al guardar", scrollY)}
+          <input type="submit" value={scrollY} readOnly />
+          <Button variant="contained" color="primary" type="button" onClick={restoreScroll}>
+            Ir a posición scroll
+          </Button>
+           <input type="" value={""} onChange={(e) => {console.log("e.target.value",e.target.value)}}  />
       </div>
     </div>
   );

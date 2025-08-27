@@ -23,7 +23,7 @@ const DownloadButton = ({ key, document, module }) => {
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/investigacion/documentos/' + document.file_name;
   }
   else if (module === "restoration") {
-    console.log('restoration');
+    //console.log('restoration');
     fileUrl = SETTINGS.URL_ADDRESS.server_url + 'static/documents/public/restauracion/documentos/' + document.file_name;
   }
   // const downloadLinkRef = useRef(null);
@@ -74,11 +74,11 @@ export const Inventory = () => {
     const dateDeparture = moment(item?.movements_info[0]?.departure_date ? item?.movements_info[0].departure_date : '0000-00-00');
     FdateDeparture = dateDeparture.format('LL');
   }
-
+  //console.log("item",item);
   return (
     <>
       <ToastContainer />
-
+      
       <div className="card card-body justify-content-end col-12 bg-gradient" style={{ backgroundColor: 'rgb(190,180,180)' }}>
         <p className="card col-5 mb-2 bg-color bg-gradient" style={{ backgroundColor: 'rgb(145,145,145)', margin: '0 auto' }}>
           {langData.pieceDetailMenu.inventory}
@@ -413,7 +413,7 @@ export const Research = () => {
               </div>
               <div className="col-6">
                 <h6 style={{ fontSize: '.85em' }} className='mb-0'>{langData.pieceDetailDescriptors.research.involved_creation_info}:</h6>
-                {console.log(item?.research_info[0]?.involved_creation_info)}
+                {/*console.log(item?.research_info[0]?.involved_creation_info)*/}
 
                 <div style={{ fontSize: '.85em' }} className='mt-0 mb-0'>{item?.research_info[0]?.involved_creation_info?.[0]?.[0]?.title ?? "N/D"}
                 </div>
@@ -688,7 +688,7 @@ export const Research = () => {
             </div>
 
             <div className=' d-flex  align-items-center justify-content-start p-2'>
-              {item?.documents_info ? console.log(item.documents_info): console.log("Sin info")}
+              
               {item?.documents_info ? (
                 item.documents_info.map((document, index) => (
                   document.module_info[0] === 'research' ? (

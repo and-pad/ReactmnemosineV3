@@ -74,10 +74,7 @@ export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
   const image_path =
     SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.inventory_thumbnails;
 
-  const handlePrev = () => {
-    //console.log("Pics", Pics);
-    //console.log("Pics current index", Pics[currentImgIndex]);
-    //console.log("current index", currentImgIndex);
+  const handlePrev = () => {    
     setCurrentImgIndex((prevIndex) => {
       const newIndex = prevIndex === 0 ? Pics.length - 1 : prevIndex - 1;
       setCurrentPic(Pics && Pics.length > 0 ? Pics[newIndex] : null);
@@ -85,11 +82,7 @@ export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
     });
   };
 
-  const handleNext = () => {
-    //console.log("Pics", Pics);
-    //console.log("Pics current index", Pics[currentImgIndex]);
-    //console.log("current index", currentImgIndex);
-
+  const handleNext = () => {   
     setCurrentImgIndex((prevIndex) => {
       const newIndex = prevIndex === Pics.length - 1 ? 0 : prevIndex + 1;
       //console.log(newIndex);
@@ -493,7 +486,7 @@ export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
       changes_docs_inputs,
     }).then((data) => {
       if (data) {
-        navigate(`/mnemosine/inventory_queries`);
+        navigate(0);
       }
     });
   };

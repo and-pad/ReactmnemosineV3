@@ -282,7 +282,7 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
     }
 
     let TabColOut = [];
-    console.log('tableData', tableData[0]);
+    //console.log('tableData', tableData[0]);
     TabColOut.push(tableData);
     TabColOut.push(defColumns);
     TabColOut.push(out);
@@ -506,12 +506,12 @@ const fetchAndCacheData = async (accessToken, refreshToken) => {
         queryData = data.query;
         const dataCode = data.code;
         Cookies.set('SYNCCODEDB', dataCode);
-        console.log('dataCode', dataCode);
-        console.log('query_duration', data.query_duration);
+        //console.log('dataCode', dataCode);
+        //console.log('query_duration', data.query_duration);
     } else if (response.status === 304) {
         data = await getDataFromCache();
         queryData = data;
-        console.log('data from cache Prra', data);   
+        //console.log('data from cache Prra', data);   
         //console.log(await response.text());
 
     }
@@ -570,16 +570,15 @@ export const fetchData = async (accessToken, refreshToken) => {
             //cachedData = await getDataFromCache();
             cachedData = fetch;
 
-        }
-            console.log('No data cached. Obtaining data from server...');
-                
+        }        
+        
         console.log('Data get from cache...');
         
         return cachedData;
     } catch (error) {
         console.log('No data cached. Obtaining data from server...');
         const freshData = await fetchAndCacheData(accessToken, refreshToken);
-        console.log('Data obtained from server and saved to cache:', freshData[0]);
+        console.log('Data obtained from server and saved to cache:');
         return freshData;
     }
 };

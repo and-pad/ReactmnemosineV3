@@ -80,86 +80,64 @@ const ModifiedOutlet = ({ Data, accessToken, refreshToken, setIsModified }) => {
           setIsModified(false);
         }
       });
-      console.log(data);
+      //console.log(data);
     }
   };
-
+const visibleFieldChanges = Object.entries(Data || {}).filter(([key]) => {
+    return ![
+      "piece_id",
+      "changes",
+      "fields_changes",
+      "new_pics",
+      "new_docs",
+      "changed_pics",
+      "changed_pics_info",
+      "changed_docs",
+      "changed_docs_info",
+      "changed_by_module_id"
+    ].includes(key);
+  });
   return (
     <>
-      <div className="container">
-        {console.log(Data?.fields_changes)}
-        {console.log("Data", Data)}
-        {Data.fields_changes && (
-          <table className="table table-bordered table-striped">
-            <thead className="table-dark">
-              <tr>
-                <th>{langData.pieceInventoryEdit.field}</th>
+      <div className="container">        
+        
+        {visibleFieldChanges.length > 0 && (
+        <table className="table table-bordered table-striped">
+          <thead className="table-dark">
+            <tr>
+              <th>{langData.pieceInventoryEdit.field}</th>
+              <th>{langData.pieceInventoryEdit.oldValue}</th>
+              <th>{langData.pieceInventoryEdit.newValue}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visibleFieldChanges.map(([key, value]) => {
+              const name_descriptor =
+                langData.pieceDetailDescriptors.inventory[key];
+              const exceptions = [
+                "gender_id",
+                "subgender_id",
+                "type_object_id",
+                "dominant_material_id"
+              ];
 
-                <th>{langData.pieceInventoryEdit.oldValue}</th>
-                <th>{langData.pieceInventoryEdit.newValue}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Object.entries(Data || {}).map(([key, value]) => {
-                if (
-                  key === "piece_id" ||
-                  key === "changes" ||
-                  key === "fields_changes" ||
-                  key === "new_pics" ||
-                  key === "new_docs" ||
-                  key === "changed_pics" ||
-                  key === "changed_pics_info" ||
-                  key === "changed_docs" ||
-                  key === "changed_docs_info"
-                ) {
-                  return null; // Omitir estas entradas
-                }
-
-                if (key === "changed_docs") {
-                  console.log("changed_docs", value);
-                  return null;
-                }
-                /*if (key === "new_pics" || key === "new_docs") {
-                       console.log("new pics", value);
-                       return null;
-                     }*/
-                const name_descriptor =
-                  langData.pieceDetailDescriptors.inventory[key];
-                const exceptions = ["gender_id", "subgender_id", "type_object_id", "dominant_material_id"];
-
-                return (
-                  <>
-                    {exceptions.includes(key) ? (
-                      <tr key={key}>
-                        <td>{name_descriptor}</td>
-                        <td>
-                          {value?.oldValue?.title
-                            ? value.oldValue.title
-                            : "No disponible"}
-                        </td>
-                        <td>
-                          {value?.newValue?.title
-                            ? value.newValue.title
-                            : "No disponible"}
-                        </td>
-                      </tr>
-                    ) : (
-                      <tr key={key}>
-                        <td>{name_descriptor}</td>
-                        <td>
-                          {value?.oldValue ? value.oldValue : "No disponible"}
-                        </td>
-                        <td>
-                          {value?.newValue ? value.newValue : "No disponible"}
-                        </td>
-                      </tr>
-                    )}
-                  </>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
+              return exceptions.includes(key) ? (
+                <tr key={key}>
+                  <td>{name_descriptor}</td>
+                  <td>{value?.oldValue?.title || "No disponible"}</td>
+                  <td>{value?.newValue?.title || "No disponible"}</td>
+                </tr>
+              ) : (
+                <tr key={key}>
+                  <td>{name_descriptor}</td>
+                  <td>{value?.oldValue || "No disponible"}</td>
+                  <td>{value?.newValue || "No disponible"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
 
         {(Data?.changed_pics?.length > 0 || Data?.changed_pics_info) && (
           <div className="card bg-custom-gray mb-3 mt-3 p-1">

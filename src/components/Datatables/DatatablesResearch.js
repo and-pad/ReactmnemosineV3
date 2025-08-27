@@ -99,7 +99,7 @@ export function DatatableUserResearch({ accessToken, refreshToken, onDetailClick
         try {
             const result = await delCache();
             if (result !== "error") {
-              console.log(result);
+              //console.log(result);
               console.log("Cache eliminado con éxito.");
             } else {
               console.log("No se encontró el objeto en la base de datos.");

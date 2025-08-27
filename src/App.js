@@ -223,7 +223,7 @@ function App() {
       //renovar tokens
       if (response === "login_redirect" || response === "not network") {
         //console.log('navigate');
-        console.log("cookiesRem");
+        //console.log("cookiesRem");
         Cookies.remove("accessToken");
         Cookies.remove("refreshToken");
         Cookies.remove("User");
@@ -259,7 +259,7 @@ function App() {
   };
 
   const handleDetailClick = ({ row }) => {
-    console.log("row", row._id[0]);
+    //console.log("row", row._id[0]);
     //return (<Navigate to='/login' />); // Navega a la ruta '/detail'
   };
 
@@ -284,7 +284,7 @@ function App() {
     try {
       const result = await delCache();
       if (result !== "error") {
-        console.log(result);
+        //console.log(result);
         console.log("Cache eliminado con éxito.");
       } else {
         console.log("No se encontró el objeto en la base de datos.");

@@ -90,7 +90,7 @@ export var handleLoggedTime = async (accessToken, refreshToken) => {
                         //console.log('rastreo access data', data);
                         return data;
                     } else {
-                        console.log('cookiesRem');
+                        //console.log('cookiesRem');
                         Cookies.remove('refreshToken');
                         Cookies.remove('accessToken');
                         /*Cookies.get('refreshToken');

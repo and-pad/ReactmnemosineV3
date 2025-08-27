@@ -56,12 +56,12 @@ export const API_RequestInventoryEdit = async ({
       }
     }
     files = {};
-    console.log("fuera docs", changedDocs);
+    //console.log("fuera docs", changedDocs);
     if (changedDocs && Object.keys(changedDocs).length > 0) {
       for (const [key, { _id, file }] of Object.entries(changedDocs)) {
         formData.append(`files[changed_doc_${key}]`, file);
         files[`${key}`] = { _id };
-        console.log("changed_files docs", files);
+        //console.log("changed_files docs", files);
       }
       formData.append("changed_docs", JSON.stringify(files));
     }

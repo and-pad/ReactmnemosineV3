@@ -11,7 +11,7 @@ export const PermissionRoute = ({ requiredPermission, permissions, element }) =>
     return element;
   } else {
     // Redirigir a otra ruta o mostrar un mensaje de error
-    console.log(permissions)
+    //console.log(permissions)
     return null;
   }
 };

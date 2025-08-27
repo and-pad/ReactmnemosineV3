@@ -48,7 +48,7 @@ const ModalPictures = ({ IDmodal, Pics }) => {
         } else if (IDmodal === IdResearch) {
             fileUrl = pathResearchImagesFull + fileName;
         }
-        console.log(fileUrl);
+        //console.log(fileUrl);
         const response = await fetch(fileUrl);
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
@@ -131,7 +131,7 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
 
         const fetchDetail = async () => {
             var data;
-            console.log('accesTokn', accessToken);
+            //console.log('accesTokn', accessToken);
             try {
                 const url = SETTINGS.URL_ADDRESS.server_api_commands + `authenticated/user_query/detail/${_id}`;
                 const response = await fetch(url, {
@@ -162,7 +162,7 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
         };
         fetchDetail().then(res => {
             if (res === 'not authenticated' /*|| response === 'not network'*/) {
-                console.log("no ahurotized", res);
+                console.log("no ahutorized", res);
                 navigate(`/mnemosine/piece_queries/detail/${encodeURIComponent(_id)}/`);
             }
         });
@@ -210,7 +210,7 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
                         locInven.push(photo);
                     }                     
                     if ( (module.name === 'research') && (module._id === photo.module_id)) {
-                        console.log('research photo', photo);
+                        //console.log('research photo', photo);
                         locResearch.push(photo);
                     } 
                     if (module.name === 'restoration' && module._id === photo.module_id) {
@@ -228,7 +228,7 @@ export const PieceDetail = ({ accessToken, refreshToken }) => {
     }, [Data]); // El efecto se ejecutará solo cuando Data o Photos cambien
     if (Photos) {
         imgurl = SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.inventory_thumbnails + Photos[0].file_name;
-        console.log(imgurl);
+        //console.log(imgurl);
     }
     // console.log(imgurl);
     const pathInventoryImagesThumbnail = SETTINGS.URL_ADDRESS.server_url + SETTINGS.URL_ADDRESS.inventory_thumbnails;

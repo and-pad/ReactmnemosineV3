@@ -267,7 +267,7 @@ export function DatatableUserQuery({ accessToken, refreshToken, onDetailClick })
         // Objeto para almacenar el nuevo orden
         var hideConstructor = [];
         const handleSelectColumnChange = (id) => {
-            console.log('idS', id);
+            //console.log('idS', id);
             setCheckboxValues(prevState => ({
                 ...prevState,
                 [id]: !prevState[id]
