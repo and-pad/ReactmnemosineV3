@@ -71,7 +71,7 @@ export function TopNavBar({ user, permissions, handleLogout }) {
 
                             {permissions && permissions.includes('ver_restauracion') ? (
                                 <li className="nav-item">
-                                    <Link to='/mnemosine/restoration' className="nav-link text-white" >{langData.StartMenu.restoration}</Link>
+                                    <Link to='/mnemosine/piece_restorations' className="nav-link text-white" >{langData.StartMenu.restoration}</Link>
                                 </li>
                             ) : null
                             }

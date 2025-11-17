@@ -9,7 +9,7 @@ export const ResearchEdit = ({ accessToken, refreshToken }) => {
     const [Data, setData] = useState();
     
     
-    const [Documents, setDocuments] = useState();
+    //const [Documents, setDocuments] = useState();
     useEffect(()=>{
         fetchResearchEdit(accessToken,refreshToken, _id)
     .then(data =>{

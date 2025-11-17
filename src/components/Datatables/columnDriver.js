@@ -6,13 +6,45 @@ import { getTranslations } from '../Languages/i18n';
 const langData = getTranslations();
 
 
-const CustomCell = ({ row, column }) => (
-    <div>
-        <div style={{ textAlign: 'justify' }}>
-            <p className="col text-wrap  ">{row[column]}</p>
+const CustomCell = ({ row, column }) => {
+    const value = row[column];
+    
+    let text;
+        //console.log("afuera");
+        //if (value && value[0] && value[0] !== undefined) {
+     //   console.log(typeof value[0]);
+     //   console.log(value[0].length);
+     //   console.log(value[0]);
+     //   }
+    if (column === 'publications'){
+        console.log("value", typeof value);
+    }
+    if (typeof value === "string" && value.length > 100 ){
+        text =  value.substring(0, 100) + "..." 
+        console.log(text);
+    }
+
+    else if (value && value[0] && typeof value[0] === "string" && value[0].length > 100 ){
+        
+
+       text =  value[0].substring(0, 100) + "..." 
+       console.log(text);
+    }   
+    else{
+        text = value;
+    } 
+
+    return (
+        <div>
+            <div style={{ textAlign: "justify" }}>
+                <p className="col text-wrap">
+                    {text}
+                </p>
+            </div>
         </div>
-    </div>
-);
+    );
+};
+
 
 const CustomTag = ({ row, column }) => {
     const textColumn = row[column];
@@ -39,7 +71,7 @@ const detailClick = ({ row, navigate }) => {
 
 // `/piece_queries/detail / ${ encodeURIComponent(Row) }`
 
-const CustomPhoto = ({ row, column, onDetailClick }) => {
+const CustomPhoto = ({ row, column, /*onDetailClick*/ }) => {
     //   const navigatess = useNavigate();
     //  const history = useHistory();    
     const fileName = row[column];
@@ -73,6 +105,7 @@ const InventoryActions = ({ row, column }) => {
    
     const _id = row._id;
     const navigate = useNavigate();
+    
     return (
         <>
             <div className="d-flex justify-content-around">
@@ -93,7 +126,11 @@ const InventoryActions = ({ row, column }) => {
 
 const editResearchClick = ({_id, navigate}) => {
     navigate(`/mnemosine/piece_researchs/actions/${encodeURIComponent(_id[0])}/edit`)
-}
+};
+
+const editRestorationClick = ({_id, navigate}) => {
+    navigate(`/mnemosine/piece_restorations/actions/${encodeURIComponent(_id[0])}/edit-select`)
+};
 const ResearchActions = ({ row, column }) => {
     const _id = row._id;
     const navigate = useNavigate();
@@ -114,7 +151,27 @@ const ResearchActions = ({ row, column }) => {
     )
 };
 
-export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailClick) => {
+const RestorationActions = ({ row, column }) => {
+    const _id = row._id;
+    const navigate = useNavigate();
+    return (
+        <>
+            <div className="d-flex ">
+                <button className="btn btn-sm btn-primary me-1" onClick={() => { editRestorationClick({ _id, navigate })}}>
+                    <i className="fas fa-edit"></i>
+                </button>
+                <button className="btn btn-sm btn-danger me-1">
+                    <i className="fas fa-trash-alt"></i>
+                </button>
+                <button className="btn btn-sm btn-info me-2">
+                    <i className="fas fa-history"></i>
+                </button>
+            </div>
+        </>
+    )
+};
+
+export const applyLogicToInventoryColumn = (columnName, columnProps /*onDetailClick*/) => {
     // Aplica la lógica según el nombre de la columna
     switch (columnName) {
 
@@ -371,7 +428,7 @@ export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailCli
                 sortable: false,
                 show: true,
                 // maxWidth: '125px',
-                cell: row => <CustomPhoto row={row} column={columnName} onDetailClick={onDetailClick} />,
+                cell: row => <CustomPhoto row={row} column={columnName} /*onDetailClick={onDetailClick}*/ />,
                 // Otras propiedades específicas de "measure_without" aquí
             };
 
@@ -381,6 +438,7 @@ export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailCli
                 name: '_id',
                 sortable: false,
                 show: false,
+                omit: false,
             };
         /***********************************************************************************/
         /***********************************************************************************/
@@ -407,6 +465,20 @@ export const applyLogicToInventoryColumn = (columnName, columnProps, onDetailCli
                 width: '125px',
                 
             };
+
+        case "actions_restoration":
+            return {
+                ...columnProps,
+                name: langData.dataTableUserQueryNames.actions,
+                sortable: false,
+                show: true,
+                cell: row => <RestorationActions row={row} column={columnName} />,
+                width: '125px',
+                
+            };            
+        /***********************************************************************************/
+        /***********************************************************************************/
+        /***********************************************************************************/
 
         // Continúa agregando más casos según sea necesario para otras columnas
         default:

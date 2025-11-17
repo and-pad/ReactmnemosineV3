@@ -122,8 +122,7 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
   const [selectedReference, setSelectedReference] = useState();
   const [selectedNewReference, setSelectedNewReference] = useState();
 
-  const containerSideBarRef = useRef(null);  
-
+  const containerSideBarRef = useRef(null);
 
   const data = big_data && big_data["research_data"];
   const InventoryData =
@@ -139,26 +138,28 @@ export const EditResearch = ({ accessToken, refreshToken, permissions }) => {
     "description_origin",
     "description_inventory",
   ];
-const [scrollY, setScrollY] = useState(0);
-
- const restoreScroll = () => {
+ //const [scrollY, setScrollY] = useState(0);
+/*
+  const restoreScroll = () => {
     window.scrollTo({
       top: scrollY, // la posición que quieras
       behavior: "smooth", // opcional, hace animación suave
     });
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
+*/
+  //useEffect(() => {
+    /*const handleScroll = () => {
       setScrollY(window.scrollY); // posición vertical del scroll de la ventana
-    };
+    };*/
 
-    window.addEventListener("scroll", handleScroll);
+    //window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    //return () => {
+      //window.removeEventListener("scroll", handleScroll);
+   // };
+  //}, []);
+
+
   const compareFormModifications = (original, modified) => {
     let changes = {};
 
@@ -425,7 +426,7 @@ const [scrollY, setScrollY] = useState(0);
               file: copyFile,
               name: file.name.split(".").slice(0, -1).join("."),
               size: file.size,
-              mime_type: file.type,              
+              mime_type: file.type,
             }
           : doc
       )
@@ -959,7 +960,7 @@ const [scrollY, setScrollY] = useState(0);
     e.preventDefault();
 
     const changes = compareFormModifications(actualFormData, formDataResearch);
-    const changes_pics_inputs = comparePicsModifications(actualPics, Pics);   
+    const changes_pics_inputs = comparePicsModifications(actualPics, Pics);
     const changes_bibliographies = compareBibliographies(
       actualBibliographies,
       bibliographies
@@ -985,7 +986,7 @@ const [scrollY, setScrollY] = useState(0);
     ) {
       //console.log("changes_bibliographies", changes_bibliographies);
       //console.log("changes_footnotes", changes_footnotes);
-      
+
       const response = await API_UpdateResearch({
         accessToken,
         refreshToken,
@@ -1002,7 +1003,7 @@ const [scrollY, setScrollY] = useState(0);
 
         _id,
       });
-      
+
       console.log("llamada api");
     }
   };
@@ -1074,15 +1075,14 @@ const [scrollY, setScrollY] = useState(0);
       console.log("modifiedItem", modifiedItem);
       for (const key of doc_keys) {
         console.log("key", key);
-        
-      
+
         console.log("originalItem[key]", originalItem[key]);
         console.log("modifiedItem[key]", modifiedItem[key]);
         // Cargamos el file si es que ha cambiado
         if (key === "file") {
-            console.log("modifiedItem[key]", modifiedItem[key]);
-            localChanges[key] = modifiedItem[key];
-            console.log("file cambiado", localChanges[key]);
+          console.log("modifiedItem[key]", modifiedItem[key]);
+          localChanges[key] = modifiedItem[key];
+          console.log("file cambiado", localChanges[key]);
           continue;
         }
         const originalValue =
@@ -1095,16 +1095,12 @@ const [scrollY, setScrollY] = useState(0);
             ? modifiedItem[key].trim()
             : modifiedItem[key];
 
-        if ((originalValue !== modifiedValue) || (key === "name")) {
+        if (originalValue !== modifiedValue ) {
           localChanges[key] = {
             oldValue: originalItem[key],
             newValue: modifiedItem[key],
           };
         }
-
-
-
-        
 
         if (Object.keys(localChanges).length > 0) {
           localChanges["_id"] = originalItem["_id"];
@@ -1229,15 +1225,11 @@ const [scrollY, setScrollY] = useState(0);
     return changes;
   };
   return (
+    
     <div>
       <div className="container">
         <form onSubmit={handleSave}>
-          <div
-            className="card pt-3 ps-3 pe-3 pb-1 "
-            style={{ background: "#abcc" }}
-          >
-            {/*
-*********************************************************************************************************************
+          {/**********************************************************************************************************************
 *********************************************************************************************************************
 *********************************************************************************************************************
 *********************************************************************************************************************
@@ -1247,7 +1239,10 @@ const [scrollY, setScrollY] = useState(0);
 *********************************************************************************************************************
                                 Campos de Inventario
  */}
-           
+          <div
+            className="card pt-3 ps-3 pe-3 pb-1 "
+            style={{ background: "#abcc" }}
+          >
             <div className="row mb-3">
               {inventoryModifications.length > 0 ? (
                 <>
@@ -4649,6 +4644,9 @@ const [scrollY, setScrollY] = useState(0);
             </div>
           </div>
 
+       
+       
+       
           <Button
             className="m-3"
             variant="contained"
@@ -4657,14 +4655,15 @@ const [scrollY, setScrollY] = useState(0);
           >
             {"Salvar"}
           </Button>
-          
+       
+       
         </form>
-        {console.log("scrollY al guardar", scrollY)}
-          <input type="submit" value={scrollY} readOnly />
-          <Button variant="contained" color="primary" type="button" onClick={restoreScroll}>
-            Ir a posición scroll
-          </Button>
-           <input type="" value={""} onChange={(e) => {console.log("e.target.value",e.target.value)}}  />
+       
+
+
+
+
+
       </div>
     </div>
   );

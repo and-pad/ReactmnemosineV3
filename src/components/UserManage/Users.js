@@ -114,11 +114,11 @@ export function UserManageDataTable({ accessToken, refreshToken }) {
     const [roles, setRoles] = useState([]);
 
 
-
+/*
     const editClick = ({ _id, navigate }) => {
         navigate(`/mnemosine/administration/user_manage/$0{encodeURIComponent(_id)}/edit`)
     }
-
+*/
 
     useEffect(() => {
         fetchUsers(setUserActiveData, setUserInactiveData, accessToken, refreshToken, setRoles);
@@ -397,9 +397,7 @@ const UsersActions = ({ row, setUserActiveData, setUserInactiveData, accessToken
 
     return (
         <>
-          
-
-            <div className=" ">
+            <div >
                 <Tooltip placement='top' title="Editar Usuario">
 
                     <IconButton variant='outlined' color="primary" size="small"   >

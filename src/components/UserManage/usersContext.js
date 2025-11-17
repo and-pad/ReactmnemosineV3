@@ -86,6 +86,8 @@ createTheme("custom-light", {
 
 export const ActiveUsersDatatable = () => {
   const [theme, setTheme] = useState("custom-dark"); // Estado para el tema
+  const [page, setPage] = useState(1); // Estado para la página actual
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Estado para filas por página
 
   const toggleTheme = () => {
     setTheme((prevTheme) =>
@@ -121,12 +123,22 @@ export const ActiveUsersDatatable = () => {
 
       <Datatable
         columns={columns_active_users}
-        data={userActiveData}
+        data={userActiveData.slice((page - 1) * rowsPerPage, page * rowsPerPage)} // 👈 aquí el corte
         pagination
         paginationComponentOptions={{
           rowsPerPageText: "Filas por página:",
           rangeSeparatorText: "de",
         }}
+        paginationServer
+        paginationTotalRows={userActiveData.length}
+        paginationPerPage={rowsPerPage}
+        paginationDefaultPage={page}
+        onChangePage={(page) => setPage(page)}
+        onChangeRowsPerPage={(newPerPage, page) => {
+          setRowsPerPage(newPerPage);
+          setPage(page);
+        }}
+        
         noDataComponent={
           <Box
             sx={{

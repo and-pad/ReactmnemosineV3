@@ -34,10 +34,16 @@ import { delCache } from "./components/Datatables/dataHandler";
 import { ResearchEdit } from "./components/PiecesResearchs/researchsActions";
 import { EditResearch } from "./components/PiecesResearchs/edit";
 
+import { RestorationEditSelect } from "./components/PiecesRestorations/restorationsActions";
+import { EditRestoration } from "./components/PiecesRestorations/edit";
+
+
 import {
   UserManageDataTable,
   UsersNavBar,
 } from "./components/UserManage/Users";
+
+
 
 //import { PermissionRoute } from './components/Permissions/permissions';
 import {
@@ -48,6 +54,7 @@ import {
 } from "./components/UserManage/usersContext";
 
 import { ResearchsQueries } from "./components/PiecesResearchs/ResearchsQueries";
+import { RestorationsQueries } from "./components/PiecesRestorations/restorationsQueries";
 
 //import { API_ActiveUser } from './components/UserManage/ApiCalls'
 
@@ -258,10 +265,7 @@ function App() {
     }
   };
 
-  const handleDetailClick = ({ row }) => {
-    //console.log("row", row._id[0]);
-    //return (<Navigate to='/login' />); // Navega a la ruta '/detail'
-  };
+ 
 
   //const navigate = useNavigate();
   const handleLogout = async ({ navigate }) => {
@@ -330,8 +334,9 @@ function App() {
                     <PiecesQueries
                       accessToken={accessToken}
                       refreshToken={refreshToken}
-                      onDetailClick={handleDetailClick}
+                      /*onDetailClick={handleDetailClick}*/
                       module={"Query"}
+                      permissions={permissions}
                     />
                   }
                   checkLogin={handleCheckLoginCallback}
@@ -401,8 +406,9 @@ function App() {
                     <PiecesQueries
                       accessToken={accessToken}
                       refreshToken={refreshToken}
-                      onDetailClick={handleDetailClick}
+                      //onDetailClick={handleDetailClick}
                       module={"Inventory"}
+                      permissions={permissions}
                     />
                   }
                   checkLogin={handleCheckLoginCallback}
@@ -452,6 +458,11 @@ function App() {
                     <ResearchsQueries
                       accessToken={accessToken}
                       refreshToken={refreshToken}
+                      module={"Research"}                      
+                      title={"Investigación"}
+                      permissions={permissions}
+                    
+                      
                     />
                   }
                 />
@@ -489,7 +500,56 @@ function App() {
                 }
               />
             </Route>
+          
+          {/* Route de piece_restorations */}
+          <Route
+              path="piece_restorations"
+              element={
+                <PrivateRoute
+                  checkLogin={handleCheckLoginCallback}
+                  element={
+                    <RestorationsQueries
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                      permissions={permissions}
+                      module={"Restoration"}
+                      title={"Restauraciones"}
+                    />
+                  }
+                />
+              }
+          />
 
+          <Route
+              path="piece_restorations/actions/:_id/edit-select"
+              element={
+                <PrivateRoute
+                  element={
+                    <RestorationEditSelect
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
+              }
+            />              
+            {/*<Route index element={<Navigate to="edit" />} />*/}
+            <Route
+              path="piece_restorations/actions/:_id/edit-select/restoration/:restoration_id/edit"
+              element={
+                <PrivateRoute
+                  element={
+                    <EditRestoration
+                      accessToken={accessToken}
+                      refreshToken={refreshToken}
+                      permissions={permissions}
+                    />
+                  }
+                  checkLogin={handleCheckLoginCallback}
+                />
+              }
+            />
             <Route
               path="administration/user_manage/"
               checkLogin={handleCheckLoginCallback}

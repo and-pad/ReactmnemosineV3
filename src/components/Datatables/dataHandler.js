@@ -1,6 +1,7 @@
 import { applyLogicToInventoryColumn } from "./columnDriver";
 import SETTINGS from "../Config/settings";
 import Cookies from 'js-cookie';
+import { Tab } from "@mui/material";
 
 const research_keys = ['title', 'keywords', 'technique', 'materials', 'acquisition_form', 'acquisition_source', 'acquisition_date', 'firm_description', 'short_description', 'formal_description', 'observation', 'publications', 'card'];
 
@@ -98,12 +99,17 @@ function structData(orderedData = null, column = null) {
     }
 }
 
-function omitingElements(size, hideConstructor, defColumns) {
+function omitingElements(size, hideConstructor, defColumns, module) {
     var out;
     if (hideConstructor.length >= size) {
         let quitElements = hideConstructor.length - size;
-        quitElements = (quitElements + 1) * -1;       
-        out = hideConstructor.slice(quitElements, -1); // Elementos que están fuera del tamaño
+        quitElements = (quitElements + 1) * -1;     
+        let slice_elements = -2;
+        //Query no tiene Actions solo muestra la foto -2 por foto y actions
+        if (module === 'Query'){         
+            slice_elements = -1;        
+        }
+        out = hideConstructor.slice(quitElements, slice_elements); // Elementos que están fuera del tamaño
 
         out.forEach(element => {
             const id = element.id;
@@ -116,11 +122,11 @@ function omitingElements(size, hideConstructor, defColumns) {
     return out;
 }
 // Define una función que aplique la lógica específica para cada propiedad de la columna
-export function ConstructElementsToHide(defColumns, size, hideConstructor = []) {
+export function ConstructElementsToHide(defColumns, size, module , hideConstructor = []) {
 
     var out;
     if (hideConstructor.length !== 0) {
-        out = omitingElements(size, hideConstructor, defColumns);
+        out = omitingElements(size, hideConstructor, defColumns, module);
         return out;
     } else {
         var hideConstructorLoc = [];
@@ -130,15 +136,15 @@ export function ConstructElementsToHide(defColumns, size, hideConstructor = []) 
                 hideConstructorLoc.push(element);
             }
         });
-        out = omitingElements(size, hideConstructorLoc, defColumns);
+        out = omitingElements(size, hideConstructorLoc, defColumns, module);
         return out;
     }
 
 };
-export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick, defColumnsUp = null, tableDataUp = null, module) {
+export function formatData(Dataquery, size, module, isNeededApplyDefault, defColumnsUp = null, tableDataUp = null) {
     var StructuredData = [];
     var StructuredColumns = [];
-    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info', "_id", "actions_inventory", "actions_research" ];
+    const order_columns = ["inventory_number", "catalog_number", "origin_number", "genders_info", "subgenders_info", "type_object_info", "dominant_material_info", "location_info", "tags", "description_origin", "description_inventory", "authors_info", "involved_creation_info", "period_info", "research_info", "measure_without", "measure_with", 'photo_thumb_info', "_id", "actions_inventory", "actions_research", "actions_restoration" ];
 
     const orderedData = {};
     var defColumns = [];
@@ -161,10 +167,15 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                     StructuredColumns.push(column);
                 }
                 
+                
                 else if (column === 'actions_inventory' && module === 'Inventory'){                                           
+                      //  console.log('module', module);
                         StructuredColumns.push(column);
                 }
                 else if (column === 'actions_research' && module === 'Research'){                                           
+                    StructuredColumns.push(column);
+                }
+                else if (column === 'actions_restoration' && module === 'Restoration'){                                           
                     StructuredColumns.push(column);
                 }
 
@@ -258,9 +269,34 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
                 //minWidth: '90px',
                 //compact: true,
             }
+             if (column === "_id"){
+                console.log('column antes', columnProps);
+            }
             //aplica los valores por default
-            columnProps = applyLogicToInventoryColumn(column, columnProps, onDetailClick);
+            columnProps = applyLogicToInventoryColumn(column, columnProps, /*onDetailClick*/);
             //declara los valores que son para el expander component del datatables
+            if (column === "_id"){
+                columnProps.show = false;
+                //console.log('column', columnProps);
+            }
+            /*
+            if (column === "actions_inventory"){
+                columnProps.show = false;
+                //console.log('column', columnProps);
+            }
+            if (column === "actions_research"){
+                columnProps.show = false;
+                //console.log('column', columnProps);
+            }
+            if (column === "actions_restoration"){
+                columnProps.show = false;
+                //console.log('column', columnProps);
+            }
+            if (column === "photo_thumb_info"){
+                columnProps.show = false;
+                //console.log('column', columnProps);
+            }
+            */
             if (columnProps.show) {
                 hideConstructor.push(columnProps);
             }
@@ -269,12 +305,12 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
 
         });
 
-        out = ConstructElementsToHide(defColumns, size, hideConstructor);
+        out = ConstructElementsToHide(defColumns, size,module, hideConstructor);
 
     } else {
-
+        //console.log("tableDataUp", tableDataUp);
         if (defColumnsUp !== null) {
-            out = ConstructElementsToHide(defColumnsUp, size);
+            out = ConstructElementsToHide(defColumnsUp, size, module);
 
             defColumns = [...defColumnsUp];
             tableData = [...tableDataUp];
@@ -282,10 +318,18 @@ export function formatData(Dataquery, size, isNeededApplyDefault, onDetailClick,
     }
 
     let TabColOut = [];
+
+    let restorations = Dataquery.map((item) => ({
+    _id:item._id,
+    restoration_info:item.restoration_info
+    }));
+    //console.log('_id tableData', tableData[0]["_id"][0]);
+    //console.log('_id restorations', restorations[0]["_id"]);
     //console.log('tableData', tableData[0]);
     TabColOut.push(tableData);
     TabColOut.push(defColumns);
     TabColOut.push(out);
+    TabColOut.push(restorations);
     return TabColOut;
 
 }

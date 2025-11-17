@@ -6,7 +6,7 @@ const langData = {
     spanish: "Spanish",
     english: "Englis",
     french: "French",
-    test: "something with accents: \u00e1\u00e9\u00ed\u00f3\u00fa\u00c1\u00c9\u00cd\u00d3\u00da\u00f1\u00d1\u00e7\u00c7",
+    test: "something with accents: áéíóúÁÉÍÓÚñÑçÇ",
   },
   StartMenu: {
     home: "Start",
@@ -185,16 +185,16 @@ const langData = {
     },
     /* Hay que hacer la version en ingles
      bibliography: {
-      title: "T\u00edtulo",
+      title: "Título",
       author: "Autor",
-      article: "Art\u00edculo",
-      chapter: "Cap\u00edtulo",
+      article: "Artículo",
+      chapter: "Capítulo",
       editorial: "Editorial",
-      vol_no: "Volumen / N\u00famero",      
-      city_country: "Ciudad y pa\u00eds",
-      pages: "P\u00e1ginas",
+      vol_no: "Volumen / Número",      
+      city_country: "Ciudad y país",
+      pages: "Páginas",
       editor: "Editor",
-      web_page: "P\u00e1gina web",
+      web_page: "Página web",
       identifier: "Identificador",
     },
      */
@@ -302,8 +302,8 @@ const langData = {
   /*
    edit_selectDatatable:{
     treatment_date: "Fecha de tratamiento",
-    preliminary_examination: "Ex\u00e1men preliminar",
-    photo: "Fotograf\u00eda",
+    preliminary_examination: "Exámen preliminar",
+    photo: "Fotografía",
     actions: "Acciones",
 
 
@@ -316,10 +316,10 @@ const langData = {
   },
 /*
     pieceRestorationEdit: {
-    preliminary_examination: "Ex\u00e1men preliminar",
-    laboratory_analysis: "An\u00e1lisis de laboratorio",
+    preliminary_examination: "Exámen preliminar",
+    laboratory_analysis: "Análisis de laboratorio",
     proposal_of_treatment: "Propuesta de tratamiento",
-    treatment_description: "Descripci\u00f3n de tratamiento",
+    treatment_description: "Descripción de tratamiento",
     results: "Resultado y recomendaciones",
     observations: "Observaciones",
     treatment_date: "Fecha de tratamiento",
@@ -330,12 +330,12 @@ const langData = {
     height: "Alto",
     width: "Ancho",
     depth: "Profundo",
-    diameter: "Di\u00e1metro",
+    diameter: "Diámetro",
 
     height_with_base: "Alto con base",
     width_with_base: "Ancho con base",
     depth_with_base: "Profundo con base",
-    diameter_with_base: "Di\u00e1metro con base",
+    diameter_with_base: "Diámetro con base",
     base_or_frame: "Base o marco",
   },*/
 
