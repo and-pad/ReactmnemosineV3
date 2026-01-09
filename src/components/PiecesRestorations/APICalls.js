@@ -90,7 +90,7 @@ export const fetchRestorationUpdate = async ( accessToken,
 if (PicsNew && PicsNew.length > 0) {
     PicsNew.forEach((pic, index) => {
       if(!pic.file) return; // Skip if no file is present
-      formData.append(`files[new_pic_${index}]`, pic.file);
+      formData.append(`files[new_img_${index}]`, pic.file);
     });
   }
 

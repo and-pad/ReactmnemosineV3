@@ -19,9 +19,11 @@ import {
 const langData = getTranslations();
 export const DocumentsField = ({Documents, setDocuments, actualDocs    }) => {
 
+
+
     const [currentDocIndex, setCurrentDocIndex] = useState(0);
 
-
+  
   const handleChangeDocumentStatus = ({ file }) => {
     const copyFile = new File([file], file.name, {
       type: file.type,

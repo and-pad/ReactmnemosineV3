@@ -1,5 +1,5 @@
 import Cookies from "js-cookie"; //Librería para el manejo de cookies
-import React, { useState, useEffect } from "react"; //react, y sus componentes
+import { useState, useEffect } from "react"; //react, y sus componentes
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; //Componentes de rutas de react de single page
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,7 +8,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "./App.css";
 import { TopNavBar } from "./components/Home/HomeComponents/MenuTemplates"; //Plantilla principal de la pagina
 
-import Login from "./components/LoginComponents/Login"; //Componente del Login
+//import Login from "./components/LoginComponents/Login"; //Componente del Login
 import PrivateRoute from "./components/PrivateRouteComponent"; // Importa el componente PrivateRoute para el acceso con contraseña
 import {
   handleLogin,
@@ -18,51 +18,38 @@ import {
 import "@fortawesome/fontawesome-free/css/all.min.css"; //FontAwesome!!
 
 //Componente de consultas
-import { PiecesQueries } from "./components/PiecesQueries/PiecesQueries";
-import { PieceDetail } from "./components/PiecesQueries/PieceDetail";
+//import { PiecesQueries } from "./components/PiecesQueries/PiecesQueries";
+//import { PieceDetail } from "./components/PiecesQueries/PieceDetail";
 
-import {
-  Inventory,
-  Research,
-  Restoration,
-  Movements,
-} from "./components/PiecesQueries/details";
-import { EditInventory } from "./components/PiecesQueries/edit";
-import { InventoryEdit } from "./components/PiecesQueries/inventoryActions";
+
 import { delCache } from "./components/Datatables/dataHandler";
 
-import { ResearchEdit } from "./components/PiecesResearchs/researchsActions";
-import { EditResearch } from "./components/PiecesResearchs/edit";
-
-import { RestorationEditSelect } from "./components/PiecesRestorations/restorationsActions";
-import { EditRestoration } from "./components/PiecesRestorations/edit";
 
 
 import {
-  UserManageDataTable,
+ // UserManageDataTable,
   UsersNavBar,
 } from "./components/UserManage/Users";
 
-
-
 //import { PermissionRoute } from './components/Permissions/permissions';
-import {
-  InactiveUsersDatatable,
-  ActiveUsersDatatable,
-  CreateUserForm,
-  UserEditForm,
-} from "./components/UserManage/usersContext";
 
-import { ResearchsQueries } from "./components/PiecesResearchs/ResearchsQueries";
-import { RestorationsQueries } from "./components/PiecesRestorations/restorationsQueries";
+//import { ResearchsQueries } from "./components/PiecesResearchs/ResearchsQueries";
 
-//import { API_ActiveUser } from './components/UserManage/ApiCalls'
-
-//import "bootstrap/dist/css/bootstrap.css";
-//import "bootstrap/dist/js/bootstrap.bundle.js";
+// Importación de las rutas
+import { AuthRoutes } from "./routes/AuthRoutes";
+import { Start } from "./routes/StartRoutes";
+import { PieceQueries } from "./routes/PieceQueriesRoutes";
+import { PieceQueriesDetail } from "./routes/PieceQueriesDetailRoutes";
+import { InventoryQueries } from "./routes/InventoryQueriesRoutes";
+import { InventoryQueriesActions } from "./routes/InventoryQueriesActionsRoutes";
+import { ResearchQueries } from "./routes/ResearchQueriesRoutes";
+import { ResearchQueriesActions } from "./routes/ResearchQueriesActionsRoutes";
+import { RestorationQueries } from "./routes/RestorationQueriesRoutes";
+import { RestorationEsitSelect } from "./routes/RestorationsEditSelectRoutes";
+import { RestorationQueriesActions } from "./routes/RestorationQueriesActionsRoutes";
+import { AdmUserManage } from "./routes/AdministrationUserManagerRoutes";
 
 const SearchPage = () => <h6>Home Page :-0</h6>;
-//var token;
 
 function App() {
   //Variables para manejar el inicio de sesion tokenizado
@@ -101,7 +88,7 @@ function App() {
       setAccessToken(parsedToken);
       setRefreshToken(parsedReToken);
       setUser(parsedUser);
-      setPermissions(vpermissions);
+      setPermissions(JSON.parse(vpermissions));
       //console.log("stored ", parsedToken);
       //console.log("stored Refresh ", parsedReToken);
     } catch (error) {
@@ -110,7 +97,7 @@ function App() {
       //no hay necesidad de mandar ningun tipo de mensaje
       //console.log("Error", error);
     }
-  }, [accessToken]);
+  }, []);
   //setForceUpdate(prevState => !prevState);
 
   const helperLoginCallBack = (response) => {
@@ -160,7 +147,7 @@ function App() {
   const handleCheckLoginCallback = async () => {
     var response;
     if (accessToken) {
-      //si ya existe un token en el sistema solaamente lo enviamos para validarlo
+      //si ya existe un token en el sistema solamente lo enviamos para validarlo
       //console.log('accessYavenido', accessToken);
       //checa la respuesta y devuelve un booleando.
       response = await handleLoggedTime(accessToken, refreshToken);
@@ -265,8 +252,6 @@ function App() {
     }
   };
 
- 
-
   //const navigate = useNavigate();
   const handleLogout = async ({ navigate }) => {
     Cookies.remove("accessToken");
@@ -302,17 +287,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/login" />} />
-          <Route
-            path="/login"
-            element={
-              <Login
-                onLogin={handleLoginCallback}
-                setAccessToken={setAccessToken}
-                accessToken={accessToken}
-              />
-            }
-          />
+          {AuthRoutes({ handleLoginCallback, accessToken, setAccessToken })}
 
           <Route
             path="/mnemosine"
@@ -324,306 +299,82 @@ function App() {
               />
             }
           >
-            <Route path="start" element={<div>Start</div>} />
+            {Start({})}
 
-            <Route
-              path="piece_queries"
-              element={
-                <PrivateRoute
-                  element={
-                    <PiecesQueries
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                      /*onDetailClick={handleDetailClick}*/
-                      module={"Query"}
-                      permissions={permissions}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            />
+            {PieceQueries({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions,
+            })}
+            {PieceQueriesDetail({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+            })}
 
-            <Route
-              path="piece_queries/detail/:_id/"
-              element={
-                <PrivateRoute
-                  element={
-                    <PieceDetail
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            >
-              <Route index element={<Navigate to="inventory" />} />
+            {InventoryQueries({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions,
+            })}
 
-              <Route
-                path="inventory"
-                element={
-                  <PrivateRoute
-                    element={<Inventory />}
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-              <Route
-                path="research"
-                element={
-                  <PrivateRoute
-                    element={<Research />}
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-              <Route
-                path="restoration"
-                element={
-                  <PrivateRoute
-                    element={<Restoration />}
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-              <Route
-                path="movements"
-                element={
-                  <PrivateRoute
-                    element={<Movements />}
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-            </Route>
-            
-            <Route
-              path="inventory_queries"
-              element={
-                <PrivateRoute
-                  element={
-                    <PiecesQueries
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                      //onDetailClick={handleDetailClick}
-                      module={"Inventory"}
-                      permissions={permissions}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            />
+            {InventoryQueriesActions({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions
+            })}
 
-            <Route
-              path="inventory_queries/actions/:_id/"
-              element={
-                <PrivateRoute
-                  element={
-                    <InventoryEdit
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                      permissions={permissions}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            >
-              <Route index element={<Navigate to="edit" />} />
-              <Route
-                path="edit"
-                element={
-                  <PrivateRoute
-                    element={
-                      <EditInventory
-                        accessToken={accessToken}
-                        refreshToken={refreshToken}
-                        permissions={permissions}
-                      />
-                    }
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-            </Route>
+            {ResearchQueries({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions,
+            })}
 
-            <Route
-              path="piece_researchs"
-              element={
-                <PrivateRoute
-                  checkLogin={handleCheckLoginCallback}
-                  element={
-                    <ResearchsQueries
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                      module={"Research"}                      
-                      title={"Investigación"}
-                      permissions={permissions}
-                    
-                      
-                    />
-                  }
-                />
-              }
-            />
+            {ResearchQueriesActions({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions,
+            })}
 
-            <Route
-              path="piece_researchs/actions/:_id/"
-              element={
-                <PrivateRoute
-                  element={
-                    <ResearchEdit
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            >
-              <Route index element={<Navigate to="edit" />} />
-              <Route
-                path="edit"
-                element={
-                  <PrivateRoute
-                    element={
-                      <EditResearch
-                        accessToken={accessToken}
-                        refreshToken={refreshToken}
-                        permissions={permissions}
-                      />
-                    }
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-            </Route>
-          
-          {/* Route de piece_restorations */}
-          <Route
-              path="piece_restorations"
-              element={
-                <PrivateRoute
-                  checkLogin={handleCheckLoginCallback}
-                  element={
-                    <RestorationsQueries
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                      permissions={permissions}
-                      module={"Restoration"}
-                      title={"Restauraciones"}
-                    />
-                  }
-                />
-              }
-          />
+            {RestorationQueries({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions,
+            })}
 
-          <Route
-              path="piece_restorations/actions/:_id/edit-select"
-              element={
-                <PrivateRoute
-                  element={
-                    <RestorationEditSelect
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            />              
-            {/*<Route index element={<Navigate to="edit" />} />*/}
-            <Route
-              path="piece_restorations/actions/:_id/edit-select/restoration/:restoration_id/edit"
-              element={
-                <PrivateRoute
-                  element={
-                    <EditRestoration
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                      permissions={permissions}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            />
-            <Route
+            {RestorationEsitSelect({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,             
+            })}
+
+            {RestorationQueriesActions({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions,
+            })}
+
+           /* <Route
               path="administration/user_manage/"
               checkLogin={handleCheckLoginCallback}
               element={<PrivateRoute element={<UsersNavBar />} />}
-            />
+            />*/
+            {AdmUserManage({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+             // permissions,
+            })}
 
-            <Route
-              path="administration/user_manage/user/"
-              element={
-                <PrivateRoute
-                  element={
-                    <UserManageDataTable
-                      accessToken={accessToken}
-                      refreshToken={refreshToken}
-                    />
-                  }
-                  checkLogin={handleCheckLoginCallback}
-                />
-              }
-            >
-              <Route index element={<Navigate to="users_active" />} />
 
-              <Route
-                path="users_active"
-                element={
-                  <PrivateRoute
-                    element={<ActiveUsersDatatable />}
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-
-              <Route
-                path="users_inactive"
-                element={
-                  <PrivateRoute
-                    element={<InactiveUsersDatatable />}
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-
-              <Route
-                path="new_user"
-                element={
-                  <PrivateRoute
-                    element={
-                      <CreateUserForm
-                        accessToken={accessToken}
-                        refreshToken={refreshToken}
-                      />
-                    }
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-
-              <Route
-                path=":id/user_edit"
-                element={
-                  <PrivateRoute
-                    element={
-                      <UserEditForm
-                        accessToken={accessToken}
-                        refreshToken={refreshToken}
-                      />
-                    }
-                    checkLogin={handleCheckLoginCallback}
-                  />
-                }
-              />
-            </Route>
-
-           
+          
           </Route>
 
           <Route path="/test/" element={SearchPage()} />

@@ -197,39 +197,7 @@ const compareformData = (original, modified) => {
     //console.log("changes desde compare modifications", changes);
     return changes;
   };
-/*
-  const compareformData = (obj1, obj2) => {
-    for (let key in obj1) {
-      if (IGNORED_KEYS.includes(key)) continue; // ignoramos campos que no importan
 
-      const val1 = obj1[key];
-      const val2 = obj2[key];
-
-      // Arrays
-      if (Array.isArray(val1) && Array.isArray(val2)) {
-        if (val1.length !== val2.length) return true;
-        for (let i = 0; i < val1.length; i++) {
-          if (val1[i] !== val2[i]) return true; // compara strings/valores primitivos
-        }
-      }
-      // Objetos anidados
-      else if (
-        val1 &&
-        typeof val1 === "object" &&
-        val2 &&
-        typeof val2 === "object"
-      ) {
-        if (compareformData(val1, val2)) return true;
-      }
-      // Valores primitivos
-      else {
-        if (val1 !== val2) return true;
-      }
-    }
-
-    return false; // Si llegamos aquí, no hubo cambios
-  };
-*/
   const compareDocuments = (original, modified) => {
     let changes = {};
     const doc_keys = ["name", "size", "mime_type", "file"];
@@ -277,7 +245,7 @@ const compareformData = (original, modified) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-    const changed = compareformData(formDataRestoration, formDataRestorationCp);
+    const changed = compareformData(formDataRestorationCp, formDataRestoration );
     const changedPicsInputs = comparePicsModifications(actualPhotos, photos);
     const changedDocs = compareDocuments(actualDocs, Documents);
     /*console.log(changedPicsInputs, "changedPicsInputs");
@@ -298,6 +266,7 @@ const compareformData = (original, modified) => {
       return;
     } else {
       alert("Se enviará el formulario con los cambios. 🚀");
+      console.log(changed, "changed to send");
       const response = fetchRestorationUpdate(
         accessToken,
         refreshToken,

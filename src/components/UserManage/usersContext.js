@@ -388,8 +388,9 @@ export const UserEditForm = ({ accessToken, refreshToken }) => {
     roles,
     fetchUsers,
   } = useData();
+  console.log("id", id);
   const userToEdit = userActiveData.find(
-    (user) => user._id === parseInt(id, 10)
+    (user) => user._id === id
   );
   console.log("userToEdit", userToEdit);
   const [formData, setFormData] = useState({});

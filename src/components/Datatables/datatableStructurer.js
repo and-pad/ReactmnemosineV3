@@ -5,7 +5,7 @@ import "../Datatables/datatable.css";
 //import { createTheme } from 'react-data-table-component'
 import Box from "@mui/material/Box"; // Para el contenedor estilizado
 import Typography from "@mui/material/Typography"; // Para el texto
-import { Button, Stack } from "@mui/material"; // Botón de Material UI
+import { Button } from "@mui/material"; // Botón de Material UI
 //import { DatatableBase } from "./datatableBase";
 //import { } from "./columnDriver";
 import InventoryTwoToneIcon from "@mui/icons-material/InventoryTwoTone";
@@ -15,7 +15,7 @@ import {
   SearchBox,
   SelectColumn,
   filterSearch,
-  filterWithRestoration,
+  //filterWithRestoration,
 } from "./FilterComponents/Filter";
 
 import Datatable from "react-data-table-component";
@@ -87,7 +87,7 @@ export const BaseDatatable = ({
           top: savedScrollY,
           behavior: "smooth", // también puedes usar "auto" (por defecto)
         });
-      }, 3800); // ajusta el tiempo si hace falta
+      }, 2800); // ajusta el tiempo si hace falta
     }
 
     const handleClick = () => {
@@ -166,9 +166,9 @@ export const BaseDatatable = ({
         restorations
       );
     };
-    const WithRestoration = (tableData) => {
+    /*const WithRestoration = (tableData) => {
       return tableData.filter((item) => item.restoration_info === true);
-    };
+    };*/
 
     if (!hasFetched) {
       const fetchDataAndFormat = async () => {

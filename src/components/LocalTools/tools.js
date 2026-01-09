@@ -9,7 +9,7 @@ import {
   faFileAlt,
   faFileCode,
 } from "@fortawesome/free-solid-svg-icons";
-import React, { useRef } from "react";
+import { useRef } from "react";
 
 export const formatTimeAgo = (date, language) => {
   const diff = moment.preciseDiff(date, moment(), true);
