@@ -29,7 +29,7 @@ import { InventoryFields } from "./Fields/_inventory_fields";
 
 const langData = getTranslations();
 
-export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
+export const NewInventory = ({ accessToken, refreshToken, permissions }) => {
   const navigate = useNavigate();
 
   //definiciones para manejar los cambios
@@ -156,18 +156,19 @@ export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
 
 
   useEffect(() => {
-    if (data !== undefined) {
-      if (data.piece) {
-        setData(data.piece);
-        setDocuments(data.documents);
+    if (data !== undefined && data !== null) {
+        console.log("data view", data);
+      if (data["genders"] !== undefined) {
+        //setData(data.piece);
+        //setDocuments(data.documents);
         setGenders(data.genders);
         setSubgenders(data.subgenders);
         setTypeObject(data.type_object);
-        setfilteredTypeObject(TypeObject);
+        //setfilteredTypeObject(TypeObject);
         setDominantMaterial(data.dominant_material);
-        setFilteredDominantMaterial(DominantMaterial);
-        setFilteredGenders(Genders);
-        setFilteredSubGenders(Subgenders);
+        //setFilteredDominantMaterial(DominantMaterial);
+        //setFilteredGenders(Genders);
+        //setFilteredSubGenders(Subgenders);
         // Si no hacemos esta revision si hay un cambio en los datos se reinician los cabios
         // eso no es deseado asi que solo llenamos los datos una vez
         //console.log("gender_info", data?.piece ? data.piece : "N/D");
@@ -219,8 +220,6 @@ export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
                 ? data.piece.dominant_material_info.description
                 : "N/D",
             },
-            location: data.piece?.location_info.name || "",
-            incidence: data.piece?.incidence || "",
 
             tags: data.piece?.tags || "",
             appraisal: data.piece?.appraisal || "",
@@ -233,16 +232,14 @@ export const EditInventory = ({ accessToken, refreshToken, permissions }) => {
             width_with_base: data.piece?.width_with_base || "",
             depth_with_base: data.piece?.depth_with_base || "",
             diameter_with_base: data.piece?.diameter_with_base || "",
-            action: data?.action || "",
-
           };
 
           setPics(data.pics);
 
-          setFormData(temp);
-          setCpFormData(temp);
-          setCpPics(data.pics);
-          setCpDocs(data.documents);
+          setFormData(temp || {});
+          setCpFormData(temp || {});
+          //setCpPics(data.pics);
+          //setCpDocs(data.documents);
           setIsDataLoaded(true);
           setIsModified(false);
           const tagsArray = temp.tags.split(",").map((tag) => tag.trim());

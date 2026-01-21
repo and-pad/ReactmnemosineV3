@@ -112,12 +112,13 @@ const InventoryActions = ({ row, column }) => {
                 <button className="btn btn-sm btn-primary" onClick={() => editInventoryClick({ _id, navigate })}>
                     <i className="fas fa-edit"></i>
                 </button>
+                
                 <button className="btn btn-sm btn-danger">
                     <i className="fas fa-trash-alt"></i>
                 </button>
-                <button className="btn btn-sm btn-info">
+                {/*<button className="btn btn-sm btn-info">
                     <i className="fas fa-history"></i>
-                </button>
+                </button>*/}
             </div>
         </>
     )

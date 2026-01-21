@@ -25,7 +25,7 @@ import customStyles from "./datatableCustomCellStyle";
 import { useMemo } from "react";
 import { fetchData, formatData, ConstructElementsToHide } from "./dataHandler";
 import { useSessionStorageState } from "./DatatableComponents/SessionStorage";
-
+import { useNavigate } from "react-router-dom";
 import { getTranslations } from "../Languages/i18n";
 
 const langData = getTranslations();
@@ -87,7 +87,7 @@ export const BaseDatatable = ({
           top: savedScrollY,
           behavior: "smooth", // también puedes usar "auto" (por defecto)
         });
-      }, 2800); // ajusta el tiempo si hace falta
+      }, 2200); // ajusta el tiempo si hace falta
     }
 
     const handleClick = () => {
@@ -350,6 +350,10 @@ export const BaseDatatable = ({
     }));
     // console.log(checkboxSearchValues[id]);
   };
+const navigate = useNavigate();
+  const handleNewInventory = () => {
+    navigate("/mnemosine/inventory_queries/actions/add/new");
+  }
 
   const subHeaderComponentMemo = useMemo(() => {
     /******************************************************************************** */
@@ -602,6 +606,17 @@ export const BaseDatatable = ({
         >
           Tema
         </Button>
+        {module === "Inventory" &&
+        (<Button
+          sx={{ textTransform: "none" }}
+          variant="contained"
+          color="secondary"
+          onClick={() => handleNewInventory()}
+          
+        >
+          + Agregar
+        </Button>)}
+
       </Box>
 
       <Datatable

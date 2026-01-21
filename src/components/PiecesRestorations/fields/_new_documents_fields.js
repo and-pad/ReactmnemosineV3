@@ -1,7 +1,7 @@
 import { getTranslations } from "../../Languages/i18n";
 //import { SETTINGS } from "../../settings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import SETTINGS from "../../Config/settings";
+//import SETTINGS from "../../Config/settings";
 import { useState } from "react";
 import {  faBan } from "@fortawesome/free-solid-svg-icons";
 import Dropzone from "react-dropzone";

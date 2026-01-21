@@ -1,7 +1,7 @@
 import { faBan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Dropzone from "react-dropzone";
-import { IconButton, Button  } from "@mui/material";
+import { IconButton, Button, Box, Typography, Paper  } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { pink } from "@mui/material/colors";
@@ -290,8 +290,42 @@ export const InventoryFields = ({
             langData={langData}
            />
           </div>
+
+
+        </div>
+       
+        <div className="row mb-3">
+          <div className="col">
+            <Paper
+              variant="outlined"
+              sx={{
+                p: .5,
+                borderRadius: 1,
+                backgroundColor: 'rgba(0, 0, 0, 0.09)',
+              }}
+            >
+              <Typography variant="caption" >
+                Ubicación
+              </Typography>
+              <Typography variant="body1">
+                {formData?.location || "No hay ubicación"}
+              </Typography>
+            </Paper>
+          </div>
         </div>
 
+        <div className="row mb-3">
+          <div className="col">
+            <Field
+              formData={formData}
+              handleInputChange={handleInputChange}
+              ID={"incidence"}
+              Label={langData.pieceDetailDescriptors.inventory.incidence}
+            />
+          </div>
+        </div>
+
+        
         <div className="row mb-3"></div>
 
         <h5>Dimensions (without base)</h5>
@@ -400,7 +434,8 @@ export const InventoryFields = ({
           </div>
         </div>
       </div>
-
+     
+    { formData && formData.action === "edit" ? (
       <div className="row">
         <div className="col">
           <div className="card mt-4" style={{ background: "#abcc" }}>
@@ -577,6 +612,9 @@ export const InventoryFields = ({
           </div>
         </div>
       </div>
+    ) : 
+    null
+     }
 
       <div className="row">
         <div className="col">
@@ -810,7 +848,7 @@ export const InventoryFields = ({
           </div>
         </div>
       </div>
-
+      { formData && formData.action === "edit" ? (
       <div className="row">
         <div className="col">
           <div className="card mt-4" style={{ background: "#abcc" }}>
@@ -986,6 +1024,9 @@ export const InventoryFields = ({
           </div>
         </div>
       </div>
+      ) :
+       null
+        }
 
       <div className="row">
         <div className="col">

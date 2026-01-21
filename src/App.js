@@ -45,7 +45,7 @@ import { InventoryQueriesActions } from "./routes/InventoryQueriesActionsRoutes"
 import { ResearchQueries } from "./routes/ResearchQueriesRoutes";
 import { ResearchQueriesActions } from "./routes/ResearchQueriesActionsRoutes";
 import { RestorationQueries } from "./routes/RestorationQueriesRoutes";
-import { RestorationEsitSelect } from "./routes/RestorationsEditSelectRoutes";
+import { RestorationEdit_select } from "./routes/RestorationsEditSelectRoutes";
 import { RestorationQueriesActions } from "./routes/RestorationQueriesActionsRoutes";
 import { AdmUserManage } from "./routes/AdministrationUserManagerRoutes";
 
@@ -299,7 +299,8 @@ function App() {
               />
             }
           >
-            {Start({})}
+            {Start({accessToken, refreshToken, handleCheckLoginCallback})}
+
 
             {PieceQueries({
               handleCheckLoginCallback,
@@ -307,6 +308,14 @@ function App() {
               refreshToken,
               permissions,
             })}
+          
+           {ResearchQueries({
+              handleCheckLoginCallback,
+              accessToken,
+              refreshToken,
+              permissions,
+            })}
+
             {PieceQueriesDetail({
               handleCheckLoginCallback,
               accessToken,
@@ -327,12 +336,7 @@ function App() {
               permissions
             })}
 
-            {ResearchQueries({
-              handleCheckLoginCallback,
-              accessToken,
-              refreshToken,
-              permissions,
-            })}
+         
 
             {ResearchQueriesActions({
               handleCheckLoginCallback,
@@ -348,7 +352,7 @@ function App() {
               permissions,
             })}
 
-            {RestorationEsitSelect({
+            {RestorationEdit_select({
               handleCheckLoginCallback,
               accessToken,
               refreshToken,             
@@ -361,11 +365,11 @@ function App() {
               permissions,
             })}
 
-           /* <Route
+          { /* <Route
               path="administration/user_manage/"
               checkLogin={handleCheckLoginCallback}
               element={<PrivateRoute element={<UsersNavBar />} />}
-            />*/
+            />*/}
             {AdmUserManage({
               handleCheckLoginCallback,
               accessToken,

@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom";
 import PrivateRoute from "../components/PrivateRouteComponent";
 import { RestorationEditSelect } from "../components/PiecesRestorations/restorationsActions";
-export function RestorationEsitSelect({
+export function RestorationEdit_select({
   handleCheckLoginCallback,
   accessToken,
   refreshToken,

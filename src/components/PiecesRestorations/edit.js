@@ -67,7 +67,7 @@ export const EditRestoration = ({ accessToken, refreshToken, permissions }) => {
 
     return changes;
   };
-
+console.log("tokens", accessToken, refreshToken);
   useEffect(() => {
     const response = fectchRestorationEdit(
       accessToken,
@@ -89,7 +89,7 @@ export const EditRestoration = ({ accessToken, refreshToken, permissions }) => {
       .catch((error) => {
         console.error("Error inesperado", error);
       });
-  }, [accessToken, refreshToken, _id, restoration_id]);
+  }, [accessToken, refreshToken ]);
 
   useEffect(() => {
     if (Data) {
@@ -101,9 +101,7 @@ export const EditRestoration = ({ accessToken, refreshToken, permissions }) => {
     }
   }, [Data]);
 
-  useEffect(() => {
-    //console.log("Changed Pics updated:", changedPics);
-  }, [changedPics]);
+
 
   const IGNORED_KEYS = [
     "_id",

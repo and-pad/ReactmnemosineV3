@@ -5,9 +5,9 @@ import French from './fr/Lang';//Archivo con la traduccion en frances
 const languages = {
     en: English,
     sp: Spanish,
-    fr: French, 
-    
+    fr: French,     
 }
+
 //Tomamos de los archivos temporales del navegador, la preferencia de lenguaje establecida
 // O tomamos por default español
 const savedLanguage = localStorage.getItem('language') || 'sp';

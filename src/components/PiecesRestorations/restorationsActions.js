@@ -1,12 +1,12 @@
-import { useParams, Outlet, useNavigate } from "react-router-dom";
-import { createContext, useContext, useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { fetchRestorationEditSelect } from "./APICalls";
 import { SelectDatatable } from "./edit-selectDatatable";
-const DataContext = createContext();
+//const DataContext = createContext();
 
 export const RestorationEditSelect = ({ accessToken, refreshToken }) => {
   const { _id } = useParams();
-  const navigate = useNavigate();
+ // const navigate = useNavigate();
   const [Data, setData] = useState();
 
   // const [Documents, setDocuments] = useState();
@@ -20,16 +20,16 @@ export const RestorationEditSelect = ({ accessToken, refreshToken }) => {
       .catch((error) => {
         console.error("Error inesperado", error);
       });
-  }, [_id, accessToken, refreshToken]);
+  }, [_id, accessToken, refreshToken ]);
 
-  const handleEdit = ({ navigate, restoration }) => {
+  /*const handleEdit = ({ navigate, restoration }) => {
     console.log("restoration", restoration["_id"]);
     navigate(
       `/mnemosine/piece_restorations/actions/${encodeURIComponent(
         _id
       )}/edit-select/restoration/${encodeURIComponent(restoration["_id"])}/edit`
     );
-  };
+  };*/
 
   return (
     <>

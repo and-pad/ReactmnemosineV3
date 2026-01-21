@@ -150,12 +150,7 @@ export const fetchInventoryEdit = async ( accessToken, refreshToken, _id ) => {
     {
       console.log("401 error");
       return {no_permission: response};
-
-
-    }    
-  
-  
-  
+    }  
   
   else {
       const errorData = await response.json();
@@ -187,6 +182,37 @@ export const fetchInventoryEdit = async ( accessToken, refreshToken, _id ) => {
       } else {
           return 'error: impossible to comunicate to server';
       }
+  }
+}
+
+const API_inventory_fetch_new = async (accessToken, _id) => {
+  const requestOptions = {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
+      },
+  };
+  const url = SETTINGS.URL_ADDRESS.server_api_commands + `authenticated/inventory_query/new/`;
+  const response = await fetch(url, requestOptions)
+  return response;
+
+}
+
+
+export const fetchNewInventory = async (accessToken, refreshToken, _id) => {
+
+  const response = await API_inventory_fetch_new(accessToken, _id);
+
+  var data;
+  if (response.ok) {
+      data = await response.json();
+      //console.log(data[appraisal],"Datatattatat");
+      console.log("data new inventory",data);
+      return data;
+  } else {
+    //filrar errores 401  
+    return true;
   }
 }
 
