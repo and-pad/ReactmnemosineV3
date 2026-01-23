@@ -1,4 +1,59 @@
 import SETTINGS from "../Config/settings";
+export const API_RequestInventoryNew = async ({
+  accessToken,
+  refreshToken,
+  
+  changes,
+  PicsNew,
+  DocumentsNew,
+}) => {
+  const url =
+    SETTINGS.URL_ADDRESS.server_api_commands +
+    `authenticated/inventory_query/new/`;
+      
+  try {
+    const formData = new FormData();
+    // Agregar datos JSON+
+    formData.append("changes", JSON.stringify(changes || {}));
+    formData.append("PicsNew", JSON.stringify(PicsNew || {}));
+    formData.append("DocumentsNew", JSON.stringify(DocumentsNew || {}));
+
+    // Agregar datos y archivos separados
+
+    if (PicsNew && Object.keys(PicsNew).length > 0) {
+      for (const [key, { file }] of Object.entries(PicsNew)) {
+        formData.append(`files[new_img_${key}]`, file);
+      }
+    }
+
+    if (DocumentsNew && Object.keys(DocumentsNew).length > 0) {
+      for (const [key, { file }] of Object.entries(DocumentsNew)) {
+        formData.append(`files[new_doc_${key}]`, file);
+      }
+    }
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        //Aquí es donde enviamos el token mismo que es tomado al hacer la peticion        
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: formData,
+    });
+    if (response.ok) {
+      return await response.json();
+    }
+    return true;
+  } catch (e) {
+    console.log("in api call catch");
+    console.error(e);
+
+    return false;
+  }
+};
+
+
+
 
 export const API_RequestInventoryEdit = async ({
   accessToken,

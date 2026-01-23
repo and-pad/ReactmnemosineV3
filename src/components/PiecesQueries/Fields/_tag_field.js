@@ -25,7 +25,9 @@ export const TagField = ({
         }}
       >
         <div className="tags-input mt-2">
-          {tags.map((tag, index) => (
+          
+          {Array.isArray(tags) &&
+          tags.filter(tag => tag.trim() !== "").map((tag, index) => (
             <span
               key={index}
               className="tag"

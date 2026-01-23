@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useData } from "./inventoryActions";
 import { getTranslations } from "../Languages/i18n";
-import { API_RequestInventoryEdit } from "./APICalls";
+import { API_RequestInventoryNew} from "./APICalls";
 import "./edit.css";
 import SETTINGS from "../Config/settings";
 import "react-dropzone-uploader/dist/styles.css";
@@ -51,7 +51,7 @@ export const NewInventory = ({ accessToken, refreshToken, permissions }) => {
   const [editTag, setEditTag] = useState("");
   const [currentTag, setCurrentTag] = useState("");
   const [Pics, setPics] = useState(); //Estas imagenes van cambiando conforme se escribe sobre ellas
-  const [actualPics, setCpPics] = useState(); //Estas se mantienen como estaban para hacer la comparación
+  const [actualPics, setCpPics] = useState({}); //Estas se mantienen como estaban para hacer la comparación
   const [PicsNew, setPicsNew] = useState([]); //Estas imagenes van cambiando conforme se escribe sobre ellas
   const [currentImgNewIndex, setCurrentImgNewIndex] = useState(0); //el indice para navegar entre imagenes
 
@@ -68,7 +68,7 @@ export const NewInventory = ({ accessToken, refreshToken, permissions }) => {
   const [currentDocIndex, setCurrentDocIndex] = useState(0);
 
   const [Documents, setDocuments] = useState();
-  const [actualDocs, setCpDocs] = useState();
+  const [actualDocs, setCpDocs] = useState({});
 
   const [isExpandedImg, setIsExpandedImg] = useState(false);
   const [isExpandedDoc, setIsExpandedDoc] = useState(false);
@@ -180,45 +180,45 @@ export const NewInventory = ({ accessToken, refreshToken, permissions }) => {
             description_origin: data.piece?.description_origin || "",
             description_inventory: data.piece?.description_inventory || "",
             gender_id: {
-              _id: data.piece?.gender_id ? data.piece.gender_id : "N/D",
+              _id: data.piece?.gender_id ? data.piece.gender_id : null,
               title: data?.piece?.genders_info
                 ? data.piece.genders_info.title
-                : "N/D",
+                : null,
               description: data?.piece?.genders_info
                 ? data.piece.genders_info.description
-                : "N/D",
+                : null,
             },
             subgender_id: {
-              _id: data.piece?.subgender_id ? data.piece.subgender_id : "N/D",
+              _id: data.piece?.subgender_id ? data.piece.subgender_id : null,
               title: data?.piece?.subgenders_info
                 ? data.piece.subgenders_info.title
-                : "N/D",
+                : null,
               description: data?.piece?.subgenders_info
                 ? data.piece.subgenders_info.description
-                : "N/D",
+                : null,
             },
 
             type_object_id: {
               _id: data.piece?.type_object_id
                 ? data.piece.type_object_id
-                : "N/D",
+                : null,
               title: data?.piece?.type_object_info
                 ? data.piece.type_object_info.title
-                : "N/D",
+                : null,
               description: data?.piece?.type_object_info
                 ? data.piece.type_object_info.description
-                : "N/D",
+                : null,
             },
             dominant_material_id: {
               _id: data.piece?.dominant_material_id
                 ? data.piece.dominant_material_id
-                : "N/D",
+                : null,
               title: data?.piece?.dominant_material_info
                 ? data.piece.dominant_material_info.title
-                : "N/D",
+                : null,
               description: data?.piece?.dominant_material_info
                 ? data.piece.dominant_material_info.description
-                : "N/D",
+                : null,
             },
 
             tags: data.piece?.tags || "",
@@ -232,10 +232,12 @@ export const NewInventory = ({ accessToken, refreshToken, permissions }) => {
             width_with_base: data.piece?.width_with_base || "",
             depth_with_base: data.piece?.depth_with_base || "",
             diameter_with_base: data.piece?.diameter_with_base || "",
+
+            incidence: data.piece?.incidence || "",
           };
 
           setPics(data.pics);
-
+          console.log("temp", temp);
           setFormData(temp || {});
           setCpFormData(temp || {});
           //setCpPics(data.pics);
@@ -404,16 +406,16 @@ export const NewInventory = ({ accessToken, refreshToken, permissions }) => {
     e.preventDefault();
 
     const changes = compareFormModifications(actualFormData, formData);
-    const changes_pics_inputs = comparePicsModifications(actualPics, Pics);
-    const changes_docs_inputs = compareDocsModifications(actualDocs, Documents);
+    //const changes_pics_inputs = comparePicsModifications(actualPics, Pics);
+    //const changes_docs_inputs = compareDocsModifications(actualDocs, Documents);
 
     if (
       (changes && Object.keys(changes).length > 0) ||
-      (changes_pics_inputs && Object.keys(changes_pics_inputs).length > 0) ||
-      (changedPics && Object.keys(changedPics).length > 0) ||
-      (changedDocs && Object.keys(changedDocs).length > 0) ||
+      //(changes_pics_inputs && Object.keys(changes_pics_inputs).length > 0) ||
+      //(changedPics && Object.keys(changedPics).length > 0) ||
+      //(changedDocs && Object.keys(changedDocs).length > 0) ||
       (PicsNew && PicsNew.length > 0) ||
-      (changes_docs_inputs && Object.keys(changes_docs_inputs).length > 0) ||
+      //(changes_docs_inputs && Object.keys(changes_docs_inputs).length > 0) ||
       (DocumentsNew && DocumentsNew.length > 0)
     ) {
       const modalElement = document.getElementById("ChangesModal");
@@ -434,23 +436,22 @@ export const NewInventory = ({ accessToken, refreshToken, permissions }) => {
     const changes = compareFormModifications(actualFormData, formData);
     const changes_pics_inputs = comparePicsModifications(actualPics, Pics);
     const changes_docs_inputs = compareDocsModifications(actualDocs, Documents);
-    const _id = Data._id;
+    //const _id = Data._id;
 
-    API_RequestInventoryEdit({
+    API_RequestInventoryNew({
       accessToken,
       refreshToken,
-      _id,
+      //_id,
       changes,
-      changes_pics_inputs,
-      changedPics,
+      //changes_pics_inputs,
+      //changedPics,
       PicsNew,
-      changedDocs,
+      //changedDocs,
       DocumentsNew,
-      changes_docs_inputs,
+      //changes_docs_inputs,
     }).then((data) => {
       if (data) {
-        navigate(0);
-      }
+        console.log("data after save", data);   }
     });
   };
 
